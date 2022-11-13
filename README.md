@@ -1,2 +1,2 @@
-# vuepress-blog
-This is a personal blog.
+# react-blog
+This is blogging about react.
