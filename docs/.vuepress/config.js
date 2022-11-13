@@ -10,7 +10,7 @@ module.exports = {
     ],
     title: 'React',
     description: 'React',
-    base: '/vuepress-blog/',
+    base: '/react-blog/',
     themeConfig: {
         nav: [
             {
