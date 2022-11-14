@@ -175,6 +175,15 @@ module.exports = {
                 ]
             },
             {
+                title: "自定义",
+                children: [
+                    {
+                        title: "实现简易useState",
+                        path: "/docs/custom/useState"
+                    }
+                ]
+            },
+            {
                 title: "发现",
                 children: [
                     {
@@ -192,6 +201,7 @@ module.exports = {
     },
     lastUpdated: 'Last Updated',
     plugins: [
+        '@vuepress/back-to-top',
         [
             "vuepress-plugin-nuggets-style-copy", 
             {

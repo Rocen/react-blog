@@ -1,6 +1,6 @@
 ## React工作流程
 
-React的工作流程就是状态更新的过程。状态更新的调用路径的关键节点：
+`React`的工作流程就是状态更新的过程。状态更新的调用路径的关键节点：
 <div align=center>
   <img width="40%" src="../../.vuepress/public/workProcess.png" alt="workProcess" />
 </div>  
@@ -14,7 +14,7 @@ React的工作流程就是状态更新的过程。状态更新的调用路径的
 + useState
 + useReducer
 
-这方法在每次调用的时候都会调用`updateContainer`方法创建一个`Update`对象，这个`Update`对象会保存**更新状态相关的内容**。在render阶段中的b`eginWork`中会根据`Update`计算新的`state`。
+这方法在每次调用的时候都会调用`updateContainer`方法创建一个`Update`对象，这个`Update`对象会保存**更新状态相关的内容**。在`render`阶段中的`beginWork`中会根据`Update`计算新的`state`。
 
 ## 创建Update对象
 

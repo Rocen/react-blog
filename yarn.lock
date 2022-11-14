@@ -1515,6 +1515,14 @@
     "@vuepress/types" "1.9.5"
     lodash.debounce "^4.0.8"
 
+"@vuepress/plugin-back-to-top@^1.9.7":
+  version "1.9.7"
+  resolved "http://npm-mirror.asiainfo.com/@vuepress%2fplugin-back-to-top/-/plugin-back-to-top-1.9.7.tgz#249a76d79f1e0c8c71a2804485ad0245837e6bfd"
+  integrity sha512-DM1S+Q8Xn/i+zhe4zThekxb1M2abfKLklg/NKtQloklHKdNdVfk+EcxWYNmNfSii+ymDWaaG8lmH0xjVhy0iXw==
+  dependencies:
+    "@vuepress/types" "1.9.7"
+    lodash.debounce "^4.0.8"
+
 "@vuepress/plugin-blog@1.9.2":
   version "1.9.2"
   resolved "https://registry.yarnpkg.com/@vuepress/plugin-blog/-/plugin-blog-1.9.2.tgz#d463a218bf54b51a07b87eb703dc1cc9eddeef3c"
@@ -1602,6 +1610,15 @@
   version "1.9.5"
   resolved "https://registry.yarnpkg.com/@vuepress/types/-/types-1.9.5.tgz#9fe265fac3236cd5f9c01216553825461d5eca9b"
   integrity sha512-fu1Wyi+cPFyn7nfxNH4MVvU5glYvRB0RMI7besq9kiI/KkZJPb2G1hITopECJOGk+6G/cOU/iSdUDUHH4GQLgA==
+  dependencies:
+    "@types/markdown-it" "^10.0.0"
+    "@types/webpack-dev-server" "^3"
+    webpack-chain "^6.0.0"
+
+"@vuepress/types@1.9.7":
+  version "1.9.7"
+  resolved "http://npm-mirror.asiainfo.com/@vuepress%2ftypes/-/types-1.9.7.tgz#aeb772fd0f7c2a10c6ec1d3c803a2e4b1d756c24"
+  integrity sha512-moLQzkX3ED2o18dimLemUm7UVDKxhcrJmGt5C0Ng3xxrLPaQu7UqbROtEKB3YnMRt4P/CA91J+Ck+b9LmGabog==
   dependencies:
     "@types/markdown-it" "^10.0.0"
     "@types/webpack-dev-server" "^3"
