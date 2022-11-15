@@ -2,7 +2,7 @@
 
 这节是利用学习过的`hooks`相关知识，实现一个简易版的`useState`。  
 
-这个使用原生实现的简易版的useState只具备触发状态更新和更新页面两个功能。
+这个使用原生实现的简易版的`useState`只具备触发状态更新和更新页面两个功能。
 
 ## 工作原理
 
@@ -169,6 +169,105 @@ function run() {
     // 将onClick事件绑定在button元素上，这样每次通过按钮的点击事件就可以触发setNum
     btn.addEventListener('click', () => event())
 ```
+
+## 完整代码
+::: details 点击查看完整代码
+```html
+    <button id="btn">点击</button>
+    <div id="dom"></div>
+
+    <script>
+
+        let isMount = true;
+        let workInProgressHook = null;
+        let fiber = {
+            memoizedState: null,
+            stateNode: App
+        }
+
+        function run() {
+            workInProgressHook = fiber.memoizedState;
+            const app = fiber.stateNode();
+            isMount = false;
+            return app;
+        }
+
+        function dispatchAction(queue, action) {
+            const update = {
+                action,
+                next: null
+            }
+            if (queue.pending === null) {
+                update.next = update;
+            }else {
+                update.next = queue.pending.next;
+                queue.pending.next = update;
+            }
+            queue.pending = update;
+
+            run()
+        }
+
+        function useState(initialState) {
+            let hook;
+            if (isMount) {
+                hook = {
+                    memoizedState: initialState,
+                    queue: {
+                        pending: null
+                    },
+                    next: null
+                }
+
+                if (!fiber.memoizedState) {
+                    fiber.memoizedState = hook;
+                }else {
+                    workInProgressHook.next = hook;
+                }
+                workInProgressHook = hook;
+            }else {
+                hook = workInProgressHook;
+                workInProgressHook = workInProgressHook.next;
+            }
+
+            let basicState = hook.memoizedState;
+            if (hook.queue.pending) {
+                let firstUpdate = hook.queue.pending.next;
+                do {
+                    const action = firstUpdate.action;
+                    basicState = typeof action === 'function' ? action(basicState) : action;
+                    firstUpdate = firstUpdate.next;
+                } while (firstUpdate !== hook.queue.pending.next);
+
+                hook.queue.pending = null;
+            }
+
+            hook.memoizedState = basicState;
+            return [hook.memoizedState, dispatchAction.bind(null, hook.queue)]
+        }
+
+        const dom = document.getElementById('dom');
+        const btn = document.getElementById('btn');
+
+        function App() {
+
+            const [num, setNum] = useState(0);
+            console.log('num=', num);
+            dom.innerHTML = num;
+
+            const onClick = () => {
+                setNum(num => num + 1)
+            }
+
+            return onClick;
+        }
+
+        const event = run();
+        btn.addEventListener('click', () => event())
+
+    </script>
+```
+:::
 
 ## 最终效果
 最终显示在页面上的效果：

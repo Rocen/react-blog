@@ -26,7 +26,12 @@ JS脚本执行 --> 样式布局 --> 页面绘制
 解决方式：在浏览器的每一帧时间中，会预留一些时间给`JS`线程，`React`会利用这部分时间更新组件（预留时间是`5ms`）。当预留的时间不够时，`React`就会将线程控制权交还给浏览器使其有时间执行渲染流水线的工作，而`React`则会等待下一帧来继续执行被中断的工作。
 > 这种将长任务拆分成多段，每次执行一小段的任务的操作，被称为**时间切片**（time slice）
 
-`React`的新模式`Concurrent Mode`就会默认使用**时间切片**（具体可以看[这篇](../architecture/scheduler.md)介绍）这种特性。
+`React`的新模式`Concurrent Mode`（并发模式）就会默认使用**时间切片**（具体可以看[这篇](../architecture/scheduler.md)介绍）这种特性。  
+```js
+// 通过使用ReactDOM.createRoot开启Concurrent Mode
+ReactDOM.createRoot(rootEl).render(<App/>);
+```
+所以，解决CPU瓶颈的关键是实现**时间切片**，而**时间切片**的关键是：将**同步的更新**变为**异步可中断的更新**。
 
 ### IO的瓶颈
 对应的网络延迟是前端开发人员无法解决的问题，那么在客观因素的影响下，如何减少用户对网络延迟的感知呢？  
@@ -35,7 +40,7 @@ React给处的答案是将`人机交互研究的结果整合到真实的UI中`�
 
 简单来说，就是在等待的过程中通过显示`loading`效果，来减少用户对网络延迟的感知。  
 
-为此，React对应的实现方式是`Suspense`（具体可以看[这篇](../implement/suspense.md)介绍）。  
+为此，React对应的实现方式是`Suspense`（具体可以看[这篇](../implement/suspense.md)介绍）以及`useTransition hook`(具体可以看[这篇](../hooks/useTransition.md)介绍)。  
 
 而在源码的内部，为了支持这种特性，React更新的方式也从**同步的更新**变为**异步可中断的更新**。
 

@@ -27,7 +27,7 @@ module.exports = {
                 path: '/',
                 children: [
                     {
-                        title: "章节列表",
+                        title: "目录",
                         path: "/docs/start/directory"
                     },
                     {
@@ -79,35 +79,15 @@ module.exports = {
                 ]
             },
             {
-                title: "实现", 
+                title: "原理", 
                 children: [
                     {
                         title: "diff算法",
-                        path: "/docs/implement/diff"
+                        path: "/docs/principle/diff"
                     },
                     {
                         title: "状态更新",
-                        path: "/docs/implement/updateState"
-                    },
-                    {
-                        title: "Scheduler工作流程",
-                        path: "/docs/implement/scheduler"
-                    },
-                    {
-                        title: "lane模型",
-                        path: "/docs/implement/lane"
-                    },
-                    {
-                        title: "批量更新",
-                        path: "/docs/implement/batchedUpdates"
-                    },
-                    {
-                        title: "Suspense",
-                        path: "/docs/implement/suspense"
-                    },
-                    {
-                        title: "饥饿问题",
-                        path: "/docs/implement/starve"
+                        path: "/docs/principle/updateState"
                     },
                 ]
             },
@@ -158,34 +138,54 @@ module.exports = {
                 ]
             },
             {
-                title: "原理",
+                title: "Concurrent Mode",
                 children: [
                     {
-                        title: "组件渲染和性能优化",
-                        path: "/docs/principle/componentRenderAndOptimize"
+                        title: "Scheduler工作流程",
+                        path: "/docs/concurrent/scheduler"
                     },
                     {
-                        title: "setState和useState的区别",
-                        path: "/docs/principle/differentBetweenSetStateAndUseState"
+                        title: "lane模型",
+                        path: "/docs/concurrent/lane"
                     },
                     {
-                        title: "useState是同步还是异步",
-                        path: "/docs/principle/isUseStateSyncOrAsync"
+                        title: "批量更新",
+                        path: "/docs/concurrent/batchedUpdates"
+                    },
+                    {
+                        title: "Suspense",
+                        path: "/docs/concurrent/suspense"
+                    },
+                    {
+                        title: "饥饿问题",
+                        path: "/docs/concurrent/starve"
                     },
                 ]
             },
             {
-                title: "自定义",
+                title: "实现",
                 children: [
                     {
                         title: "实现简易useState",
-                        path: "/docs/custom/useState"
+                        path: "/docs/implement/useState"
                     }
                 ]
             },
             {
                 title: "发现",
                 children: [
+                    {
+                        title: "组件渲染和性能优化",
+                        path: "/docs/find/componentRenderAndOptimize"
+                    },
+                    {
+                        title: "setState和useState的区别",
+                        path: "/docs/find/differentBetweenSetStateAndUseState"
+                    },
+                    {
+                        title: "useState是同步还是异步",
+                        path: "/docs/find/isUseStateSyncOrAsync"
+                    },
                     {
                         title: "React中的性能优化",
                         path: "/docs/find/performanceOptimize"
