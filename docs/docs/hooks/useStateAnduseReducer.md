@@ -7,8 +7,8 @@
 
 在与`Hooks`相关的源码中有一个非常重要的概念或者说是变量，就是`dispatcher`。  
 
-在`Hooks`中，组件`mount`时的`hook`与`update`时的`hook`来源于不同的对象，这类对象在源码中被称为`dispatcher`。
-那么它在源码中是怎么定义的呢？
+在`Hooks`中，组件`mount`时的`hook`与`update`时的`hook`来源于不同的对象，这类对象在源码中被称为`dispatcher`。  
+以下`dispatcher`在源码中是怎么定义：
 ```js
 const HooksDispatcherOnMount: Dispatcher = {
   useCallback: mountCallback,
@@ -49,24 +49,28 @@ const ContextOnlyDispatcher: Dispatcher = {
   // ...
 };
 ```
-从这段代码可以看出，`Dispatcher`一共有三种类型，通常对应了三个变量。而从这三个变量的命名就大致可以猜到他们的用途了。  
+从这段代码可以看出，`Dispatcher`一共有三种类型，通常对应了三个变量。而从这三个变量的命名应该大致可以猜到他们的用途了。  
 
-`FunctionComponent`在`mount`时会使用`HooksDispatcherOnMount`中属于`mount`阶段的`hook`，而在`update`时会使用`HooksDispatcherOnUpdate`中属于`update`阶段的`hook`。  
+`FunctionComponent`在`mount`时会使用`HooksDispatcherOnMount`中属于`mount`阶段的处理函数，而在`update`时会使用`HooksDispatcherOnUpdate`中属于`update`阶段的处理函数。  
 
-在`FunctionComponent render`前，会根据`FunctionComponent`对应`fiber`的以下条件区分`mount`与`update`。  
+在`FunctionComponent render`前，会根据`FunctionComponent`对应`fiber`的以下条件来区分`mount`和`update`：  
 ```js
 ReactCurrentDispatcher.current =
   current === null || current.memoizedState === null
     ? HooksDispatcherOnMount
     : HooksDispatcherOnUpdate;  
 ```
-`ReactCurrentDispatcher`是一个全局变量，用来保存`mount`和`update`时对应的`dispatcher`。其中`current`变量表示的就是`current Fiber`。如果`current === null`就表示当前还没有`current Fiber`，说明此时是该`FunctionComponent`的第一次渲染，对应`mount`。  
+`ReactCurrentDispatcher`是一个全局变量，用来保存`mount`和`update`时对应的`dispatcher`。  
 
-当在`FunctionComponent`中声明了`hooks`，这些`hook`会组成单项链表的结构保存在`fiber.memoizedState`属性上。所以通过`current fiber.memoizedState === null`就可以判断当前这个`Fiber`上还没有`hook`，所以也是`mount`。  
+其中`current`变量表示的就是`current Fiber`。如果`current === null`就表示当前还没有`current Fiber`，说明此时是`FunctionComponent`的第一次渲染，对应就是`mount`。  
 
-当不存在上述两种情况就说明不是`mount`而是`update`。那么就需要使用`update`对应的`hook`了。  
+当在`FunctionComponent`中声明了`hooks`，这些`hook`会组成单项链表的结构保存在`fiber.memoizedState`属性上。所以通过`current fiber.memoizedState === null`就可以判断当前这个`Fiber`上还不存在`hook`，所以也是`mount`。  
 
-还有一种抛出异常的`dispacher：ContextOnlyDispatcher`。`ContextOnlyDispatcher`就是为了保证在`FunctionComponent`中使用`hooks`的正确性。那么`ContextOnlyDispatcher`会在什么时候赋值给`ContextOnlyDispatcher`的呢？  
+如果不存在上述两种情况就说明不是`mount`而是`update`。那么就需要使用`update`对应的处理函数了。  
+
+还有一种抛出异常的`dispacher：ContextOnlyDispatcher`。`ContextOnlyDispatcher`就是为了保证在`FunctionComponent`中使用`hooks`的方式是正确的。  
+
+那么`ContextOnlyDispatcher`会在什么时候赋值给`ContextOnlyDispatcher`的呢？  
 ```js
 // 简化后
 function renderWithHooks<Props, SecondArg>(
@@ -89,7 +93,7 @@ function renderWithHooks<Props, SecondArg>(
 
 }
 ```
-我们知道在`render`阶段对于`FunctionComponent`会通过调用`renderWithHooks`方法来实现组件的渲染，而在实现组件渲染之前会赋值`ReactCurrentDispatcher`变量来确保使用`hooks`时是属于正确的阶段（`mount`或`update`）。而在完成组件渲染之后就会将`ReactCurrentDispatcher`赋值为`ContextOnlyDispatcher`。  
+我们知道在`render`阶段对于`FunctionComponent`会通过调用`renderWithHooks`方法来实现组件的渲染，而在实现组件渲染之前会赋值`ReactCurrentDispatcher`变量来确保在执行`FunctionComponent`时，组件内使用的`hooks`都属于正确的处理函数。而在组件渲染完成之后就会将`ReactCurrentDispatcher`赋值为`ContextOnlyDispatcher`。  
 
 可以考虑如下情况：
 ```js
@@ -97,7 +101,9 @@ useEffect(() => {
   useState(0);
 })
 ```
-`useEffect`因为属于顶层的`hook`，所以在组件渲染时会使用正确的`hook`（`mountEffect`或`updateEffect`）。而`useState`被使用在了`useEffect`的回调函数中，在执行组件渲染的时候不会被执行，会跟随`useEffect`的回调函数在`layout`阶段之后异步执行。等到通过回调函数执行`useState`时，此时全局变量`ReactCurrentDispatcher`的值已经是`ContextOnlyDispatcher`，所以`useState`对应的就是`throwInvalidHookError`方法而抛出异常，来警告开发者使用`Hooks`的方式是不正确的。
+`useEffect`因为属于顶层的`hook`，所以在组件渲染时会使用正确的处理函数（`mountEffect`或`updateEffect`）。  
+
+而`useState`被使用在了`useEffect`的回调函数中，在执行组件渲染的时候不会被执行，会跟随`useEffect`的回调函数在`layout`阶段之后再异步执行。等到通过回调函数执行`useState`时，此时全局变量`ReactCurrentDispatcher`的值已经是`ContextOnlyDispatcher`，导致`useState`对应的处理函数就是`throwInvalidHookError`方法。所以在调用`throwInvalidHookError`方法就会抛出异常，来警告开发者`Hooks`的使用方式是不正确的。
 
 ## Hooks的数据结构
 
@@ -333,7 +339,7 @@ function updateReducer<S, I, A>(
 }
 ```
 整个流程可以概括为：
-> 找到对应的hook，根据update计算该hook的新的state并返回
+> 找到对应的hook，根据update计算该hook对应的新的state并返回
 
 ```js
 function updateWorkInProgressHook(): Hook {
@@ -404,7 +410,9 @@ function updateWorkInProgressHook(): Hook {
   return workInProgressHook;
 }
 ```
-从这段代码可以看到，当组件在`update`时获取`hook`方式是通过移动`workInProgress`构成的链表上的`next`指针获得的。而`workInProgress`构成的单项链表决定了各个`hook`存在顺序是固定的，所以这也是为什么在组件中使用`hook`时的一大限制就是不可以用在*条件语句*中。因为如果在条件语句中使用了`hook`，那么在`update`时就会打乱了`hook`之间的顺序关系，而各个`hook`结构中保存的数据结构也不一样，自然就无法混用了。  
+从这段代码可以看到，当组件在`update`时获取`hook`方式是通过移动`workInProgress`构成的链表上的`next`指针获得的。而`workInProgress`构成的单项链表决定了各个`hook`存在顺序是固定的，所以这也是为什么在组件中使用`hook`时的一大限制就是不可以用在*条件语句*中。  
+
+因为如果在条件语句中使用了`hook`，那么在`update`时就会打乱了`hook`之间的顺序关系，而各个`hook`结构中保存的数据结构也不一样，自然就无法混用了。  
 
 ## 调用阶段
 
@@ -457,7 +465,7 @@ function dispatchAction<S, A>(
 ```
 从这段代码可以看到，`dispatchAction`方法主要做的工作就是创建`update`，并将`update`插入到`queue.pending`构成的环状链表中，然后开启调度状态更新。  
 
-其中与`eagerState`相关的优化逻辑的详细介绍可以看这篇文章。  
+其中与`eagerState`相关的优化逻辑的详细介绍可以看[这篇](../find/performanceOptimize.md)文章。  
 
 ## 总结
 

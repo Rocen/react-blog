@@ -1,7 +1,7 @@
 ## 目录
 首先按照由浅入深的学习方式，需要先从理念和架构两章开始着手。  
 
-当有了`React`实现原理和整体的工作流程这些宏观知识后，再通过`React`自身的特性和使用方法这些微观知识去充实`React`框架，最后就能构建比较完善和牢固的源码知识体系。  
+当有了`React`架构和完整工作流程这些宏观知识后，再通过`React`自身的特性和使用方法这些微观知识去充实`React`框架，最后可以构建比较完善和牢固的源码知识体系。  
 ### 理念
 :white_check_mark: [React理念](../idea/concept.md)  
 :white_check_mark: [React架构](../idea/architecture.md)  
@@ -39,7 +39,7 @@
 :white_check_mark: [饥饿问题](../concurrent/starve.md)  
 
 ### 实现
-:white_check_mark: [useTransition](../implement/useState.md)  
+:white_check_mark: [实现简易useState](../implement/useState.md)  
 
 ### 发现
 :white_check_mark: [组件渲染和性能优化](../find/componentRenderAndOptimize.md)  

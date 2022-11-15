@@ -19,7 +19,9 @@
 
 ## 事件绑定
 
-事件系统的入口函数`listenToAllSupportedEvents`会通过`ReactDOM.createRoot`或者`ReactDOM.render`方法调用。从`listenToAllSupportedEvents`方法开始会依次执行事件绑定和事件触发。
+事件系统的入口函数`listenToAllSupportedEvents`会通过`ReactDOM.createRoot`或者`ReactDOM.render`方法调用。  
+
+从`listenToAllSupportedEvents`方法开始会依次执行事件绑定和事件触发。
 ```js
 const listeningMarker =
   '_reactListening' +
@@ -100,7 +102,11 @@ function addTrappedEventListener(
     }
 }
 ```
-这段代码最重要的一段就是在`addTrappedEventListener`函数中执行`addEventCaptureListener`或`addEventBubbleListener`方法，这两个方法的本质都是调用容器`dom.addEventListener`方法以特定的事件类型绑定`listener`回调函数。在上边可以看到`listener`是通过`createEventListenerWrapperWithPriority`函数创建出来的，那`createEventListenerWrapperWithPriority`这个函数是怎么定义的呢？
+这段代码最重要的是在`addTrappedEventListener`函数中执行`addEventCaptureListener`或`addEventBubbleListener`方法。  
+
+这两个方法的本质都是调用容器的`addEventListener`方法以特定的事件类型绑定`listener`回调函数。在上边可以看到`listener`是通过`createEventListenerWrapperWithPriority`函数创建出来的。  
+
+以下是`createEventListenerWrapperWithPriority`函数的定义：
 ```js
 function createEventListenerWrapperWithPriority(
   targetContainer: EventTarget,
@@ -133,7 +139,7 @@ function createEventListenerWrapperWithPriority(
         targetContainer,
     );
 }
-
+// 触发离散事件
 function dispatchDiscreteEvent(
   domEventName,
   eventSystemFlags,
@@ -154,7 +160,11 @@ function dispatchDiscreteEvent(
   }
 }
 ```
-以上这两部分代码可以看做是事件合成或事件绑定，主要的工作就是为容器元素调用`addEventListener`方法以事件类型和回调函数绑定监听器。并且这个回调函数并不是用户在`React Element`上注册的回调函数，而是一个名为`dispatchEvent`的方法。以`click`方法为例，当在某个元素上触发`click`方法，根据*DOM事件流*会从目标元素冒泡到容器元素，并触发容器元素的`click`事件对应的回调函数即`dispatchEvent`。最终，通过`dispatchEvent`方法就会进入到`React`事件系统的事件触发阶段。
+以上这两部分代码可以看做是事件合成或事件绑定，主要的工作是为容器元素调用`addEventListener`方法以事件类型和回调函数绑定监听器。并且这个回调函数并不是用户在`React Element`上注册的回调函数，而是一个名为`dispatchEvent`的方法。  
+
+以`click`方法为例，当在某个元素上触发`click`方法，根据*DOM事件流*会从目标元素冒泡到容器元素，并触发容器元素的`click`事件对应的回调函数，即`dispatchEvent`方法。  
+
+接着，调用`dispatchEvent`方法就会进入到`React`事件系统的事件触发阶段。
 
 ## 事件触发
 
@@ -232,11 +242,11 @@ function dispatchEventForPluginEventSystem(
 }
 
 function dispatchEventsForPlugins() {
-    // DOM节点
+    // 获取DOM节点
     const nativeEventTarget = getEventTarget(nativeEvent);
-    // 触发事件队列
+    // 定义触发事件队列
     const dispatchQueue: DispatchQueue = [];
-    // 收集触发事件队列
+    // 开始收集触发事件队列
     extractEvents(
         dispatchQueue,
         domEventName,
@@ -283,15 +293,17 @@ function extractEvents(
   eventSystemFlags: EventSystemFlags,
   targetContainer: EventTarget,
 ): void {
-    // domEventName是否有对应的React事件
+    // domEventName是否有对应的React合成事件
     const reactName = topLevelEventsToReactNames.get(domEventName);
     if (reactName === undefined) {
+        // 如果没有对应的React合成事件，则直接退出
         return;
     }
     // 默认的合成事件event
     let SyntheticEventCtor = SyntheticEvent;
     // React事件名称
     let reactEventType: string = domEventName;
+    //根据原生事件类型找到对应的事件源event对象
     switch (domEventName) {
         case 'click':
             // 定义事件源event
@@ -316,7 +328,7 @@ function extractEvents(
         // 当accumulateTargetOnly为true就不会收集所有注册的回调函数，只会收集目标节点注册的回调函数
         // 在此React给出的解释是：有些事件不会在浏览器中冒泡。我们将尝试通过在React中不冒泡来接近浏览器的行为。会从onScroll不冒泡开始，然后展开。
         const accumulateTargetOnly = !inCapturePhase && domEventName === 'scroll';
-        // 收集的监听函数队列
+        // 收集监听函数队列
         const listeners = accumulateSinglePhaseListeners(
             targetInst,
             reactName,
@@ -334,7 +346,7 @@ function extractEvents(
                 nativeEvent,
                 nativeEventTarget,
             );
-            // 事件源event和监听函数队列组成的对象
+            // 将事件源event和监听函数队列组成的对象，push到事件触发队列中
             dispatchQueue.push({event, listeners});
         }
     }
@@ -362,18 +374,20 @@ function accumulateSinglePhaseListeners(
     // 从目标Fiber节点一直向上遍历直到根节点
     while (instance !== null) {
         const {stateNode, tag} = instance;
-        // 原生节点，并且存在真实DOM节点，如div，p标签等
+        // 原生节点，并且存在真实DOM节点，如div，span标签等
         if (tag === HostComponent && stateNode !== null) {
+            // 赋值DOM节点
             lastHostComponent = stateNode;
 
             // 正确的react合成事件名称
             if (reactEventName !== null) {
                 // reactEventName是React合成事件的名字,如onClick 
-                // 通过props[registrationName]就能取到onClick对应的回调函数了
+                // 通过props[registrationName]就能取到当前Fiber节点上onClick属性对应的回调函数
                 // 下面这行代码可以简化为：listener = props[registrationName]
                 const listener = getListener(instance, reactEventName); 
                 if (listener != null) {
-                    // 将监听的相关内容保存到listeners
+                    // 存在以React合成事件注册的回调函数
+                    // 将监听的相关内容push到listeners
                     listeners.push(
                         // createDispatchListener就是根据传入的参数作为属性，创建并返回一个对象
                         // {
@@ -393,9 +407,10 @@ function accumulateSinglePhaseListeners(
         // 向上遍历,寻找父级Fiber节点
         instance = instance.return;
     }
+    // 最后返回监听队列
     return listeners;
 }
-// 收集单个阶段的监听器，捕获阶段和冒泡阶段
+// 收集两个阶段的监听器，捕获阶段和冒泡阶段
 function accumulateTwoPhaseListeners(
   targetFiber: Fiber | null,
   reactName: string,
@@ -446,20 +461,27 @@ function accumulateTwoPhaseListeners(
     // 向上遍历,寻找父级Fiber节点
     instance = instance.return;
   }
+  // 最后返回监听队列
   return listeners;
 }
 ```
-从这段代码可以看到在`accumulateSinglePhaseListeners`方法中有一个`while循`环，循环的目的是从目标`Fiber`节点一直向上遍历直到根节点`rootFiber`，收集这一条路径上通过`React`合成事件注册的回调函数，然后依次*push*到数组中。  
+从这段代码可以看到在`accumulateSinglePhaseListeners`方法中有一个`while`循环，目的是从目标`Fiber`节点一直向上遍历直到根节点`rootFiber`，收集这一条路径上通过`React`合成事件注册的回调函数，然后依次*push*到监听队列中。  
 
-最终收集的监听器队列和对应的事件源`event`保存在`dispatchQueue`中。接下来要做的就是调用`processDispatchQueue`函数遍历`dispatchQueue`并执行监听器队列。
+最终收集的监听队列和对应的事件源`event`会保存在`dispatchQueue`。  
+
+接下来要做的就是调用`processDispatchQueue`方法遍历`dispatchQueue`然后执行监听队列：
 ```js
 function processDispatchQueue(
   dispatchQueue: DispatchQueue,
   eventSystemFlags: EventSystemFlags,
 ): void {
+  // 是否是捕获阶段
   const inCapturePhase = (eventSystemFlags & IS_CAPTURE_PHASE) !== 0;
+  // 遍历dispatchQueue
   for (let i = 0; i < dispatchQueue.length; i++) {
+    // 获取事件源event和监听对象
     const {event, listeners} = dispatchQueue[i];
+    // 执行监听队列
     processDispatchQueueItemsInOrder(event, listeners, inCapturePhase);
     //  event system doesn't use pooling.
   }
@@ -471,26 +493,31 @@ function processDispatchQueueItemsInOrder(
   inCapturePhase: boolean,
 ): void {
   let previousInstance;
-  // 区分是否是捕获阶段
+  // 是否是捕获阶段
   if (inCapturePhase) {
-        // 如果是捕获阶段，所以就从最后一项开始遍历直到第一项，相对应的DOM流就是捕获阶段然后进入向下的目标阶段
+        // 如果是捕获阶段，所以就从最后一项开始遍历直到第一项，相对应的DOM事件流就是捕获阶段然后进入向下的目标阶段
         // 节点的顺序 a -> b -> c -> d （a是目标节点，d根节点）
-        // 收集回调函数的顺序也是 [a, b, c, d]
+        // 收集回调函数的顺序是 [a, b, c, d]
         // 捕获阶段是从根节点向下的顺序进行的，所以最终的执行回调函数的顺序是 d -> c -> b -> a
+        // 从尾部开始遍历
         for (let i = dispatchListeners.length - 1; i >= 0; i--) {
           const {instance, currentTarget, listener} = dispatchListeners[i];
+          // 对于合成事件源event对象，定义了isPropagationStopped方法，方法的返回值就是true
+          // 当调用了isPropagationStopped则会进入到条件语句里面直接return掉，后续的回调函数也就不糊执行了，达到了阻止冒泡的目的
           if (instance !== previousInstance && event.isPropagationStopped()) {
               return;
           }
+          // 执行listener中保存的回调函数
           executeDispatch(event, listener, currentTarget);
           previousInstance = instance;
         }
   } else {
         // 因为是冒泡阶段，所以就从第一项开始遍历直到最后一项，相对应的DOM事件流就是目标阶段然后进入向上的冒泡阶段
         // 节点的顺序 a -> b -> c -> d （a是目标节点，d根节点）
-        // 收集回调函数的顺序也是 [dCapture, cCapture, bCapture, aCapture, a, b, c, d];
-        // 带有Capture后缀表示捕获事件
+        // 收集回调函数的顺序是 [dCapture, cCapture, bCapture, aCapture, a, b, c, d];
+        // 带有Capture后缀表示捕获事件，不带Capture后缀表示冒泡事件
         // 捕获阶段是从根节点向下的顺序进行的，所以最终的执行回调函数的顺序是 dCapture -> cCapture -> bCapture -> aCapture -> a -> b -> c -> d
+        // 从头部开始遍历
         for (let i = 0; i < dispatchListeners.length; i++) {
           const {instance, currentTarget, listener} = dispatchListeners[i];
           // 对于合成事件源event对象，定义了isPropagationStopped方法，方法的返回值就是true
@@ -528,10 +555,8 @@ if (
         // 创建一个事件名
         var evt = document.createEvent('Event');
         var didCall = false; 
-
+        // 获取windowEvent
         var windowEvent = window.event;
-
-        var windowEventDescriptor = Object.getOwnPropertyDescriptor(window, 'event');
 
         function restoreAfterDispatch() {
             // 在执行回调函数后立刻移除回调函数，防止出现嵌套调用
@@ -546,11 +571,11 @@ if (
         }
         // 获取回调函数的参数
         var funcArgs = Array.prototype.slice.call(arguments, 3);
-        // 调用回调函数
+        // 执行回调函数的方法
         function callCallback() {
             didCall = true;
             restoreAfterDispatch();
-            // 终于!!!在这里执行回调函数，并传入上下文和参数
+            // ***终于!!!在这里执行回调函数，并传入上下文和参数***
             func.apply(context, funcArgs);
             didError = false;
         } 
@@ -560,21 +585,19 @@ if (
         fakeNode.addEventListener(evtType, callCallback, false); 
         // 初始化evtType实例
         evt.initEvent(evtType, false, false);
-        // 在虚拟DOM节点上callCallback方法，然后执行回调函数
+        // 触发在虚拟DOM节点上callCallback方法，然后执行回调函数
         fakeNode.dispatchEvent(evt);
-
-        if (windowEventDescriptor) {
-            Object.defineProperty(window, 'event', windowEventDescriptor);
-        }
 
         // handle throw error...
     }
 }
 ```
-至此，`React`事件系统相关的源码终于介绍完了。需要说明的是，为了方便，以上的代码主要是以`click`这种简单事件为例，并且触发的方式也是比较简单的。除此之外，还有像选择事件、鼠标移动事件、输入事件等。每种事件都做了许多额外的处理工作，并且也有各自不同的事件源`event`对象。  
+至此，`React`事件系统相关的源码终于介绍完了。  
+
+需要说明的是，为了学习的方便，以上的代码都是以`click`这种简单事件为例，并且触发的方式也是比较简单的。除此之外，还有像选择事件、鼠标移动事件、输入事件等。每种事件都做了许多额外的处理工作，并且也有各自不同的事件源`event`对象。  
 
 ## 总结
 
 `React`的事件系统主要分成两个阶段，事件绑定和事件触发。  
 + 事件绑定阶段：会在容器根节点（`ReactDOM.createRoot`的一个参数或`ReactDOM.render`的第二个参数）上绑定一个`dispatchEvent`方法。
-+ 事件触发阶段：当在目标节点触发一个点击事件后，根据`DOM`事件流向上冒泡到容器根节点，触发容器根节点的`dispatchEvent`方法。`dispatchEvent`方法会从目标`Fiber`节点一直向上遍历到容器根节点，同时收集遍历到`Fiber`节点上的注册事件的相关信息（`Fiber`节点和`callback`回调函数），然后依次push到监听器队列中，然后再和对应的事件源`event`组成对象保存到`dispatchQueue`数组中。接着根据是否是**捕获阶段**来决定回调函数的**执行顺序**，最后遍历`dispatchQueue`并调用`executeDispatch`方法执行*callback回调函数*。
++ 事件触发阶段：当在目标节点触发一个点击事件后，根据`DOM`事件流向上冒泡到容器根节点，触发容器根节点的`dispatchEvent`方法。`dispatchEvent`方法会从目标`Fiber`节点一直向上遍历到容器根节点，同时收集遍历到`Fiber`节点上的注册事件的相关信息（`Fiber`节点和`callback`回调函数），然后依次*push*到监听器队列中，接着再和对应的事件源`event`组成对象`push`到`dispatchQueue`队列中。然后遍历`dispatchQueue`和调用`processDispatchQueueInOrder`方法遍历`dispatchListeners`（捕获事件会从`dispatchListeners`的尾部开始执行，冒泡事件会从`dispatchListeners`的头部开始执行）。最后对遍历到的`listener`调用`executeDispatch`方法执行对应的*callback回调函数*。
