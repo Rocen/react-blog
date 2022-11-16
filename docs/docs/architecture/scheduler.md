@@ -214,7 +214,7 @@ function performConcurrentWorkOnRoot(root, didTimeout) {
     // root.callbackNode表示根节点正在调度的task
     if (root.callbackNode === originalCallbackNode) {
         // 如果两者相等，说明存在任务中断的情况
-        // 因为erformConcurrentWorkOnRoot执行结束后，root.callbackNode会被重置为null，而originalCallbackNode一定是有值的，那么两者一定不会相等
+        // 因为performConcurrentWorkOnRoot执行结束后，root.callbackNode会被重置为null，而originalCallbackNode一定是有值的，那么两者一定不会相等
         return performConcurrentWorkOnRoot.bind(null, root);
     }
 }
