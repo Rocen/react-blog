@@ -1,12 +1,11 @@
 ## Suspense
 
 `React`官网对于`Suspense`的描述是：
-> Suspense 使得组件可以“等待”某些操作结束后，再进行渲染。目前，Suspense 仅支持的使用场景是：通过 React.lazy 动态加载组件。
-> Suspense 可以指定加载指示器（loading indicator），以防其组件树中的某些子组件尚未具备渲染条件。
+> Suspense 使得组件可以“等待”某些操作结束后，再进行渲染。
 
 `Suspense`是`React`提出的一种以同步的代码来实现异步操作的方案。`Suspense`让组件*等待*异步操作，异步请求结束后在进行组件的渲染，也就是所谓的**异步渲染**。  
 
-而且`Suspense`的用法也比较简单，通常作为一种容器组件使用就可以。具有一个`fallback`属性，用来代替当`Suspense`处于`loading`状态下渲染的内容，`Suspense`的`children`就是异步组件。多个异步组件可以用`Suspense`嵌套使用。  
+而且`Suspense`的用法也比较简单，通常作为一种容器组件使用就可以。它具有一个`fallback`属性，用来代替当`Suspense`处于`loading`状态下渲染的内容，`Suspense`的`children`就是异步组件。多个异步组件可以用`Suspense`嵌套使用。  
 
 例如：
 ```js
@@ -32,6 +31,7 @@ function Index() {
 const LazyComponent = React.lazy(()=>import('./index'));
 ```
 `React.lazy`接收一个函数，这个函数需要动态调用`import`方法。它必须返回一个`Promise`，该`Promise`需要`resolve`一个以`export default`方式导出的`React`组件。  
+
 使用`React.lazy`动态引入的组件，很利于**代码分割**，可以在项目初始化的时候不必加载大量的文件，以此来提升性能。  
 
 ## Suspense的实现
@@ -63,16 +63,17 @@ function updateSuspenseComponent(current, workInProgress, renderLanes) {
   let suspenseContext: SuspenseContext = suspenseStackCursor.current;
   // 是否显示fallback
   let showFallback = false;
-  // 是否悬停，通过判断flags是否包含DidCapture effectTag
+  // 是否悬停，需要通过判断flags是否包含DidCapture flags
   // DidCapture表示捕获了错误，如果捕获了错误的话，则需要悬停来处理这个错误
   const didSuspend = (workInProgress.flags & DidCapture) !== NoFlags;
-
+  // 是否需要悬停
   if (
     didSuspend
   ) {
-    // 赋值
+    // 需要悬停
+    // 赋值showFallback
     showFallback = true;
-    // 清除DidCapture effectTag
+    // 为workInProgress fiber清除DidCapture flags
     workInProgress.flags &= ~DidCapture;
   }
    if (current === null) {
@@ -80,7 +81,7 @@ function updateSuspenseComponent(current, workInProgress, renderLanes) {
 
     // 获取原始子组件
     const nextPrimaryChildren = nextProps.children;
-    // 获取fallback属性
+    // 获取fallback对应的组件
     const nextFallbackChildren = nextProps.fallback;
     // 是否展示fallback
     if (showFallback) {
@@ -99,7 +100,8 @@ function updateSuspenseComponent(current, workInProgress, renderLanes) {
         renderLanes,
       );
       workInProgress.memoizedState = SUSPENDED_MARKER;
-      // 返回fallback对应的fiber节点，这样在页面显示的时候显示就是fallback，而不显示真正的子组件
+      // 返回fallback对应的fiber节点
+      // 这样在页面显示就是fallback对应的组件，而不显示真正的子组件
       return fallbackFragment;
     } else {
       // 不展示fallback，则显示真正的子组件，创建子组件对应的fiber节点
@@ -207,10 +209,13 @@ function updateSuspenseComponent(current, workInProgress, renderLanes) {
   }
 }
 ```
-从这段代码可以看到，`updateSuspenseComponent`方法主要做的工作就是判断是否展示`fallback`，然后返回相应的`fiber`节点。如果需要显示`fallback`则返回`fallback`对应的`fiber`节点，如果不需要显示`fallback`则返回真正子组件对应的`fiber`节点。  
+从这段代码可以看到，`updateSuspenseComponent`方法主要做的工作就是判断是否展示`fallback`，然后创建并返回相应的`fiber`节点。  
+
+如果需要显示`fallback`则返回`fallback`对应的`fiber`节点，如果不需要显示`fallback`则返回真正子组件对应的`fiber`节点。  
 
 那么子`fiber`节点是怎么创建的呢？
 ```js
+// 创建原始子组件对应的fiber节点
 function mountSuspensePrimaryChildren(
   workInProgress,
   primaryChildren,
@@ -238,14 +243,16 @@ function mountSuspensePrimaryChildren(
   // 返回子fiber节点
   return primaryChildFragment;
 }
-
+// 创建fallback组件对应的fiber节点
 function mountSuspenseFallbackChildren(
   workInProgress,
   primaryChildren,
   fallbackChildren,
   renderLanes,
 ) {
+  // 获取workInProgress fiber的mode属性
   const mode = workInProgress.mode;
+  // 获取workInProgress fiber的子fiber节点
   const progressedPrimaryFragment: Fiber | null = workInProgress.child;
   // 创建子fiber节点的props
   const primaryChildProps: OffscreenProps = {
@@ -254,7 +261,6 @@ function mountSuspenseFallbackChildren(
     // 子组件
     children: primaryChildren,
   };
-
   let primaryChildFragment;
   let fallbackChildFragment;
   // 创建子组件对应的fiber节点
@@ -283,7 +289,7 @@ function mountSuspenseFallbackChildren(
   return fallbackChildFragment;
 }
 ```
-从这段代码可以看到，子组件对应的`fiber`节点其实是`OffscreenFiber`，就是离屏的`fiber`节点，对应的组件类型是`OffscreenComponent`。所以会使用`updateOffscreenComponent`方法处理`OffscreenComponent`。  
+从这段代码可以看到，子组件对应的`fiber`节点其实是`OffscreenFiber`，就是离屏的`fiber`节点，对应的组件类型是`OffscreenComponent`。所以接下来在`beginWork`方法中会使用`updateOffscreenComponent`方法处理`OffscreenComponent`类型的组件。  
 ```js
 function updateOffscreenComponent(
   current: Fiber | null,
@@ -436,11 +442,13 @@ function updateOffscreenComponent(
   return null;
 }
 ```
-其中很大一部分逻辑是处理缓存的，暂时还不需要理解这些代码，只要知道最后会根据`children`创建对应的`fiber`节点就可以了。
+其中很大一部分逻辑是处理缓存的，暂时还不需要理解这些代码，只要知道最后会根据`children`创建对应的`fiber`节点就可以了（如果使用了`lazy`方法，这个`fiber`节点对应的组件就是`LazyComponent`）。
 
 ## Lazy的实现
 
-然后再通过`mountLazyComponent`方法处理`LazyComponent`类型的组件。但是在此之前我们需要先知道`React.lazy`这个方法是怎么实现的，才能更好的了解`LazyComponent`具有哪些特点。
+在`beginWork`方法中通过`mountLazyComponent`方法处理`LazyComponent`类型的组件。  
+
+但是在此之前我们需要先知道`React.lazy`这个方法是怎么实现的，才能更好的了解`LazyComponent`具有哪些特点。
 ```js
 function lazy<T>(
   ctor: () => Thenable<{default: T, ...}>,
@@ -461,7 +469,7 @@ function lazy<T>(
     // 执行thenable状态的方法
     _init: lazyInitializer,
   };
-
+  // 返回REACT_LAZY_TYPE类型的ReactElement
   return lazyType;
 }
 
@@ -493,7 +501,7 @@ function lazyInitializer<T>(payload: Payload<T>): T {
           // 改变这个promise的状态为rejected
           const rejected: RejectedPayload = (payload: any);
           // 赋值状态和结果
-          // Resolved的值为2
+          // Rejected的值为2
           rejected._status = Rejected;
           // error就是导出过程中遇到的错误
           rejected._result = error;
@@ -520,7 +528,7 @@ function lazyInitializer<T>(payload: Payload<T>): T {
   }
 }
 ```
-从这段代码可以看到，`lazy`方法主要做的工作是构建`LazyComponent`的数据结构，其中包括处理`Promise`对象的函数。这个函数是用来处理`Promise`对象状态变化，只有状态为`resolved`时才会返回导出结果，否则都将`throw`一个变量（可能是`error`，也可能是`Promise`）。  
+从这段代码可以看到，`lazy`方法主要做的工作是构建`LazyComponent`的数据结构，其中包括记录*Promise*状态的对象和改变*Promise*状态的函数。只有在*Promise*状态变为*resolved*时才会返回导出结果，否则都将`throw`一个变量（可能是`error`，也可能是状态为*pending*或*rejected*的`Promise`对象）。  
 
 调用`mountLazyComponent`方法处理`LazyComponent`：
 ```js
@@ -536,7 +544,7 @@ function mountLazyComponent(
     // 清除alternate指针的连接
     _current.alternate = null;
     workInProgress.alternate = null;
-    // 标记Placement effectTag
+    // 标记Placement flags
     workInProgress.flags |= Placement;
   }
   // 获取props属性
@@ -556,7 +564,7 @@ function mountLazyComponent(
   // 将需要计算的pendingProps和组件自身的baseProps进行合并，然后返回合并的结果
   const resolvedProps = resolveDefaultProps(Component, props);
   let child;
-  // 根据组件类型的不同，通过不同方法获取对应的子fiber节点
+  // 根据组件类型的不同，通过不同方法创建相应的子fiber节点
   switch (resolvedTag) {
     // 函数组件
     case FunctionComponent: {
@@ -583,11 +591,13 @@ function mountLazyComponent(
   }
 }
 ```
-理想情况下，通过`mountLazyComponent`方法执行`Promise`对象并取到执行结果，即导出的模块内容。然后根据导出的模块内容对应的组件类型进行不同的处理，最终得到创建的组件对应的子`fiber`节点。  
+理想情况下，在`mountLazyComponent`方法中执行`init`方法想要拿到*import*方法返回的*Promise*对象，即导出的模块内容。然后再根据导出的模块内容对应的组件类型进行不同的处理，最终得到组件对应的子`fiber`节点。  
 
-但是，需要注意在执行`init(payload)`这行代码，即调用`lazyInitializer`方法。我们知道动态加载一个模块有时不可能立即完成，这个过程需要等待一段时间。而在这段时间里当第一次执行`lazyInitializer`方法时`thenable`代表的`Promise`对象状态还是`pending`状态，如果是`pending`状态将会执行`throw payload._result`这行代码。而`payload._result`的值还是`thenable`这个`Promise`对象。  
+<!-- 但是，需要注意在执行`init(payload)`这行代码时，调用的其实是`lazyInitializer`方法。   -->
 
-而源码中使用`throw`抛出的这个`Promise`对象会被当做一个错误处理。这个过程属于`render`阶段，而`render`阶段内所有`throw`抛出的变量，都会被`handleError`这个方法接收。 
+我们知道动态加载一个模块有时不可能立即完成，这个过程需要等待一段时间。而在这段时间里当第一次执行`lazyInitializer`方法时`thenable`代表的`Promise`对象状态还是`pending`状态，如果是`pending`状态将会执行`throw payload._result`这行代码。而`payload._result`的值还是`thenable`这个`Promise`对象。  
+
+而源码中使用`throw`抛出的这个`Promise`对象会被当做一个错误处理。因为以上过程发生在`beginWork`方法中，所以属于`render`阶段。而`render`阶段内所有`throw`抛出的变量，都会被`handleError`这个方法接收。 
 ```js
 function renderRootConcurrent(root: FiberRoot, lanes: Lanes) {
   // ...
@@ -606,7 +616,7 @@ function renderRootConcurrent(root: FiberRoot, lanes: Lanes) {
   // ...
 }
 ```
-`handleError`接收到了`throw`抛出的变量，在内部会调用`throwException`方法中进行进一步的处理。
+`handleError`接收到了`throw`抛出的变量，在内部会调用`throwException`方法中进行处理。
 ```js
 function throwException(
   root: FiberRoot,
@@ -615,7 +625,7 @@ function throwException(
   value: mixed,
   rootRenderLanes: Lanes,
 ) {
-  // 把目标fiber节点标记Incomplete
+  // 把目标fiber节点标记Incomplete flags
   sourceFiber.flags |= Incomplete;
 
   if (
@@ -633,7 +643,7 @@ function throwException(
         workInProgress.tag === SuspenseComponent &&
         shouldCaptureSuspense(workInProgress, hasInvisibleParentBoundary)
       ) {
-        // 找到最近的边界.
+        // 找到最近的边界
         const wakeables: Set<Wakeable> = (workInProgress.updateQueue: any);
         // 如果updateQueue为null
         if (wakeables === null) {
@@ -651,10 +661,10 @@ function throwException(
         // 赋值
         workInProgress.flags |= ShouldCapture;
         workInProgress.lanes = rootRenderLanes;
-        // 憨憨
+        // 返回
         return;
       }
-      // 这个边界在渲染过程中已经被捕获了。遍历到下一个边界。
+      // 这个边界在渲染过程中已经被捕获了，遍历到下一个边界。
       workInProgress = workInProgress.return;
     } while (workInProgress !== null);
   }
@@ -662,7 +672,7 @@ function throwException(
   // ordero code...
 }
 ```
-这个地方的关键在于`attachPingListener`方法：
+这个地方的关键在于调用的`attachPingListener`方法：
 ```js
 function attachPingListener(root: FiberRoot, wakeable: Wakeable, lanes: Lanes) {
   // 绑定一个监听器到这个根节点上
@@ -683,7 +693,7 @@ function attachPingListener(root: FiberRoot, wakeable: Wakeable, lanes: Lanes) {
   }
   // 不存在更新
   if (!threadIDs.has(lanes)) {
-    // Memoize using the thread ID to prevent redundant listeners.
+    // 使用线程ID来防止冗余的侦听器
     threadIDs.add(lanes);
     const ping = pingSuspendedRoot.bind(null, root, wakeable, lanes);
     // 将Promise对象再定义一个then方法，回调函数都为ping，即pingSuspendedRoot
@@ -691,7 +701,7 @@ function attachPingListener(root: FiberRoot, wakeable: Wakeable, lanes: Lanes) {
   }
 }
 ```
-`attachPingListener`函数为`Promise`定义了一个`then`方法，所以当`Promise`的状态改变后会调用回调函数`ping`，对应的就是`pingSuspendedRoot`这个方法。
+`attachPingListener`函数为`Promise`定义了一个`then`方法，所以当`Promise`的状态改变后会调用回调函数`ping`，对应的就是`pingSuspendedRoot`方法。
 ```js
 function pingSuspendedRoot(
   root: FiberRoot,
@@ -705,7 +715,7 @@ function pingSuspendedRoot(
     // 从pingCache中删除这个wakeable
     pingCache.delete(wakeable);
   }
-  // 计算一个过期时间
+  // 获取一个事件时间
   const eventTime = requestEventTime();
   // 标记root根节点为pingedLanes
   markRootPinged(root, pingedLanes, eventTime);
@@ -713,7 +723,7 @@ function pingSuspendedRoot(
   ensureRootIsScheduled(root, eventTime);
 }
 ```
-`pingSuspendedRoot`方法主要的作用是从根节点再次开启调度更新，目的是进行`fallback -> children`的渲染。因为`Promise`对象此时也已经完成了状态变化，所以在`render`阶段的`beginWork`方法，调用`mountLazyComponent`方法执行`init(payload)`就会得到导出的组件并根据组件创建对应的`fiber`节点。之后再正常完成`render`阶段和`commot`阶段。最终页面上的显示效果就从`fallback`切换到了子组件。  
+`pingSuspendedRoot`方法主要的作用是从根节点再次开启调度更新，目的是进行`fallback -> children`的渲染。因为`Promise`对象此时也已经完成了状态变化，所以在`render`阶段的`beginWork`方法中，调用`mountLazyComponent`方法可以正确执行`init(payload)`，从而得到导出的组件并根据组件创建对应的`fiber`节点。之后再顺利完成`render`阶段和`commot`阶段，页面上的显示效果就会从`fallback`切换到子组件。  
 
 其中还有非常重要的一步是如何控制`fallback`的显示。在执行完`throwException`方法后会接着调用`completeUnitOfWork`方法：
 ```js
@@ -800,9 +810,9 @@ function unwindWork(workInProgress: Fiber, renderLanes: Lanes) {
   }
 }
 ```
-在`unwindWork`方法中主要做的工作是为`Suspense`对应的`fiber`节点标记`DidCapture`。而且当`unwindWork`方法返回`SuspenseComponent`对应的`fiber`节点`next`时，会赋值`workInProgress = next`，然后退出`completeUnitOfWork`方法。  
+在`unwindWork`方法中主要做的工作是为`Suspense`对应的`fiber`节点标记`DidCapture flags`。而且当`unwindWork`方法返回`SuspenseComponent`对应的`fiber`节点`next`时，会赋值`workInProgress = next`，然后退出`completeUnitOfWork`方法。  
 
-因为这个过程还在`do while`循环里，所以又会调用`workLoopConcurrent`方法进入`render`阶段，执行`beginWor`k方法处理`workInProgress`。这个`workInProgress`对应的组件类型是`SuspenseComponent`，所以会再次调用`updateSuspenseComponent`方法。  
+因为这个过程发生在`do while`循环里，所以又会调用`workLoopConcurrent`方法然后执行`beginWork`方法处理`workInProgress`。这个`workInProgress`对应的组件类型是`SuspenseComponent`，所以会再次调用`updateSuspenseComponent`方法。  
 
 当执行到这行代码：
 ```js
@@ -846,11 +856,13 @@ if (
 ```
 对于`SuspenseComponent`类型的组件，返回的是`fallback`对应的子`fiber`节点。当完成`render`阶段和`commit`阶段之后，页面上显示的效果就是`LOADING...`。  
 
-等到`Promise`对象完成状态变化，`resolve`了模块内容，然后触发`then`方法的成功回调函数，调用`ensureRootIsScheduled`方法开启调度更新。这次再执行`updateLazyComponent`方法就能顺利执行`init(payload)`，改变`payload.status`和`payload.result`的值并返回`moduleObject.default`，然后创建子组件对应的`fiber`节点。在顺利完成`render`阶段和`commit`阶段后，页面上的显示效果就是导出模块的内容。  
+等到`Promise`对象完成状态变化`resolve`了模块内容，然后触发`then`方法的成功回调函数，调用`ensureRootIsScheduled`方法开启调度更新。
+
+这次再执行`updateLazyComponent`方法就能顺利执行`init(payload)`，改变`payload.status`和`payload.result`的值并返回`moduleObject.default`，然后创建子组件对应的`fiber`节点。在顺利完成`render`阶段和`commit`阶段后，页面上的显示效果就是导出模块的内容。    
 
 ## 总结
 
 Suspense相关流程图：
 <div align=center>
-  <img width="60%" src="../../.vuepress/public/errorBoundary.png" alt="suspenseWorkProcess" />
+  <img width="100%" src="../../.vuepress/public/suspense.png" alt="suspenseWorkProcess" />
 </div>  

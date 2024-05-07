@@ -120,28 +120,29 @@ function requestUpdateLane(fiber: Fiber): Lane {
   // 所以，click事件触发的状态更新，获取的currentUpdatePriority值是DiscreteEventPriority，对应的lane优先级是SyncLane
   // 注：在react事件系统中，合成事件对应的事件优先级是预设好的，可以通过搜索getEventPriority函数查看
   const updateLane: Lane = (getCurrentUpdatePriority(): any);
-  // 如果这次状态更新时通过合成事件触发的，因为合成事件一定存在对应的事件优先级及lane优先级，所以获取到的updateLane是不为NoLane的
-  // NoLane的值是0
+  // 如果这次状态更新是通过合成事件触发的，因为合成事件一定存在对应的事件优先级及lane优先级，所以获取到的updateLane是一定不为NoLane的（NoLane的值是0）
   if (updateLane !== NoLane) {
-    // 最终返回合成事件对应的lane优先级
+    // 返回合成事件对应的lane优先级
     return updateLane;
   }
   
   // 如果updateLane为NoLane，即值为0
-  // 说明此次触发状态更新的方法不属于合成事件
+  // 说明此次触发状态更新的方法不属于合成事件注册的回调函数
   // 例如：setTimeout(() => setNum(1), 1000)
-  // 通过setTimeout设置一个回调函数，在回调函数中触发状态更新，这个回调函数并不属于合成事件，所以currentUpdatePriority就是默认值NoLane，即0
-  // 所以当通过getCurrentEventPriority方法获取这个回调函数的事件类型是undefined的，就会被赋值DefaultEventPriority，即DefaultLane
+  // 通过setTimeout设置一个回调函数，在回调函数中触发状态更新，这个回调函数并不属于合成事件，所以currentUpdatePriority就是默认值NoLane
+  // 所以当通过getCurrentEventPriority方法获取这个回调函数的合成事件类型为undefined，那么会被赋值为DefaultEventPriority，即DefaultLane
   const eventLane: Lane = (getCurrentEventPriority(): any);
   return eventLane;
 }
 ```
-从这段代码可以看到，在不同方法中触发的状态更新，通过`requestUpdateLane`方法获取`lane`的值是不相同的，所以也就决定了即将创建的`update`的优先级。
+从这段代码可以看到，在不同方法中触发的状态更新，通过`requestUpdateLane`方法获取`lane`的值是不相同的，这也就决定了即将创建的`update`的优先级。
 
 ## 插入Update
 
-`updateQueue`相关的代码逻辑都涉及到大量的链表操作。所以，通过具体的例子详细看下在源码中是如何操作`Update`的。
-假设有一个`fiber`在`commit`阶段完成了渲染。该`fiber`上有两个由于优先级较低，所以在上次`render`阶段被跳过而没有处理的`Update`。他们会成为下次更新的`baseUpdate`。
+`updateQueue`相关的代码逻辑都涉及到大量的链表操作。所以，通过具体的例子详细看下在源码中是如何操作`Update`的。  
+
+假设有一个`fiber`在`commit`阶段完成了渲染。该`fiber`上有两个由于优先级较低，所以在上次`render`阶段被跳过而没有处理的`Update`。他们会成为下次更新的`baseUpdate`。  
+
 我们称其为*u1*和*u2*，其中`u1.next === u2`。
 ```js
 fiber.updateQueue.firstBaseUpdate === u1;
@@ -175,7 +176,7 @@ u3.next === u4;
 ```js
 fiber.updateQueue.shared.pending: u4 --> u3
                                    ▲     |
-                                   └  ┘
+                                   └ --- ┘
 ```
 `shared.pending`会保证始终指向最后一个插入的`update`。
 更新调度完成之后会进入`render`阶段。
@@ -183,18 +184,21 @@ fiber.updateQueue.shared.pending: u4 --> u3
 ```js
 fiber.updateQueue.baseUpdate: u1 -> u2 -> u3 -> u4
 ```
-接下来遍历`updateQueue.baseQueue`链表，以`fiber.updateQueue.baseState`为初始的`state`，然后以此与遍历到的每个`Update`计算并产生新的`state`。
+接下来遍历`updateQueue.baseQueue`链表，以`fiber.updateQueue.baseState`为初始的`state`，然后依次与遍历到的每个`Update`计算并产生新的`state`。
 在遍历时如果有优先级较低的`Update`会被**跳过**。  
 
-当遍历完成后获取的`state`，就是该`Fiber`节点在本次更新的`state`，被称为`memoizedState`。  
+当对足够优先级的update完成遍历后得到的`state`，就是该`Fiber`节点在本次更新的`state`，被称为`memoizedState`。  
 
-`state`的变化在`render`阶段产生与上次更新不同的`JSX`对象，通过`diff算法`会产生`effectTag`，表示该`Fiber`节点需要进行更新，最终通过`commit`阶段渲染到页面上。  
+`state`的变化在`render`阶段产生与上次更新不同的`JSX`对象，通过`diff算法`会产生`flags`，表示该`Fiber`节点需要进行更新，最终通过`commit`阶段渲染到页面上。  
 
 在`layout`阶段之后，完成`current`指针的切换，`workInProgress Fiber`树就会变为`current Fiber`树，整个更新流程结束。
 
 ## 计算Update
 
-如果在一个组件中存在两种触发状态更新的方式，一个状态更新负责修改主题的颜色，一个状态更新负责修改输入框的内容。其中修改主体颜色更新先触发，随后又触发了一个修改输入框内容的更新。我们将修改颜色的`Update`称为*u1*，修改输入框的`Update`称为*u2*。
+如果在一个组件中存在两种触发状态更新的方式，一个状态更新负责修改主题的颜色，一个状态更新负责修改输入框的内容。
+
+其中修改主体颜色更新先触发，随后又触发了一个修改输入框内容的更新。我们将修改颜色的`Update`称为*u1*，修改输入框的`Update`称为*u2*。
+
 其中*u1*先触发，就会先进入`render`阶段，但本身类似于定时器触发的更新，所以优先级比较低。此时：
 ```js
 updateQueue = {
@@ -240,9 +244,9 @@ updateQueue = {
     effects: null
 }
 ```
-随后会进入到从`baseUpdate`开始遍历计算`update`，当遍历到*u1*时，由于其优先级不足，所以会被跳过，转而遍历*u2*。  
+随后会从`baseUpdate`开始遍历和计算`update`。当遍历到*u1*时，由于其优先级不足，所以会被跳过，然后遍历到*u2*。  
 
-但由于`update`之间可能有**依赖关系**，所以被跳过的`update`及其之后**所有**的`update`都会成为下次更新的`baseUpdate`（即u1 -- u2）。  
+但由于`update`之间可能存在**依赖关系**，所以被跳过的`update`及其之后**所有**的`update`都会成为下次更新的`baseUpdate`（即u1 -- u2）。  
 
 当u2完成`render - commit`阶段，此时：
 ```js
@@ -259,8 +263,9 @@ updateQueue = {
     effects: null
 }
 ```
-在`commit`阶段的末尾会再调度一次更新，在该次更新中会基于`baseState`中`firstBaseUpdate`保存的*u1开*启一次新的`render`阶段。
-在经过两次计算`update`之后的结果如下：
+在`commit`阶段的末尾会再调度一次更新，在该次更新中会基于`baseState`中`firstBaseUpdate`保存的*u1开*启一次新的`render`阶段。  
+
+在经过两次计算`update`之后得到的结果如下：
 ```js
 updateQueue = {
     baseState: {
@@ -305,7 +310,7 @@ function enqueueUpdate<State>(
   // 取到updateQueue队列
   const updateQueue = fiber.updateQueue;
   if (updateQueue === null) {
-    // 当该Fiber被卸载时，会提前退出函数.
+    // 当前Fiber被卸载时，会提前退出函数.
     return;
   }
   // 取到sharedQueue
@@ -325,10 +330,10 @@ function enqueueUpdate<State>(
       // shared.pending始终指向该链表最后一个update，那么shared.pending.next就是指向该链表第一个update
       // 因为当前这个update即将成为该链表的最后一个update，所以它的指针需要指向该链表的第一个update
       update.next = pending.next;
-      // 当插入一个updat时，就需要将它连接到最后一个update后面，即pending.next = update。让这个update称为该链表最后一个update
+      // 当插入一个updat时，就需要将它连接到最后一个update后面，即pending.next = update。让这个update成为该链表最后一个update
       pending.next = update;
     }
-    // shared.pending始终指向该链表最后一个update，也就是当前的update
+    // shared.pending始终指向该链表最后一个update，也就是当前插入的update
     sharedQueue.pending = update;
   }
 }
@@ -346,7 +351,7 @@ sharedQueue: 4 -> 1 -> 2 -> 3 -> 4
 4.next = 5; // 4 -> 5
 // 这样就完成了update的插入操作
 sharedQueue: 1 -> 2 -> 3 -> 4 -> 5 -> 1
-// 最后再将share.pending赋值为该链表的最后一个update
+// 最后再将share.pending指向该链表的最后一个update
 shared.pending: 5 -> 1 -> 2 -> 3 -> 4 -> 5
 ```
 我们再看一下this.setState这个方法具体这个哪些工作。
@@ -364,11 +369,11 @@ Component.prototype.setState = function(partialState, callback) {
   this.updater.enqueueSetState(this, partialState, callback, 'setState');
 };
 
-// 实际进行工作的方法
+// 实际执行工作的方法
 enqueueSetState(inst, payload, callback) {
-    // 获取fiber节点
+    // 获取fiber节点
     const fiber = getInstance(inst);
-    // 获取过期时间
+    // 获取触发事件的时间
     const eventTime = requestEventTime();
     // 获取优先级
     const lane = requestUpdateLane(fiber);
@@ -394,7 +399,7 @@ enqueueSetState(inst, payload, callback) {
 2. 将`update`插入到`updateQueue`中
 3. 开启一次状态更新流程
 
-对于产生的`update，react`是如何进行计算的？  
+对于产生的`update`，`react`是如何进行计算的？  
 
 计算`update`的工作是在`beginWork`方法中进行的，通过入口函数`updateClassComponent`间接调用`processCommitUpdate`完成`update`的计算工作。
 ```js
@@ -416,28 +421,28 @@ function processUpdateQueue<State>(
 
   // 获取shared.pending
   let pendingQueue = queue.shared.pending;
-  // 存在需要计算的update
+  // 如果存在需要计算的update
   if (pendingQueue !== null) {
     // 先重置shared.pending
     queue.shared.pending = null;
 
-    // 剪开shared.pending上的环状链表
+    // 准备剪开shared.pending上的环状链表
     // 取到shared.pending上最后一个update
     const lastPendingUpdate = pendingQueue;
      // 取到shared.pending上第一个update
     const firstPendingUpdate = lastPendingUpdate.next;
-    // 剪开环，即将lastPendingUpdate.next置null，这样最后一个update就不再指向第一个update了，由此变成了一条单项链表
+    // 剪开环，即将lastPendingUpdate.next置null，这样最后一个update就不再指向第一个update了，由此变成了一条单向链表
     lastPendingUpdate.next = null;
     // 将等待计算的update连接到baseQueue上
-    // 如果最后一个基础update为null，说明当前还没有baseUpdate
+    // 如果最后一个baseUpdate为null，说明当前还没有baseUpdate
     if (lastBaseUpdate === null) {
       // 则将第一个等待计算的update作为第一个baseUpdate
       firstBaseUpdate = firstPendingUpdate;
     } else {
-      // 否则，说明当前存在基础update，需要将等待计算的update链表连接到最后一个基础update后面
+      // 否则，说明当前存在baseUpdate，需要将等待计算的update链表连接到最后一个baseUpdate后面
       lastBaseUpdate.next = firstPendingUpdate;
     }
-    // 将最后一个等待计算的update作为最后一个基础update
+    // 将最后一个等待计算的update作为最后一个baseUpdate
     lastBaseUpdate = lastPendingUpdate;
 
     // 获取到workInProgress Fiber节点通过alternate连接的current Fiber节点
@@ -449,14 +454,18 @@ function processUpdateQueue<State>(
       const currentQueue: UpdateQueue<State> = (current.updateQueue: any);
       // 获取到current上的最后一个baseUpdate
       const currentLastBaseUpdate = currentQueue.lastBaseUpdate;
-      // 当current上最后一个baseUpdate不等于workInProgress上最后一个基础update，说明存在更新
+      // 当current上最后一个baseUpdate不等于workInProgress上最后一个baseUpdate，说明存在更新
       if (currentLastBaseUpdate !== lastBaseUpdate) {
-        // 将shared.pending这条等待计算的链表同时连接到current的baseUpdate上，目的是保存这条链表
+        // 将shared.pending这条等待计算的链表同时连接到current fiber的baseUpdate上，目的是保存这条链表
         if (currentLastBaseUpdate === null) {
+          // 如果current fiber上最后一个baseUpdate为null
+          // 则说明current fiber上不存在baseUpdate，所以直接赋值current fiber的第一个baseUpdate为第一个等待计算的update
           currentQueue.firstBaseUpdate = firstPendingUpdate;
         } else {
+          // 否则，说明current fiber上存在baseUpdate，则将等待计算的update链表连接到最后一个baseUpdate后面
           currentLastBaseUpdate.next = firstPendingUpdate;
         }
+        // 将最后一个等待计算的update作为最后一个baseUpdate 
         currentQueue.lastBaseUpdate = lastPendingUpdate;
       }
     }
@@ -478,7 +487,8 @@ function processUpdateQueue<State>(
     do {
       const updateLane = update.lane;
       const updateEventTime = update.eventTime;
-      //  当前这个update，因为优先级不足，而需要被跳过，则将这个update复制一份，并保存到baseUpdate上，作为下次计算update时的baseUpdate
+      // 如果当前这个update，因为优先级不足，而需要被跳过
+      // 则将这个update复制一份，并保存到baseUpdate上，作为下次计算update时的baseUpdate
       if (!isSubsetOfLanes(renderLanes, updateLane)) {
         // 复制这个update
         const clone: Update<State> = {
@@ -492,19 +502,23 @@ function processUpdateQueue<State>(
         };
         // 将复制的update连接到newBaseUpdate上
         if (newLastBaseUpdate === null) {
+          // 如果不存在newLastBaseUpdate，说明当前这个复制的update是第一个被跳过的update
+          // 所以赋值newFirstBaseUpdate和newLastBaseUpdate
           newFirstBaseUpdate = newLastBaseUpdate = clone;
           // 当下次计算这个被跳过的update时，它的baseState是基于被跳过的update对应的当前的newState计算的
+          // 所以要将newState保存到newBaseState中，作为下次计算的baseState
           newBaseState = newState;
         } else {
+          // 存在newLastBaseUpdate，那就把赋值的update连接到baseUpdate链表，并作为最后一个baseUpdate
           newLastBaseUpdate = newLastBaseUpdate.next = clone;
         }
         // 合并优先级
         newLanes = mergeLanes(newLanes, updateLane);
       } else {
-        // 当update存在足够的优先级，计算它
+        // 当update存在足够的优先级，就需要计算这个update
 
         // **保证状态依赖的连续性**
-        // 当newLastBaseUpdate不为空，说明存在被跳过的update，那么当下次计算这个被跳过的update时需要将这个update之后的所有update都进行计算
+        // 当newLastBaseUpdate不为空，说明存在被跳过的update，那么当下次计算这个被跳过的update时是需要将这个update之后的所有的update都进行计算（尽管有些update已经被计算过了）
         // 所以此时会收集被跳过update之后连续的所有update
         if (newLastBaseUpdate !== null) {
           const clone: Update<State> = {
@@ -523,7 +537,7 @@ function processUpdateQueue<State>(
         // 计算这个update
         // 大致的流程：update.payload如果是函数，则执行它，将它的结果作为partialState
         // update.payload不是函数，则它作为partialState
-        // 最后this.state和partialState使用Object.assign浅合并的结果作为函数的返回值
+        // 最后this.state和partialState使用Object.assign浅合并的结果作为getStateFromUpdate方法的返回值
         newState = getStateFromUpdate(
           workInProgress,
           queue,
@@ -534,14 +548,16 @@ function processUpdateQueue<State>(
         );
         // 获取update中callback
         const callback = update.callback;
-        // 当存在这个callback属性，说明存在自定义的回调函数
+        // 当存在callback属性，说明存在自定义的回调函数
         if (
           callback !== null &&
           update.lane !== NoLane
         ) {
+          // 为fiber赋值Callback flags
           workInProgress.flags |= Callback;
+          // 取到effects回调函数数组
           const effects = queue.effects;
-          // 将这个回调函数保存到updateQueue.effects数组中
+          // 将这个回调函数保存到updateQueue.effects数组中（最终在layout阶段对ClassComponent会调用commitUpdateQueue方法遍历effects数组依次执行这些回调函数）
           if (effects === null) {
             queue.effects = [update];
           } else {
@@ -567,7 +583,7 @@ function processUpdateQueue<State>(
           // })
           // 外层的this.setState触发了一次状态更新，创建了一个update
           // 当在计算这update时，内部又触发一次状态更新，所以又会创建一个update
-          // 而这个update就会被插入到pendingQueue中，仍然需要计算
+          // 而这个update也会被插入到pendingQueue中，仍然需要计算
 
           // 执行的操作依然是把pendingQueue上保存的环状链表剪开，并连接到baseUpdate上
           const lastPendingUpdate = pendingQueue;
@@ -581,19 +597,19 @@ function processUpdateQueue<State>(
         }
       }
     } while (true);
-    // 如果newLastBaseUpdate为null，表示不存在被跳过的update
+    // 如果newLastBaseUpdate为null，说明不存在被跳过的update
     if (newLastBaseUpdate === null) {
       // 则新的baseState的值就是最终计算得出的state的值
       newBaseState = newState;
     }
     // 更新baseState
     queue.baseState = ((newBaseState: any): State);
-    // 最终被跳过的update会再次赋值给baseUpdate，等到下次计算这些update
+    // 最终被跳过的update会再次赋值给baseUpdate，等到下次再计算这些update
     queue.firstBaseUpdate = newFirstBaseUpdate;
     queue.lastBaseUpdate = newLastBaseUpdate;
 
     workInProgress.lanes = newLanes;
-    // 所以，最后计算出的新的state，会保存在fiber.memoizedState属性上
+    // 最后计算出的新的state，会保存在fiber.memoizedState属性上
     workInProgress.memoizedState = newState;
   }
 }
@@ -628,14 +644,14 @@ function updateClassInstance(
   return ...
 }
 ```
-从这段代码可以看到，通过计算`update`得出的`newState`最终会被赋值给实例的`state`，这样当我们在`ClassComponent`当中使用`this.state`就可以得到新的`state`了。
+从这段代码可以看到，通过计算`update`得出的`newState`最终会被赋值给实例的`state`，这样当我们在`ClassComponent`当中使用`this.state`是可以得到最新的`state`。
 
 ## 保证Update不丢失
 
-从`updateQueue`的工作流程中可以看到，`render`阶段可能被终端，那是如何保证`updateQueue`中保存的`update`不丢失的呢？  
+从`updateQueue`的工作流程中可以看到，`render`阶段可能被中断，这样的话该如何保证`updateQueue`中保存的`update`不丢失的呢？  
 
 在`render`阶段，`shared.pending`的环会被剪开并连接在`updateQueue.lastBaseUpdate`后面。同时，也会通过`workInProgress.alternate`取到`current`，再连接到`current updateQueue.lastBaseUpdate`后面。  
-当`render`阶段被中断后重新开始时，会基于`current updateQueue`克隆出`workInProgress updateQueue`。由于`current updateQueue.lastBaseUpdate`已经保存了上一次的`update`，所以不会丢失。  
+当`render`阶段被中断后重新开始时，会基于`current updateQueue`克隆出`workInProgress updateQueue`。由于`current updateQueue.lastBaseUpdate`已经保存了上一次的`update`，所以`update`是不会丢失的。  
 
 当`commit`阶段完成渲染，由于`workInProgress updateQueue.lastBaseUpdate`中保存了上一次的`update`，所以`workInProgress Fiber`树变成`current Fiber`树后也不会造成`Update`的丢失。  
 
@@ -644,6 +660,7 @@ function updateClassInstance(
 ## 保证状态依赖的连续性
 
 当某个`update`由于优先级较低而被跳过时，保存在`baseUpdate`中的不仅是该`update`，还包括链表中该`update`之后所有的`update`。  
+
 所谓**状态依赖**是指当前触发的状态更新需要依靠前一个触发的状态更新的结果。比如：
 ```js
 // 先触发了优先级较低的u1
@@ -655,11 +672,11 @@ this.setState((prevState) => ({
     double: prevState.num * 2
 }))
 ```
-在这个例子中，存在两次状态更新，*u2*需要获取*u1*的`state.num`值来计算此次修改的`double`的值。每当通过`this.setState`第一个参数使用函数的形式时传递`state`参数，通常属于`状态依赖`。这种情况中前一个状态更新结果的正确与否就决定下一个状态更新的结果是否是正确的。  
+在这个例子中，存在两次状态更新，*u2*需要获取*u1*的`state.num`值来计算此次修改的`double`的值。每当通过`this.setState`第一个参数使用函数的形式并传递`state`参数，这通常就属于`状态依赖`。这种情况中前一个状态更新结果的正确与否就决定下一个状态更新的结果是否是正确的。  
 
-当第一次计算`update`时，*u1*由于优先级不足被跳过了，而计算了第二个优先级较高的*u2*。虽然直接计算*u2*得出的结果肯定不是正确的，但是也只会作为中间状态存在。  
+当第一次计算`update`时，*u1*由于优先级不足被跳过了，而计算了第二个优先级较高的*u2*。虽然直接计算*u2*得出的结果一定不是正确的，但是这种情况也只会作为中间状态短暂的存在。  
 
-等到第二次计算`update`时，就会计算被跳过的*u1*和它之后的**所有**`update`（也就是`u1 -- u2`的顺序），而得出具有正确状态依赖关系的的`state`值作为最终的计算结果。
+等到第二次计算`update`时，就会计算被跳过的*u1*和它之后的**所有**`update`（也就是`u1 -- u2`的顺序），而得出具有正确状态依赖关系的的`state`值作为最终的计算结果。  
 
 对应的的代码部分可以查看上面代码中*保证状态依赖的连续性*的部分。  
 

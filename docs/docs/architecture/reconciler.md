@@ -389,7 +389,7 @@ function ChildReconciler(shouldTrackSideEffects) { // shouldTrackSideEffects是�
 
 `reconcileChildFibers`方法的目的是用来创建`Fiber`节点，创建的过程也会区别是`mount`或`update`。`mount`的话就直接根据`JSX`对象创建对应的`Fiber`节点就可以了，但是`update`就需要通过`diff`算法来判断原`Fiber`节点是否可以复用，可以复用的话会复用原`Fiber`节点，不可以复用的话则会删除掉原`Fiber`节点然后再根据`JSX`对象创建对应的`Fiber`节点。因为`reconcileChildFibers`函数内部代码量比较多，所以会在diff算法中介绍。  
 
-调用`reconcileChildFibers`方法创建的`Fiber`节点一般都会被打上相应的`effectTag`，这个`effectTag`表示该`Fiber`节点对应的`DOM`节点需要执行怎样的操作，包括*插入*、*更新*或*删除*。当`mount`时，因为是首屏渲染，所以在此时创建的`Fiber`节点都会被标记为`Placement`，表示该`Fiber`节点对应的`DOM`节点需要插入到页面中。在`update`时，当一个`Fiber`节点的属性变化了，就会为该`Fiber`节点标记为`Update`，表示该`Fiber`节点对应的`DOM`节点需要进行更新。  
+调用`reconcileChildFibers`方法创建的`Fiber`节点一般都会被标记相应的`flags`，这个`flags`表示该`Fiber`节点对应的`DOM`节点需要执行怎样的操作，包括*插入*、*更新*或*删除*。当`mount`时，因为是首屏渲染，所以在此时创建的`Fiber`节点都会被标记为`Placement`，表示该`Fiber`节点对应的`DOM`节点需要插入到页面中。在`update`时，当一个`Fiber`节点的属性变化了，就会为该`Fiber`节点标记为`Update`，表示该`Fiber`节点对应的`DOM`节点需要进行更新。  
 ```js
 // effecTag被定义为32个二进制位
 // DOM需要插入到页面中
@@ -415,7 +415,7 @@ function placeSingleChild(newFiber: Fiber): Fiber {
 ```
 以上这些工作都属于`render`阶段，而`render`阶段的工作是在内存中进行的，当工作结束后会通知`Renderer`需要执行的`DOM`操作。要执行`DOM`操作的具体类型就保存在`fiber.flags`中。  
 
-虽然，`beginWork`方法内部涉及到的代码很多，但是主要的工作流程是比较清晰的。根据`workInProgres.tag`的不同创建对应的`Fiber`节点，且只会创建并初始化第一个子`Fiber`节点，并为这个`Fiber`节点标记`effectTag`，随后返回这个`Fiber`节点作为本次`beginWork`方法的返回值，并作为下次`performUnitOfWork`方法的`workInProgress`参数。
+虽然，`beginWork`方法内部涉及到的代码很多，但是主要的工作流程是比较清晰的。根据`workInProgres.tag`的不同创建对应的`Fiber`节点，且只会创建并初始化第一个子`Fiber`节点，并为这个`Fiber`节点标记`flags`，随后返回这个`Fiber`节点作为本次`beginWork`方法的返回值，并作为下次`performUnitOfWork`方法的`workInProgress`参数。
 
 ## completeWork
 
@@ -529,7 +529,7 @@ function completeWork(
       if (current && workInProgress.stateNode != null) {
         // update
         const oldText = current.memoizedProps;
-        // 为当前Fiber节点打上Update effectTag，表示需要更新文本节点
+        // 为当前Fiber节点打上Update flags，表示需要更新文本节点
         updateHostText(current, workInProgress, oldText, newText);
       } else {
         // mount

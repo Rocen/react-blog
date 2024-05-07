@@ -60,7 +60,7 @@ function commitBeforeMutationEffectsOnFiber(finishedWork: Fiber) {
 function commitMutationEffectsOnFiber(finishedWork: Fiber, root: FiberRoot) {
   // 获取flags
   const flags = finishedWork.flags;
-  // 根据ContentReset effectTag重置文本节点
+  // 根据ContentReset flags重置文本节点
   if (flags & ContentReset) {
     commitResetTextContent(finishedWork);
   }
@@ -73,7 +73,7 @@ function commitMutationEffectsOnFiber(finishedWork: Fiber, root: FiberRoot) {
     }
   }
 
-  // 根据effectTag分别处理
+  // 根据flags分别处理
   // 插入或更新
   const primaryFlags = flags & (Placement | Update | Hydrating);
   switch (primaryFlags) {
@@ -104,14 +104,14 @@ function commitMutationEffectsOnFiber(finishedWork: Fiber, root: FiberRoot) {
 }
 ```
 `commitMutationEffects`函数主要做了三个工作：
-+ 根据`ContentReset effectTag`重置文本节点
++ 根据`ContentReset flags`重置文本节点
 + 更新`ref`
-+ 根据`effectTag`分别做不同的处理（`Placement` | `Update`）  
++ 根据`flags`分别做不同的处理（`Placement` | `Update`）  
 
 其中还包括`Hydrating`作为服务端渲染相关，就不需要关注了。
 
 ### Placement
-当`Fiber.flags`包含`Placement effectTag`，则意味着该`Fiber`节点对应的`DOM`节点需要插入到页面中。  
+当`Fiber.flags`包含`Placement flags`，则意味着该`Fiber`节点对应的`DOM`节点需要插入到页面中。  
 调用的方法为`commitPlacement`，具体代码：
 ```js
 function commitPlacement(finishedWork: Fiber): void {
@@ -146,7 +146,7 @@ function commitPlacement(finishedWork: Fiber): void {
       break;
     default:
   }
-  // 当该节点包含ContentReset effectTag，则重置该文本节点
+  // 当该节点包含ContentReset flags，则重置该文本节点
   if (parentFiber.flags & ContentReset) {
     resetTextContent(parent);
     parentFiber.flags &= ~ContentReset;
@@ -209,14 +209,14 @@ abecdf
 ```
 同级存在以上5个`Fiber`节点，字母代表每个`Fiber`节点的`key`和`DOM`节点的文本值。  
 
-可以看到在更新前后*c*节点和*d*节点进行了位置的移动，都移到了*e*节点的后面，*f*节点的前面。那么通过`diff`算法，会将*c*节点和*d*节点标记移动，这个标记指为`Fiber`节点标记`Placement effectTag`，就说明需要对*c*节点和*d*节点执行插入操作。如果只存在`appendChild`方法，通过*c*节点和*d*节点寻找到它们的父级节点，然后调用父级节点的`appendChild`方法，完成插入操作的顺序就变成了*abefcd*，显然结果是不正确的，混乱了节点移动后的顺序。  
+可以看到在更新前后*c*节点和*d*节点进行了位置的移动，都移到了*e*节点的后面，*f*节点的前面。那么通过`diff`算法，会将*c*节点和*d*节点标记移动，这个标记指为`Fiber`节点标记`Placement flags`，就说明需要对*c*节点和*d*节点执行插入操作。如果只存在`appendChild`方法，通过*c*节点和*d*节点寻找到它们的父级节点，然后调用父级节点的`appendChild`方法，完成插入操作的顺序就变成了*abefcd*，显然结果是不正确的，混乱了节点移动后的顺序。  
 
 相反，如果使用`insertBefore`方法就可以在大多数情况下避免顺序的错误。使用`insertBefore`方法需要寻找当前`Fiber`节点的下一个兄弟`Fiber`节点，*c*节点的兄弟节点是*d*，d节点的兄弟节点是*f*。那么通过`insertBefore`方法，*c*节点插入到*d*节点的前面，再将*d*节点插入到*f*节点的前面，最终节点的顺序就是正确的了。  
 
 具体`diff`算法的介绍可以看[这篇](../implement/diff.md)文章。
 
 ### Update
-当`Fiber`节点含有`Update effectTag`，意味着该`Fiber`节点需要更新。调用的方法是`commitWork`，它会根据`Fiber.tag`分别处理。
+当`Fiber`节点含有`Update flags`，意味着该`Fiber`节点需要更新。调用的方法是`commitWork`，它会根据`Fiber.tag`分别处理。
 ```js
 // 简化后
 function commitWork(current: Fiber | null, finishedWork: Fiber): void {
@@ -312,7 +312,7 @@ function updateDOMProperties(
 }
 ```
 ### Deletion
-在稍早一些版本中，也会通过`commitMutationEffectsOnFiber`方法对于`Fiber`节点的e`ffectTag`进行判断，是否包含`Deletion effectTag`，如果包含的话表示需要将该`Fiber`节点对应的`DOM`节点从页面中删除，调用的方法为`commitDeletion`。  
+在稍早一些版本中，也会通过`commitMutationEffectsOnFiber`方法对于`Fiber`节点的e`ffectTag`进行判断，是否包含`Deletion flags`，如果包含的话表示需要将该`Fiber`节点对应的`DOM`节点从页面中删除，调用的方法为`commitDeletion`。  
 
 但是在17版本中，对于删除节点的逻辑做了调整。通过`diff`算法计算得出需要删除的节点会调用`deleteChild`或`deleteRemainningChild`方法，将需要删除的`Fiber`节点保存在该父级`Fiber`节点的`deletions`属性中，这个属性的数据结构是一个数组。并同时为该父级`Fiber`节点执行按位或 `returnFiber.flags |= ChildDeletion` ，表示该`Fiber`节点存在需要删除的子`Fiber`节点。  
 
@@ -486,9 +486,9 @@ root.current = finishedWork;
 + 对于`ClassComponent`，调用`getSnapShotBeforeUpdate`生命周期函数  
 
 `mutation`阶段主要做了三个工作：
-+ 根据`ContentReset effectTag`重置文本节点
++ 根据`ContentReset flags`重置文本节点
 + 更新`ref`
-+ 根据`effectTag`分别做不同的处理，包括：执行`DOM`节点的插入，更新`DOM`节点的属性，删除`DOM`节点
++ 根据`flags`分别做不同的处理，包括：执行`DOM`节点的插入，更新`DOM`节点的属性，删除`DOM`节点
 
 `layout`阶段主要做了三个工作：
 + 根据`fiber.tag`分别做不同的处理，对于`FunctionComponent`，调用`useLayoutEffect`的回调函数，对于`ClassComponent`，判断`current`是否为`null`，`mount`时调用`componentDidMount`，`update`时调用`componentDidUpdate`

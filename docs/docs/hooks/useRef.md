@@ -49,17 +49,17 @@ function createRef(): RefObject {
 
 其中，`ForwardRef`只是将`ref`作为第二个参数传递下去，并不会进入`ref`的工作流程。  
 
-我们知道`HostComponent`在`commit`阶段的`mutation`阶段执行`DOM`操作。所以，对应`ref`的更新也是发生在`mutation`阶段的。而`mutation`阶段执行`DOM`操作的依据是`effectTag`，所以对于`HostComponent`、`ClassComponent`如果包含`ref`属性，那么也会赋值对应的`Ref effectTag`。
+我们知道`HostComponent`在`commit`阶段的`mutation`阶段执行`DOM`操作。所以，对应`ref`的更新也是发生在`mutation`阶段的。而`mutation`阶段执行`DOM`操作的依据是`flags`，所以对于`HostComponent`、`ClassComponent`如果包含`ref`属性，那么也会赋值对应的`Ref flags`。
 ```js
 export const Ref = /*                          */ 0b00000000000000100000000;
 ```
 所以，`ref`的工作流程可以分为两部分：
 + `render`阶段，为含有`ref`属性的`fiber`标记`Ref effectTa`g
-+ `commit`阶段，为包含`Ref effectTag`的`fiber`执行`ref`操作
++ `commit`阶段，为包含`Ref flags`的`fiber`执行`ref`操作
 
 ## render阶段
 
-在`render`阶段的`beginWork`与`completeWork`中有个同名的方法`markRef`。这个方法用于为含有`ref`属性的`fiber`标记`Ref effectTag`。
+在`render`阶段的`beginWork`与`completeWork`中有个同名的方法`markRef`。这个方法用于为含有`ref`属性的`fiber`标记`Ref flags`。
 ```js
 // beginWork中的
 function markRef(current: Fiber | null, workInProgress: Fiber) {
@@ -87,7 +87,7 @@ function markRef(workInProgress: Fiber) {
 在`completeWork`中，有一处使用了`markRef`：
 + `completeWork`中的`HostComponent`类型
 
-组件对应`fiber`被赋值`Ref effectTag`需要满足的条件：
+组件对应`fiber`被赋值`Ref flags`需要满足的条件：
 + 对于`mount`，`workInProgress.ref !== null`，即存在`ref`属性
 + 对于`update`，`current.ref !== workInProgress.ref`，即`ref`属性改变
 
@@ -108,7 +108,7 @@ function commitDetachRef(current: Fiber) {
   }
 }
 ```
-然后，在`mutation`阶段，对于`Deletion effectTag`的`fiber`节点，需要递归它的子树，对子孙`fiber`节点的`ref`执行类似`commitDetachRef`的操作。  
+然后，在`mutation`阶段，对于`Deletion flags`的`fiber`节点，需要递归它的子树，对子孙`fiber`节点的`ref`执行类似`commitDetachRef`的操作。  
 ```js
 function safelyDetachRef(current: Fiber) {
   const ref = current.ref;
@@ -156,4 +156,4 @@ function commitAttachRef(finishedWork: Fiber) {
 
 `ref`的主要工作流程：
 + 对于`FunctionComponent`，`useRef`负责创建并返回一个对象作为`ref`使用
-+ 对于赋值了`ref`属性的`HostComponent`和`ClassComponent`，会在`render`阶段经历标记`Ref effectTag`，`commit阶段`执行重置`ref`和赋值`ref`的操作
++ 对于赋值了`ref`属性的`HostComponent`和`ClassComponent`，会在`render`阶段经历标记`Ref flags`，`commit阶段`执行重置`ref`和赋值`ref`的操作

@@ -133,9 +133,9 @@ render阶段会从应用的根节点`FiberRootNode`开始向下进行深度优�
 2. 对于`ClassComponent`，调用`getSnapShotBeforeUpdate`生命周期函数
 
 `mutation`阶段的主要工作：
-1. 根据`ContentReset effectTag`重置文本节点
+1. 根据`ContentReset flags`重置文本节点
 2. 更新`ref`
-3. 根据`effectTag`分别做不同的处理，包括：执行`DOM`节点的插入，更新`DOM`节点的属性，删除`DOM`节点
+3. 根据`flags`分别做不同的处理，包括：执行`DOM`节点的插入，更新`DOM`节点的属性，删除`DOM`节点
 
 `layout`阶段的主要工作：
 1. 根据`fiber.tag`分别做不同的处理，对于`FunctionComponent`，调用`useLayoutEffect`的回调函数，对于`ClassComponent`，判断`current`是否为`null`，`mount`时调用`componentDidMount`，`update`时调用`componentDidUpdate`

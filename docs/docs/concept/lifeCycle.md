@@ -101,7 +101,7 @@ function mountClassInstance(
   if (typeof instance.componentDidMount === 'function') {
     // 如果存在componentDidMount生命周期函数
     let fiberFlags: Flags = Update;
-    // 为当前Fiber节点标记Update effectTag，表示组件需要更新，在DOM节点挂载后会再调用componentDidMount方法
+    // 为当前Fiber节点标记Update flags，表示组件需要更新，在DOM节点挂载后会再调用componentDidMount方法
     workInProgress.flags |= fiberFlags;
   }
 }
@@ -270,7 +270,7 @@ function updateClassInstance(
         oldState !== current.memoizedState
       ) {
         // 旧props和旧state不相等
-        // 为Fiber节点标记Update effectTag
+        // 为Fiber节点标记Update flags
         workInProgress.flags |= Update;
       }
     }
@@ -281,7 +281,7 @@ function updateClassInstance(
         oldState !== current.memoizedState
       ) {
         // 旧props和旧state不相等
-        // 为Fiber节点标记Snapshot effectTag
+        // 为Fiber节点标记Snapshot flags
         workInProgress.flags |= Snapshot;
       }
     }
@@ -333,11 +333,11 @@ function updateClassInstance(
       }
     }
     if (typeof instance.componentDidUpdate === 'function') {
-      // 为Fiber节点标记Update effectTag
+      // 为Fiber节点标记Update flags
       workInProgress.flags |= Update;
     }
     if (typeof instance.getSnapshotBeforeUpdate === 'function') {
-      // 为Fiber节点标记Snapshot effectTag
+      // 为Fiber节点标记Snapshot flags
       workInProgress.flags |= Snapshot;
     }
   } else {
@@ -348,7 +348,7 @@ function updateClassInstance(
         oldState !== current.memoizedState
       ) {
         // 旧props和旧state不相等
-        // 为Fiber节点标记Update effectTag
+        // 为Fiber节点标记Update flags
         workInProgress.flags |= Update;
       }
     }
@@ -358,7 +358,7 @@ function updateClassInstance(
         oldState !== current.memoizedState
       ) {
         // 旧props和旧state不相等
-        // 为Fiber节点标记Snapshot effectTag
+        // 为Fiber节点标记Snapshot flags
         workInProgress.flags |= Snapshot;
       }
     }

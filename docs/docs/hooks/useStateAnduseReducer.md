@@ -8,7 +8,7 @@
 在与`Hooks`相关的源码中有一个非常重要的概念或者说是变量，就是`dispatcher`。  
 
 在`Hooks`中，组件`mount`时的`hook`与`update`时的`hook`来源于不同的对象，这类对象在源码中被称为`dispatcher`。  
-以下`dispatcher`在源码中是怎么定义：
+以下是`dispatcher`在源码中的定义：
 ```js
 const HooksDispatcherOnMount: Dispatcher = {
   useCallback: mountCallback,
@@ -49,11 +49,11 @@ const ContextOnlyDispatcher: Dispatcher = {
   // ...
 };
 ```
-从这段代码可以看出，`Dispatcher`一共有三种类型，通常对应了三个变量。而从这三个变量的命名应该大致可以猜到他们的用途了。  
+从这段代码可以看出，`Dispatcher`一共有三种类型，通常对应了三个变量。而从这三个变量的命名应该大致可以猜到他们的用途。  
 
 `FunctionComponent`在`mount`时会使用`HooksDispatcherOnMount`中属于`mount`阶段的处理函数，而在`update`时会使用`HooksDispatcherOnUpdate`中属于`update`阶段的处理函数。  
 
-在`FunctionComponent render`前，会根据`FunctionComponent`对应`fiber`的以下条件来区分`mount`和`update`：  
+在`FunctionComponent render`前，会根据`FunctionComponent`对应的`fiber`按如下条件来判断，`FunctionComponent`属于`mount`还是`update`：  
 ```js
 ReactCurrentDispatcher.current =
   current === null || current.memoizedState === null
@@ -62,9 +62,9 @@ ReactCurrentDispatcher.current =
 ```
 `ReactCurrentDispatcher`是一个全局变量，用来保存`mount`和`update`时对应的`dispatcher`。  
 
-其中`current`变量表示的就是`current Fiber`。如果`current === null`就表示当前还没有`current Fiber`，说明此时是`FunctionComponent`的第一次渲染，对应就是`mount`。  
+其中`current`变量表示的就是`current Fiber`。如果`current === null`就表示当前还没有`current Fiber`，说明此时是`FunctionComponent`的第一次渲染，所以就对应`mount`。  
 
-当在`FunctionComponent`中声明了`hooks`，这些`hook`会组成单项链表的结构保存在`fiber.memoizedState`属性上。所以通过`current fiber.memoizedState === null`就可以判断当前这个`Fiber`上还不存在`hook`，所以也是`mount`。  
+当在`FunctionComponent`中声明了`hooks`，这些`hook`会组成单项链表的结构保存在`fiber.memoizedState`属性上。所以通过`current fiber.memoizedState === null`就可以判断当前这个`Fiber`上还不存在`hook`，所以也对应`mount`。  
 
 如果不存在上述两种情况就说明不是`mount`而是`update`。那么就需要使用`update`对应的处理函数了。  
 
@@ -103,7 +103,7 @@ useEffect(() => {
 ```
 `useEffect`因为属于顶层的`hook`，所以在组件渲染时会使用正确的处理函数（`mountEffect`或`updateEffect`）。  
 
-而`useState`被使用在了`useEffect`的回调函数中，在执行组件渲染的时候不会被执行，会跟随`useEffect`的回调函数在`layout`阶段之后再异步执行。等到通过回调函数执行`useState`时，此时全局变量`ReactCurrentDispatcher`的值已经是`ContextOnlyDispatcher`，导致`useState`对应的处理函数就是`throwInvalidHookError`方法。所以在调用`throwInvalidHookError`方法就会抛出异常，来警告开发者`Hooks`的使用方式是不正确的。
+而`useState`被使用在了`useEffect`的回调函数中，在执行组件渲染的时候不会被执行的，而会等到`useEffect`的回调函数在`layout`阶段之后异步执行。所以当执行`useState`的时候，此时的全局变量`ReactCurrentDispatcher`的值已经是`ContextOnlyDispatcher`，导致`useState`对应的处理函数就是`throwInvalidHookError`方法。然后`throwInvalidHookError`方法就会抛出异常，来警告开发者`Hooks`的使用方式是不正确的。
 
 ## Hooks的数据结构
 
@@ -216,7 +216,7 @@ function updateState<S>(
   return updateReducer(basicStateReducer, (initialState: any));
 }
 ```
-由此可见，在`update`时，`useState`其实调用的就是`updateReducer`。
+所以，在`update`时，`useState`其实调用的就是`updateReducer`。
 ```js
 function updateReducer<S, I, A>(
   reducer: (S, A) => S,
@@ -241,9 +241,13 @@ function updateReducer<S, I, A>(
     // baseQueue不为null，说明之前存在被跳过的update
     if (baseQueue !== null) {
       // 将pendingQueue这条环状链表剪开，连接到baseQueue上
+      // 取到baseQueue上第一个update
       const baseFirst = baseQueue.next;
+      // 取到pendingQueue上第一个update
       const pendingFirst = pendingQueue.next;
+      // 将pendingQueue上的update连接到baseQueue上
       baseQueue.next = pendingFirst;
+      // 再将
       pendingQueue.next = baseFirst;
     }
     // 赋值一份baseQueue保存到current fiber上
@@ -435,7 +439,7 @@ function dispatchAction<S, A>(
     eagerState: null, // 特定情况下的优化字段
     next: (null: any), // 指针，指向下一个update，由此形成环状链表
   };
-  // 取到与workInProgress fiber通过alternate属性连接的fiber
+  // 取到与workInProgress fiber通过alternate属性连接的fiber（一般为current fiber）
   const alternate = fiber.alternate;
   if (
     fiber === currentlyRenderingFiber ||
