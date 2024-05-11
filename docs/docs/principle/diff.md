@@ -1,7 +1,7 @@
 ## Diff算法
 
-经过`reconciler`一节有关`beginWork`方法的学习，我们知道对于`update`的组件，会通过`reconcilerChildFibers`方法将当前组件与该组件在上次更新时对应的`Fiber`节点比较（俗称即`diff`算法），将比较的结果生成新的`Fiber`节点。
-在此之前需要明确一下，在某一时刻，一个`DOM`节点最后会存在**4个节点**与它有关：
+经过`reconciler`一节有关`beginWork`方法的学习，我们知道对于`update`的组件，会通过`reconcileChildFibers`方法将当前组件与该组件在上次更新时对应的`Fiber`节点比较（俗称即`diff`算法），将比较的结果生成新的`Fiber`节点。
+在此之前需要明确一下，在某一时刻，一个`DOM`节点最多会存在**4个节点**与它有关：
 ::: tip
 + `current Fiber`，代表在页面中`DOM`节点对应的`Fiber`节点。
 + `workInProgress Fiber`，代表在内存中正在构建的`Fiber`节点。
@@ -54,7 +54,7 @@ function reconcileChildFibers(
             );
         }
     }
-    // 传入的newChild文本类型
+    // 传入的newChild是文本类型
     if (typeof newChild === 'string' || typeof newChild === 'number') {
         return placeSingleChild(
             // 处理单个文本子节点
@@ -102,9 +102,9 @@ function reconcileSingleElement(
           if (
             child.elementType === elementType
           ) {
-            // 如果两者的key和type都相同，代表workInProgress Fiber的创建过程可以复用对应的current Fiberr节点的部分属性
+            // 如果两者的key和type都相同，代表workInProgress Fiber的创建过程可以复用对应的current Fiber节点的部分属性
 
-            // 因为本次是单节点的diff，说明当前只存在一子字节点，所以需要将current Fiber子节点的兄弟节点都标记为删除
+            // 因为本次是单节点的diff，说明当前只存在一个子节点，所以需要将current Fiber子节点的兄弟节点都标记为删除
             deleteRemainingChildren(returnFiber, child.sibling);
             // useFiber方法就是根据current Fiber节点的部分属性，然后创建workInProgress Fiber节点
             const existing = useFiber(child, element.props);
@@ -200,7 +200,7 @@ function reconcileSingleElement(
     newChildren: Array<*>,
     lanes: Lanes,
   ): Fiber | null {
-    // 最后醉卧结果返回的第一个子Fiber节点
+    // 最后结果返回的第一个子Fiber节点
     let resultingFirstChild: Fiber | null = null;
     // 中间变量，负责连接前后两个Fiber节点
     let previousNewFiber: Fiber | null = null;
@@ -412,7 +412,7 @@ function reconcileSingleElement(
 
 如果`oldIndex >= lastPlacedIndex`，说明这两个节点的**相对位置**没有变化，所以可以复用。但是如果`oldIndex < lastPlacedIndex`，则说明这两个节点的**相对位置**产生了变化，所以不可以复用。  
 
-`lastPlacedInde`初始值为*0*，`oldIndex`表示遍历`newChildren`时的可复用节点对应`oldFiber`中节点的位置索引。对于可以复用的情况，将`lastPlacedIndex = oldIndex`。否则，`lastPlacedIndex`的值不变，然后再进行下一次的比较。  
+`lastPlacedIndex`初始值为*0*，`oldIndex`表示遍历`newChildren`时的可复用节点对应`oldFiber`中节点的位置索引。对于可以复用的情况，将`lastPlacedIndex = oldIndex`。否则，`lastPlacedIndex`的值不变，然后再进行下一次的比较。  
 
 如果单凭文字确实很难理解，那通过例子来实际体会一下，其中每个字母代表一个节点，字母的值代表节点的`key`属性  
 demo1：

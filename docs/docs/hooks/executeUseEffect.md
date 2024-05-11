@@ -1,5 +1,5 @@
 ## useEffect的执行
----
+
 React文档对与effect的执行时机描述：
 > 与 componentDidMount、componentDidUpdate 不同的是，在浏览器完成布局与绘制之后，传给 useEffect 的函数会延迟调用。
 > 这使得它适用于许多常见的副作用场景，比如设置订阅和事件处理等情况，因此不应在函数中执行阻塞浏览器更新屏幕的操作。  
@@ -9,7 +9,7 @@ React文档对与effect的执行时机描述：
 因为`useEffect`的触发是**异步执行**的，涉及到的工作流程比较多和分散，所以需要单独成一篇文章介绍。  
 
 ## 调度useEffect
----
+
 调度`useEffect`的时机是在`renderer`阶段的`before mutation`阶段之前，如代码所示：
 ```js
 function commitRootImpl(root, renderPriorityLevel) {
@@ -33,7 +33,7 @@ function commitRootImpl(root, renderPriorityLevel) {
 从这段代码可以看到，在使用`scheduleCallback`方法取调度`flushPassiveEffects`函数之前，会先使用`PassiveMask`标识去判断当前`Fiber`节点或当前`Fiber`节点的子孙`Fiber`树是否存在`useEffect`，如果存在的话，才会进行`useEffect`的调度工作。  
 
 ## 如何异步调度
----
+
 执行`useEffect`的入口函数是`flushPassiveEffects`，具体代码如下：
 ```js
 function flushPassiveEffects(): boolean {
@@ -108,9 +108,38 @@ function commitRootImpl(root, renderPriorityLevel) {
 然后当通过调度执行`flushPassiveEffects`方法时就会正式进入到执行`useEffect`的工作。
 
 ## 执行useEffect
----
-执行`useEffect`的阶段需要根据`commitHookEffectListUnmount`和`commitHookEffectListMount`分别完成*销毁函数*和*回调函数*的执行工作，具体代码如下：
+
+在`commitPassiveUnmountOnFiber`和`commitPassiveMountOnFiber`方法中会分别调用`commitHookEffectListUnmount`和`commitHookEffectListMount`来完成*销毁函数*和*回调函数*的执行工作，具体代码如下：
 ```js
+function commitPassiveMountOnFiber(
+  finishedRoot: FiberRoot,
+  finishedWork: Fiber,
+): void {
+  switch (finishedWork.tag) {
+    case FunctionComponent:
+    case ForwardRef:
+    case SimpleMemoComponent: {
+      commitHookEffectListMount(HookPassive | HookHasEffect, finishedWork);
+      break;
+    }
+  }
+}
+
+function commitPassiveUnmountOnFiber(finishedWork: Fiber): void {
+  switch (finishedWork.tag) {
+    case FunctionComponent:
+    case ForwardRef:
+    case SimpleMemoComponent: {
+      commitHookEffectListUnmount(
+          HookPassive | HookHasEffect,
+          finishedWork,
+          finishedWork.return,
+        );
+      break;
+    }
+  }
+}
+
 function commitHookEffectListUnmount(
   flags: HookFlags,
   finishedWork: Fiber,
@@ -169,10 +198,10 @@ function commitHookEffectListMount(tag: number, finishedWork: Fiber) {
   }
 }
 ```
-从这段代码可以看到`useEffect`的*销毁函数*和*回调函数*的执行代码几乎一致，而且代码逻辑比较清晰易懂。  
+<!-- 从这段代码可以看到`useEffect`的*销毁函数*和*回调函数*的执行代码几乎一致，而且代码逻辑比较清晰易懂。   -->
 
 ## 总结
----
+
 整个`useEffect`的异步调用分为三步：
 + 在`before mutation`阶段之前使用`scheduleCallback`函数调度`flushPassiveEffects`方法
 + `layout`阶段之后，将`root`赋值给`rootWithPendingPassiveEffects`变量
@@ -183,7 +212,7 @@ function commitHookEffectListMount(tag: number, finishedWork: Fiber) {
 与此相对的，`useLayoutEffect`是在`layout`阶段**同步执行**的，所以存在**阻塞浏览器渲染**的风险，应该谨慎使用。  
 
 ## Plus
----
+
 还有要说明的一点是，`useEffect`和`useLayoutEffect`都是通过`commitHookEffectListUnmount`和`commitHookEffectListMount`这两个方法执行各自的*销毁函数*和*回调函数*的。 
 
 既然这两个`hook`调用的都是同一个方法，又是怎么区分当前执行到的`hook`是`useEffect`还是`useLayoutEffect`呢？  
@@ -212,4 +241,4 @@ import {
   Passive as HookPassive,
 } from './ReactHookEffectTags';
 ```
-所以源码内部在用到`useEffect`或`useLayoutEffect`时，会根据`HookPassive`和`HookLayout`这两个*标志位*来进行识别。
+所以源码内部在用到`useEffect`或`useLayoutEffect`时，会根据`HookPassive`和`HookLayout`这两个*标志位*进行判断。
