@@ -42,7 +42,7 @@ function renderRootSync(
 }
 ```
 从这段代码可以看出，在`render阶段`的入口函数`workLoopSync`被包裹在`try catch语句`中来捕获执行过程中可能抛出的错误，一旦有错误抛出就会被`catch`接收到并传递给`handleError`方法来处理这个错误。  
-而`commit阶段`使用的是相同的写法，将`captureCommitPhaseError`方法放在`catch`语句中接收被捕获的错误并做相应的处理。而因为`commit阶段`包括很多子阶段，所以在`commit阶段`的内部会出现很多被`try catch语句`包裹的地方，这些地方都同样使用了`captureCommitPhaseError`方法来处理错误。
+而`commit阶段`使用的是相同的写法，将`captureCommitPhaseError`方法放在`catch`语句中接收被捕获的错误并做相应的处理。而因为`commit阶段`包括很多子阶段，所以在`commit阶段`的内部会出现很多被`try catch`语句包裹的地方，这些地方都同样使用了`captureCommitPhaseError`方法来处理错误。
 ```js
 try {
     // commit阶段调用的方法

@@ -37,14 +37,15 @@ const performWorkUntilDeadline = () => {
     deadline = currentTime + yieldInterval;
     const hasTimeRemaining = true;
 
-    // hasMoreWork表示是否有未完成的task，即任务的暂停
+    // hasMoreWork表示是否有未完成的task，即暂停的任务
     let hasMoreWork = true;
     try {
-        // scheduledHostCallback就是lushWork方法，等价于执行flushWork方法
+        // scheduledHostCallback就是flushWork方法
+        // 下面这行代码等价于执行flushWork方法
         hasMoreWork = scheduledHostCallback(hasTimeRemaining, currentTime);
     } finally {
-        // 如果存在未完成的task，则继续调用
         if (hasMoreWork) {
+            // 如果存在未完成的task，则继续调用schedulePerformWorkUntilDeadline方法
             schedulePerformWorkUntilDeadline();
         } else {
             isMessageLoopRunning = false;
@@ -134,9 +135,9 @@ function unstable_scheduleCallback(priorityLevel, callback, options) {
     if (typeof options === 'object' && options !== null) {
         var delay = options.delay;
         if (typeof delay === 'number' && delay > 0) {
-        startTime = currentTime + delay;
+            startTime = currentTime + delay;
         } else {
-        startTime = currentTime;
+            startTime = currentTime;
         }
     } else {
         // 通常开始时间等于当前时间
@@ -163,7 +164,7 @@ function unstable_scheduleCallback(priorityLevel, callback, options) {
             break;
     }
     // 过期时间
-    // 优先级越高, 过期时间越短，优先级越低,过期时间越长
+    // 优先级越高,过期时间越短,优先级越低,过期时间越长
     var expirationTime = startTime + timeout;
     // 初始化任务
     var newTask = {
@@ -176,10 +177,11 @@ function unstable_scheduleCallback(priorityLevel, callback, options) {
     };
     // 开始时间大于当前时间，说明传入了delay延迟时间，newTask未过期，将newTask保存到timerQueue
     if (startTime > currentTime) {
-        // This is a delayed task.
+        // 这是一个延迟的任务
         newTask.sortIndex = startTime;
+        // 将这个未过期的任务放到未过期队列timerQueue中
         push(timerQueue, newTask);
-        // taskQueue队列中没有过期的任务，并且newTask是timerQueue队列中第一个未过期的任务
+        // 当taskQueue队列中没有过期的任务，并且newTask是timerQueue队列中第一个未过期的任务
         if (peek(taskQueue) === null && newTask === peek(timerQueue)) {
             // 当前是否有正在调度的定时器
             if (isHostTimeoutScheduled) {
@@ -192,8 +194,9 @@ function unstable_scheduleCallback(priorityLevel, callback, options) {
             requestHostTimeout(handleTimeout, startTime - currentTime);
         }
     } else {
-    // 开始时间等于当前时间，说明newTask过期了，将newTask保存到taskQueue
+        // 开始时间小于等于当前时间，说明newTask过期了
         newTask.sortIndex = expirationTime;
+        // 将newTask放到已过期队列taskQueue中
         push(taskQueue, newTask);
         // 当前没有正在调度的回调函数，则最终调用workLoop执行taskQueue中过期的任务
         if (!isHostCallbackScheduled && !isPerformingWork) {
@@ -201,11 +204,11 @@ function unstable_scheduleCallback(priorityLevel, callback, options) {
             requestHostCallback(flushWork);
         }
     }
-
+    // 返回这个新建的任务
     return newTask;
 }
 ```
-这段代码就是`Scheduler`阶段的入口函数`scheduleCallback`。将传入的两个参数`callback`通过`priorityLevel`初始化`开始时间`和`过期时间`。  
+这段代码就是`Scheduler`阶段的入口函数`scheduleCallback`。将传入的第二个参数`callback`通过`priorityLevel`初始化`开始时间`和`过期时间`。  
 
 优先级就对应**任务过期时间的长短**，优先级越高任务**过期的越快**，优先级越低任务**过期的越慢**。然后比较开始时间和当前时间的大小，如果开始时间大于当前时间说明该`task`未过期，未过期的任务就被保存在`timerQueue`（*未过期*任务队列）中。如果开始时间小于等于当前时间说明该`task`过期了，过期的任务被保存在`taskQueue`（*过期*任务队列）中。  
 
@@ -220,16 +223,16 @@ function advanceTimers(currentTime) {
   let timer = peek(timerQueue);
   // 循环读取timerQueue中的任务
   while (timer !== null) {
-    // 这个任务没有callback就
+    // 这个任务不存在callback
     if (timer.callback === null) {
-        // 直接弹出，清除掉
+        // 责直接弹出这个任务，从 timerQueue 中清除掉
         pop(timerQueue);
     } else if (timer.startTime <= currentTime) {
-        // 开始时间小于当前时间，说明过期了 
+        // 开始时间小于当前时间，说明该任务过期了 
         // 从timerQueue中弹出
         pop(timerQueue);
         timer.sortIndex = timer.expirationTime;
-        // 推进taskQueue中
+        // 放到taskQueue中
         push(taskQueue, timer);
     } else {
         // 其他就是未过期的任务
@@ -240,6 +243,7 @@ function advanceTimers(currentTime) {
 }
 ```
 既然已经我们已经了解了操作`timerQueue`的方法，那操作`taskQueue`的方法是什么呢？其实在上文中已经提到过了，就是`workLoop`方法。但是`workLoop`方法会在`flushWork`函数内部调用，所以放在一起看一下。  
+
 如代码所示：
 ```js
 function flushWork(hasTimeRemaining, initialTime) {
@@ -274,14 +278,15 @@ function workLoop(hasTimeRemaining, initialTime) {
     while (
         currentTask !== null
     ) {
-        // task的过期时间是否大于当前时间，并且当前有没有剩余时间 或者 应该让出主线程
+        // task的过期时间是否大于当前时间，并且当前没有剩余时间 或者 应该让出主线程
         if (
             currentTask.expirationTime > currentTime &&
             (!hasTimeRemaining || shouldYieldToHost())
         ) {
+            // 直接退出循环
             break;
         }
-        // 
+        // 获取当前 task 的 callback
         const callback = currentTask.callback;
         // 判断callback的类型
         if (typeof callback === 'function') {
@@ -292,39 +297,44 @@ function workLoop(hasTimeRemaining, initialTime) {
             const didUserCallbackTimeout = currentTask.expirationTime <= currentTime;
             // 执行callback，并获取执行结果
             const continuationCallback = callback(didUserCallbackTimeout);
+            // 重新获取当前时间
             currentTime = getCurrentTime();
             // callback的返回值如果还是一个函数
             if (typeof continuationCallback === 'function') {
-                // 将返回值的函数再赋值给callback，等待继续执行
+                // 将返回值的函数再赋值给callback，等待下次继续执行
                 currentTask.callback = continuationCallback;
             } else {
-            // 如果不是一个函数，通常为null，则说callback明彻底执行完了，将task弹出，清除掉
+            // 如果不是一个函数，通常为null，则说明callback彻底执行完了
                 if (currentTask === peek(taskQueue)) {
+                    // 将 task 从 taskQueue 中弹出
                     pop(taskQueue);
                 }
             }
-            // 继续取出timerQueue即将过期的task
+            // 继续取出 timerQueue 即将过期的 task
             advanceTimers(currentTime);
         } else {
-            // 如果callback不是一个函数则直接清除掉
+            // 如果callback不是一个函数则直接弹出这个 task
             pop(taskQueue);
         }
-        // 重新取出taskQueue中过期的任务，继续执行回调函数
+        // 重新取出 taskQueue 中过期的任务，继续执行回调函数
         currentTask = peek(taskQueue);
     }
-    // 可能存在未执行完的task
+
     if (currentTask !== null) {
+        // currentTask 不为空，说明存在未执行完成的task
         // 返回的true，会赋值给hasMoreTask，将开启新一轮workLoop
         return true;
     } else {
-        // 取出timerQueue中的第一个未过期的任务
+        // currentTask 为空，说明该 task 已经执行完成了
+        // 取出 timerQueue 中的第一个未过期的任务
         const firstTimer = peek(timerQueue);
-        // timerQueue存在未过期的任务
+
         if (firstTimer !== null) {
-            // 设置定时器，到时间执行advanceTimers方法，将未过期的任务放到taskQueue并执行
+            // 如果 timerQueue 存在未过期的任务
+            // 设置定时器，到时间执行 advanceTimers 方法，将未过期的任务放到 taskQueue 并执行
             requestHostTimeout(handleTimeout, firstTimer.startTime - currentTime);
         }
-        // 返回false，表示taskqueue中过期的任务都已经执行完了
+        // 返回false，表示 taskQueue 中过期的任务都已经执行完了
         return false;
     }
 }

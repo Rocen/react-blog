@@ -3,14 +3,14 @@
 `React`官网对于`Transition`的描述：
 > Transitions 是 React 18 引入的一个全新的并发特性。它允许你将标记更新作为一个 transitions，这会告诉 React 它们可以被中断执行，并避免回到已经可见内容的 Suspense 降级方案。
 
-从源码的角度来看这句话的关键在于**“可以被中断执行”**，那么说明使用`useTransition`触发的更新对应的优先级是相对较低的，因为它可以被中断。那么我猜测，最适合它的优先级应该是`DefaultLane`。  
+从源码的角度来看这句话的关键在于**可以被中断执行**，那么说明使用`useTransition`触发的更新对应的优先级是相对较低的，因为它可以被中断。那么我猜测，最适合它的优先级应该是`DefaultLane`。  
 
 `useTransition`的使用方法：
 > const [isPending, startTransition] = useTransition();
 
 返回一个状态值表示过渡任务的等待状态，以及一个启动该过渡任务的函数。  
 
-从使用方法上看，它的返回值对应的数据类型和`useState`是及其相似。`isPending`是一个变量，`startTransition`是一个启动过渡任务的函数。所以可以推测出，在实现上这两个`hook`一定是有所关联的。  
+从使用方法上看，它的返回值对应的数据类型和`useState`是极其相似的。`isPending`是一个变量，`startTransition`是一个启动过渡任务的函数。所以可以推测出，在实现上这两个`hook`一定是有所关联的。  
 
 ## 用途
 
@@ -99,7 +99,7 @@ function startTransition(setPending, callback) {
   }
 }
 ```
-从这段代码可以看到，在`startTransition`至少可能触发三个状态更新，分别为：s`etPending(true)`、`setPending(false)`和`callback()`。因为`setPending`方法是通过`mountState`暴露出来的，所以使用`setPending`就会触发一次状态更新。而`callback`是使用`startTransition`传入的回调函数，在回调函数内部使用了`setCount`，所以也会触发一次状态更新。  
+从这段代码可以看到，在`startTransition`至少可能触发三个状态更新，分别为：`setPending(true)`、`setPending(false)`和`callback()`。因为`setPending`方法是通过`mountState`暴露出来的，所以使用`setPending`就会触发一次状态更新。而`callback`是使用`startTransition`传入的回调函数，在回调函数内部使用了`setCount`，所以也会触发一次状态更新。  
 
 获取`transition`相关的优先级的代码：
 ```js

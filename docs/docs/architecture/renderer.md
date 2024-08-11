@@ -174,7 +174,7 @@ function insertOrAppendPlacementNode(
     const stateNode = node.stateNode;
     // 判断是否存在兄弟Fiber节点
     if (before) {
-      // 存在兄弟Fiber节点，需要调用兄弟DOM节点的insetBefore方法执行插入操作
+      // 存在兄弟Fiber节点，需要调用兄弟DOM节点的insertBefore方法执行插入操作
       insertBefore(parent, stateNode, before);
     } else {
       // 如果不存在兄弟Fiber节点，则调用父级DOM节点的appendChild方法执行插入操作
@@ -312,7 +312,7 @@ function updateDOMProperties(
 }
 ```
 ### Deletion
-在稍早一些版本中，也会通过`commitMutationEffectsOnFiber`方法对于`Fiber`节点的e`ffectTag`进行判断，是否包含`Deletion flags`，如果包含的话表示需要将该`Fiber`节点对应的`DOM`节点从页面中删除，调用的方法为`commitDeletion`。  
+在稍早一些版本中，也会通过`commitMutationEffectsOnFiber`方法对于`Fiber`节点的`effectTag`进行判断，是否包含`Deletion flags`，如果包含的话表示需要将该`Fiber`节点对应的`DOM`节点从页面中删除，调用的方法为`commitDeletion`。  
 
 但是在17版本中，对于删除节点的逻辑做了调整。通过`diff`算法计算得出需要删除的节点会调用`deleteChild`或`deleteRemainningChild`方法，将需要删除的`Fiber`节点保存在该父级`Fiber`节点的`deletions`属性中，这个属性的数据结构是一个数组。并同时为该父级`Fiber`节点执行按位或 `returnFiber.flags |= ChildDeletion` ，表示该`Fiber`节点存在需要删除的子`Fiber`节点。  
 
@@ -419,7 +419,7 @@ function commitLayoutEffectOnFiber(
           }
           // 与类组件执行副作用的情况一样
           // 遍历updateQueue.effects，执行effect.callback函数
-          // 通常指this.setState的第二个参数回到函数，ReactDOM.render的第三个参数回调函数
+          // 通常指this.setState的第二个参数回调函数，ReactDOM.render的第三个参数回调函数
           commitUpdateQueue(finishedWork, updateQueue, instance);
         }
         break;
@@ -452,7 +452,7 @@ function commitLayoutEffectOnFiber(
 
 ## current Fiber树切换
 
-从上文可以看到，`Renderer`阶段的主要工作就是针对`Fiber`节点对应`的DOM`节点的执行具体的操作。  
+从上文可以看到，`Renderer`阶段的主要工作就是针对`Fiber`节点对应的`DOM`节点的执行具体的操作。  
 
 但在`commitRootImpl`函数内执行完`commitLayoutEffects`方法之后，还有两个非常关键的步骤：
 + 调度`useEffect`

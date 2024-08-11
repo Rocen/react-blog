@@ -172,7 +172,7 @@ function bailoutHooks(
 
 最后，`commit`阶段会切换`fiber`树，`current fiber`树变为`workInProgress fiber`树，`workInProgress fiber`树变为`current fiber`树。  
 
-再到第三次点击调用`dispatchAction`方法时，`fiber`对应的`workInProgress fiber`是不存在更新。`alternate`对应的`current fiber`也是不存在更新，所以此次执行会命中`eagerState`的优化策略，不会开启状态更新，从而达到性能优化的目的。
+再到第三次点击调用`dispatchAction`方法时，`fiber`对应的`workInProgress fiber`不存在更新。`alternate`对应的`current fiber`也不存在更新，所以此次执行会命中`eagerState`的优化策略，不会开启状态更新，从而达到性能优化的目的。
 
 <!-- 但是，重点在`alternate.lanes`是存在更新标记的，即`alternate.lanes !== 0`。所以第二次点击事件触发的状态更新，尽管新旧`state`的值没有变化，但依然会进行组件的`render`，不会命中到`eagerState`的优化逻辑。  
 

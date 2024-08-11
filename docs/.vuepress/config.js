@@ -4,17 +4,23 @@ module.exports = {
             'link',
             {
                 rel: 'icon', 
-                href: 'faviocn.ico'
+                href: '/public/faviocn.ico'
             }
         ]
     ],
-    title: 'React',
+    title: 'React笔记',
     description: 'React',
     base: '/react-blog/',
     themeConfig: {
         nav: [
             {
-                text: '🆒 github',
+                text: 'nextjs博客',
+                link: 'https://next-blog.irocen.top',
+                icon: 'reco-blog',
+                target: '_blank'
+            },
+            {
+                text: 'github',
                 link: 'https://github.com/Rocen',
                 icon: 'reco-github',
                 target:'_blank'

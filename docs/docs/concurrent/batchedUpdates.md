@@ -40,7 +40,7 @@ const func = () => {
 ```js
 // 简化后的代码
 function ensureRootIsScheduled(root: FiberRoot, currentTime: number) {
-  // 取到当前root正在进行的回调
+  // 取到当前root正在执行的任务，即 task
   const existingCallbackNode = root.callbackNode;
   // 取到当前root上最高优先级的lanes
   const nextLanes = getNextLanes(
@@ -51,7 +51,7 @@ function ensureRootIsScheduled(root: FiberRoot, currentTime: number) {
   if (nextLanes === NoLanes) {
     // 说明当前执行的回调内没有触发状态更新
     if (existingCallbackNode !== null) {
-      // 直接取消正在执行的回调
+      // 直接取消正在执行的task
       cancelCallback(existingCallbackNode);
     }
     // 重置全局变量，并退出
@@ -61,7 +61,7 @@ function ensureRootIsScheduled(root: FiberRoot, currentTime: number) {
   }
   // 从nextLanes中再取出最高优先级的lane
   const newCallbackPriority = getHighestPriorityLane(nextLanes);
-  // 取到root正在回调的lane对应的优先级
+  // 取到root正在执行的 task 的 lane 对应的优先级
   const existingCallbackPriority = root.callbackPriority;
   // **重点**
   // 如果root正在回调的lane对应的优先级等于下一次新回调的lane对应的优先级
@@ -74,7 +74,7 @@ function ensureRootIsScheduled(root: FiberRoot, currentTime: number) {
   }
   // 如果没有中途退出，那么新的回调任务的优先级一定比正在进行回调任务的优先级高
   if (existingCallbackNode != null) {
-    // 则取消正在调度的任务
+    // 则取消正在调度的任务，也就是**高优先的更新会打断低优先级的更新**
     cancelCallback(existingCallbackNode);
   }
 
@@ -122,7 +122,7 @@ function ensureRootIsScheduled(root: FiberRoot, currentTime: number) {
 
 整个`ensureRootIsScheduled`方法涉及到了两个特性：**批量更新**和**高优先级更新打断低优先级更新**。  
 
-这两个特性都是需要判断前后状态更新的`lane`对应的优先级是否一致。如果优先级*一致*，就对应**批量更新**的特性，后续的状态更新都不会开启新的状态更新流程。而如果优先级*不一致*的话，就对应了**高优先级更新打断低优先级更新**的特性，因为新产生的状态更新的`lane`对应的优先级更高，所以会**打断**正在进行中的状态更新，转而调度一个新的状态更新流程。  
+这两个特性都是需要判断前后状态更新的`lane`对应的优先级是否一致。如果优先级*一致*，就对应**批量更新**的特性，后续的状态更新都不会开启新的状态更新流程。而如果优先级*不一致*的话，就对应了**高优先级更新打断低优先级更新**的特性，因为新产生的状态更新的`lane`对应的优先级更高，所以会**打断**正在进行中的状态更新，重新调度一个新的状态更新流程。  
 
 <!-- 比如，在一个点击事件中先后触发了两个更新，先触发了一个defaultLane的更新，后触发了一个SyncLane的更新。当defaultLane率先进入ensureRootIsScheduled方法，调度了一个新的更新流程。然后SyncLane的更新进入了ensureRootIsScheduled方法，它的优先级明高于defaultLane，所以会取消defaultLane正在调度更新流程，然后使用同步的方式调度新的更新流程。 -->
 当根节点存在正在进行的更新*u1*，此时又触发了一个状态更新*u2*。那么*u2*对应的优先级相比*u1*的优先级存在三种可能的取值：优先级更低，优先级相等和优先级更高。  
@@ -165,7 +165,7 @@ function prepareFreshStack(root: FiberRoot, lanes: Lanes) {
   workInProgressRootPingedLanes = NoLanes;
 }
 ```
-因为状态更新流程是包括`render`阶段和`commit`阶段。在`Concurrent Mode`下，只有`render`阶段是可以被**打断**的，`commit`阶段因为是**同步**执行的，所以不可能被打断。`render`阶段的工作是创建`Fiber`节点并形成`Fiber`树，所以只要清空已经创建的`Fiber`节点和`Fiber`树就消除被打断的状态更新流程产生的影响。  
+因为状态更新流程是包括`render`阶段和`commit`阶段。在`Concurrent Mode`下，只有`render`阶段是可以被**打断**的，`commit`阶段因为是**同步**执行的，所以不可能被打断。`render`阶段的工作是创建`Fiber`节点并形成`Fiber`树，所以只要清空已经创建的`Fiber`节点和`Fiber`树就可以消除被打断的状态更新流程产生的影响。  
 
 ## 完整流程
 首先，`this.setState`使用的是源码内部定义的`enqueueSetState`方法。
@@ -185,7 +185,7 @@ enqueueSetState(inst, payload, callback) {
       // 赋值callback
       update.callback = callback;
     }
-    // 将创建的update插入到fiber,updateQeuue中
+    // 将创建的update插入到fiber.updateQeuue中
     enqueueUpdate(fiber, update, lane);
     // 调度更新
     const root = scheduleUpdateOnFiber(fiber, lane, eventTime);
@@ -348,6 +348,7 @@ function getNextLanes(root: FiberRoot, wipLanes: Lanes): Lanes {
 然后再从`nextLanes`中取出最高优先级的`lane`，作为`newCallbackPriority`与`existingCallbackPriority`进行比较，决定是否需要重新开启一个状态更新流程。 
 
 ## 总结
-`React`新版批量更新是基于`lane`模型实现的。在调用`performConcurrentWorkOnRoot`方法之前会判断当前根节点正在调度的回调和新调度的回调两者的优先级是否一致。  
+`React`新版批量更新是基于`lane`模型实现的。在调用`performConcurrentWorkOnRoot`方法之前会判断当前根节点正在执行的任务和新创建的任务两者的优先级是否一致。  
 
-如果**一致**的话，将中途退出函数，不会开启新的状态更新流程。如果**不一致**的话，则会打断正在调度的回调，重新开启新的状态更新流程。
+如果优先级**一致**的话，将中途退出函数，不会开启新的状态更新流程，即**批量更新**。
+如果优先级**不一致**的话，则会打断正在执行的任务，重新开启新的状态更新流程，即**高优先的更新打断低优先级的更新**。

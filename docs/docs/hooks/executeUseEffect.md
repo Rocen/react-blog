@@ -162,6 +162,7 @@ function commitHookEffectListUnmount(
         effect.destroy = undefined;
         if (destroy !== undefined) {
              try {
+              // 执行销毁函数
                 destroy();
             } catch (error) {
                 // 捕获commit阶段抛出的错误
@@ -189,7 +190,7 @@ function commitHookEffectListMount(tag: number, finishedWork: Fiber) {
         // 取到回调函数
         const create = effect.create;
         // 执行回调函数
-        // 同时将回调函数的执行结果赋值为销毁函数的值
+        // 同时将回调函数的执行结果赋值给销毁函数
         effect.destroy = create();
       }
       // 移动next指针
@@ -225,9 +226,9 @@ if ((effect.tag & flags) === flags)
 
 在`mount hook`或`update hook`时，会将`HookLayout | HookHasEffect`和`HookPassive | HookHasEffect`分别作为`useEffect`和`useLayoutEffect`的标志，保存在`effect.tag`中。  
 
-当需要执行`useLayoutEffec`时，`HookLayout | HookHasEffect`会作为`flags`的值。当需要执行`useEffect`时，`HookPassive | HookHasEffect`会作为`flags`的值。  
+当需要执行`useLayoutEffect`时，`HookLayout | HookHasEffect`会作为`flags`的值。当需要执行`useEffect`时，`HookPassive | HookHasEffect`会作为`flags`的值。  
 
-这样通过按位或操作，就可以判断当前`effect`是属于`useEffec`还是`useLayoutEffect`了。
+这样通过按位或操作，就可以判断当前`effect`是属于`useEffect`还是`useLayoutEffect`了。
 ```js
 // 定义
 export const HasEffect = /* */ 0b001;

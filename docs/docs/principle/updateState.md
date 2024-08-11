@@ -684,7 +684,7 @@ this.setState((prevState) => ({
 
 状态更新的整个工作流程主要分为两部分：
 1. 通过`this.setState`触发**状态更新**（包括创建`Update`，插入`Update`和开启调度更新）
-2. 在`beginWork`方法中间接调用`processCommitUpdate`计算产生的`update`˜
+2. 在`beginWork`方法中间接调用`processCommitUpdate`计算产生的`update`
 
 虽然看起来可能状态更新的工作流程比较简短，但是涉及到的内容非常多，而且计算的过程也比较复杂（包括链表的操作和优先级相关），所以如果想要彻底弄懂这部分内容还是需要重复学习和理解的。
 

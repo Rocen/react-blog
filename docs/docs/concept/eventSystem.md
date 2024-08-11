@@ -33,10 +33,9 @@ function listenToAllSupportedEvents(rootContainerElement: EventTarget) {
     // 如果容器元素上没有监听过的标记
     if (!(rootContainerElement: any)[listeningMarker]) {
         (rootContainerElement: any)[listeningMarker] = true;
-        // allNativeEvents
+
         allNativeEvents.forEach(domEventName => {
-        // We handle selectionchange separately because it
-        // doesn't bubble and needs to be on the document.
+
         if (domEventName !== 'selectionchange') {
             // 不需要委托的事件，如click等事件是需要委托在容器元素上，通过冒泡的方式触发
             if (!nonDelegatedEvents.has(domEventName)) {
@@ -483,7 +482,7 @@ function processDispatchQueue(
     const {event, listeners} = dispatchQueue[i];
     // 执行监听队列
     processDispatchQueueItemsInOrder(event, listeners, inCapturePhase);
-    //  event system doesn't use pooling.
+
   }
 }
 
@@ -495,7 +494,7 @@ function processDispatchQueueItemsInOrder(
   let previousInstance;
   // 是否是捕获阶段
   if (inCapturePhase) {
-        // 如果是捕获阶段，所以就从最后一项开始遍历直到第一项，相对应的DOM事件流就是捕获阶段然后进入向下的目标阶段
+        // 因为是捕获阶段，所以就从最后一项开始遍历直到第一项，相对应的DOM事件流就是捕获阶段然后进入向下的目标阶段
         // 节点的顺序 a -> b -> c -> d （a是目标节点，d根节点）
         // 收集回调函数的顺序是 [a, b, c, d]
         // 捕获阶段是从根节点向下的顺序进行的，所以最终的执行回调函数的顺序是 d -> c -> b -> a
@@ -575,7 +574,7 @@ if (
         function callCallback() {
             didCall = true;
             restoreAfterDispatch();
-            // ***终于!!!在这里执行回调函数，并传入上下文和参数***
+            // *** 终于!!!在这里执行回调函数，并传入上下文和参数 ***
             func.apply(context, funcArgs);
             didError = false;
         } 

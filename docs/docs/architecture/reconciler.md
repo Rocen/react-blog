@@ -246,7 +246,7 @@ function updateClassComponent(
 ) {
     // Fiber节点对应的真实DOM节点
     const instance = workInProgress.stateNode;
-    // 否更新的标志位
+    // 是否更新的标志位
     let shouldUpdate;
     // 当DOM节点为空，说明是mount
     if (instance === null) {
@@ -337,7 +337,7 @@ function updateHostText(current, workInProgress) {
     return null;
 }
 ```
-从这段代码可以看到，获得`nextChildren`是`reconcileChildren`方法创建子`Fiber`节点的前提条件。而`nextChildren`的值就是当前遍历到的`JSX`对象。所以，r`econcileChildren`会根据参数传入的`JSX`对象创建`Fiber`节点。  
+从这段代码可以看到，获得`nextChildren`是`reconcileChildren`方法创建子`Fiber`节点的前提条件。而`nextChildren`的值就是当前遍历到的`JSX`对象。所以，`reconcileChildren`会根据参数传入的`JSX`对象创建`Fiber`节点。  
 
 `reconcileChildren`是作为入口函数存在的，目的是区分当前是`mount`还是`update`，来进行不同的处理工作。
 ```js
@@ -404,7 +404,7 @@ const Deletion = /*                 */ 0b00000000001000;
 // 在reconcileChildFibers方法内部会调用placeSingleChild
 function placeSingleChild(newFiber: Fiber): Fiber {
   // shouldTrackSideEffects为true时，表示当前是update
-  // newFiber.alternatew诶空，表示当前Fiber节点没有对应的current Fiber节点，说明当前是一个新增Fiber节点
+  // newFiber.alternatew为空，表示当前Fiber节点没有对应的current Fiber节点，说明当前是一个新增Fiber节点
   if (shouldTrackSideEffects && newFiber.alternate === null) {
     // 同时满足以上两点，才会为当前Fiber节点标记为Placement
     // |= 属于位运算符，表示按位或，相当于将Placement保存到newFiber.flags
@@ -440,16 +440,16 @@ function completeUnitOfWork(unitOfWork: Fiber): void {
     }
     // 获取当前Fiber节点的兄弟Fiber节点
     const siblingFiber = completedWork.sibling;
-    // 当存在兄弟Fiber节点
+    // 如果存在兄弟Fiber节点
     if (siblingFiber !== null) {
-      // 执行兄弟Fiber节点的beginWork方法
+      // 则执行兄弟Fiber节点的beginWork方法
       workInProgress = siblingFiber;
-      // 退出本次completeWork
+      // 然后退出本次completeWork
       return;
     }
     // completeWork被赋值为当前Fiber节点的父级Fiber节点，就会向上循环执行
     completedWork = returnFiber;
-    // workInProgress是全局变量
+    // workInProgress是一个全局变量
     workInProgress = completedWork;
   } while (completedWork !== null);
 }
@@ -614,7 +614,7 @@ function diffProperties(
         }
       }
     } else {
-      // 没有命中以上判断，则该propKey为null
+      // 没有命中以上判断，则该propKey设为null
       (updatePayload = updatePayload || []).push(propKey, null);
     }
   }
@@ -711,7 +711,7 @@ function diffProperties(
 
 当`update`时，则主要通过`diffProperties`方法，计算出变化的属性并将变化的属性保存到`updatePayload`数组中，最后返回一个需要更新的由*属性名*为偶数和*属性值*为奇数组成的数组，然后将返回值`updatePayload`保存到`fiber.updateQueue`属性。  
 
-该过程中经过不断的调用`completeWork`方法，最后**“归”**到`rootFiber`的时候，就已经生成一颗构建好的离屏`DOM`树。  
+该过程中经过不断的调用`completeWork`方法，最后"**归**"到`rootFiber`的时候，就已经生成了一颗构建好的离屏`DOM`树。  
 
 ## 总结
 
