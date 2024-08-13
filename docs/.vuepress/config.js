@@ -4,7 +4,7 @@ module.exports = {
             'link',
             {
                 rel: 'icon', 
-                href: '/public/faviocn.ico'
+                href: '/logo.svg'
             }
         ]
     ],
@@ -14,7 +14,13 @@ module.exports = {
     themeConfig: {
         nav: [
             {
-                text: 'nextjs博客',
+                text: '博客园',
+                link: 'https://www.cnblogs.com/rocenjs',
+                icon: 'reco-bokeyuan',
+                target: '_blank'
+            },
+            {
+                text: 'nextjs笔记',
                 link: 'https://next-blog.irocen.top',
                 icon: 'reco-blog',
                 target: '_blank'
@@ -36,10 +42,10 @@ module.exports = {
                         title: "目录",
                         path: "/docs/start/directory"
                     },
-                    {
-                        title: "拉取源码",
-                        path: "/docs/start/pullSource"
-                    }
+                    // {
+                    //     title: "拉取源码",
+                    //     path: "/docs/start/pullSource"
+                    // }
                 ]
             },
             {
