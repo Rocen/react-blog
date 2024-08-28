@@ -56,7 +56,7 @@ function updateMemo<T>(
     if (nextDeps !== null) {
       // 获取前一次的依赖项
       const prevDeps: Array<mixed> | null = prevState[1];
-      // 判断前后依赖项是否相等
+      // areHookInputsEqual内部会遍历nextDeps和prevDeps，然后用 Object.is 方法比较依赖项里面的每个值是否相等
       if (areHookInputsEqual(nextDeps, prevDeps)) {
         // 如果前后依赖项相等，则不需要重新执行回调函数获取执行结果，直接返回前一次缓存的值
         return prevState[0];
@@ -82,7 +82,7 @@ function updateCallback<T>(callback: T, deps: Array<mixed> | void | null): T {
     if (nextDeps !== null) {
       // 获取前一次的依赖项
       const prevDeps: Array<mixed> | null = prevState[1];
-      // 判断前后依赖项是否相等
+      // areHookInputsEqual内部会遍历nextDeps和prevDeps，然后用 Object.is 方法比较依赖项里面的每个值是否相等
       if (areHookInputsEqual(nextDeps, prevDeps)) {
         // 如果前后依赖项相等，则不需要重新缓存回调函数，直接返回前一次缓存的回调函数
         return prevState[0];

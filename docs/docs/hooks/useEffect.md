@@ -111,10 +111,10 @@ function updateEffectImpl(fiberFlags, hookFlags, create, deps): void {
       // 当前依赖项存在
       // 获取到上一次的依赖项
       const prevDeps = prevEffect.deps;
-      // areHookInputsEqual是一个浅比较方法，用于比较前后依赖项是否相等
+      // areHookInputsEqual内部会遍历nextDeps和prevDeps，然后用 Object.is 方法比较依赖项里面的每个值是否相等
       if (areHookInputsEqual(nextDeps, prevDeps)) {
         // 如果前后依赖项相等
-        // 执行pushEffect，创建并返回effect
+        // 执行 pushEffect，创建并返回effect
         hook.memoizedState = pushEffect(hookFlags, create, destroy, nextDeps);
         return;
       }
