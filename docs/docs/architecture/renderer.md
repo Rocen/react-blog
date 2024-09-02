@@ -126,6 +126,7 @@ function commitPlacement(finishedWork: Fiber): void {
   let parent;
   let isContainer;
   const parentStateNode = parentFiber.stateNode;
+  // 根据父级fiber的tag找到对应的DOM节点
   switch (parentFiber.tag) {
     // 原生类型，如div，span
     case HostComponent:
@@ -133,7 +134,7 @@ function commitPlacement(finishedWork: Fiber): void {
       parent = parentStateNode;
       isContainer = false;
       break;
-    // rootFiber节点
+    // rootFiber节点，对应根节点
     case HostRoot:
       // 因为rootFiber节点的stateNode属性指向FiberRootNode
       // 所以rootFiber节点的真实DOM节点就保存在FiberRootNode的containerInfo属性上
@@ -141,6 +142,8 @@ function commitPlacement(finishedWork: Fiber): void {
       isContainer = true;
       break;
     case HostPortal:
+      // 当调用createPortal方法创建的节点
+      // 传入的第二个参数会作为containerInfo的值
       parent = parentStateNode.containerInfo;
       isContainer = true;
       break;
@@ -153,10 +156,12 @@ function commitPlacement(finishedWork: Fiber): void {
   }
   // 获取当前Fiber节点的兄弟节点
   const before = getHostSibling(finishedWork);
-  // 判断当前Fiber节点是否是rootFiber
   if (isContainer) {
+    // 对应HostRoot和HostPortal的情况
+    // 该方法与insertOrAppendPlacementNode的唯一区别是：该方法会额外判断容器节点类型是否是COMMENT_NODE
     insertOrAppendPlacementNodeIntoContainer(finishedWork, before, parent);
   } else {
+    // 对应HostComponent的情况
     insertOrAppendPlacementNode(finishedWork, before, parent);
   }
 }
