@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>饥饿问题 | React笔记</title>
+    <meta name="generator" content="VuePress 1.9.5">
+    <link rel="icon" href="/react-blog/logo.svg">
+    <meta name="description" content="React">
+    
+    <link rel="preload" href="/react-blog/assets/css/0.styles.7c9b7da0.css" as="style"><link rel="preload" href="/react-blog/assets/js/app.1296abc1.js" as="script"><link rel="preload" href="/react-blog/assets/js/2.2aa2ea89.js" as="script"><link rel="preload" href="/react-blog/assets/js/25.c9819b86.js" as="script"><link rel="prefetch" href="/react-blog/assets/js/10.eec084d2.js"><link rel="prefetch" href="/react-blog/assets/js/11.90e7ad9c.js"><link rel="prefetch" href="/react-blog/assets/js/12.ec712917.js"><link rel="prefetch" href="/react-blog/assets/js/13.5fd1705f.js"><link rel="prefetch" href="/react-blog/assets/js/14.33d6319e.js"><link rel="prefetch" href="/react-blog/assets/js/15.b49ac970.js"><link rel="prefetch" href="/react-blog/assets/js/16.915d1a33.js"><link rel="prefetch" href="/react-blog/assets/js/17.0d48f94a.js"><link rel="prefetch" href="/react-blog/assets/js/18.162dd664.js"><link rel="prefetch" href="/react-blog/assets/js/19.897cc694.js"><link rel="prefetch" href="/react-blog/assets/js/20.c0d68b54.js"><link rel="prefetch" href="/react-blog/assets/js/21.23f5c8b7.js"><link rel="prefetch" href="/react-blog/assets/js/22.17cddd5f.js"><link rel="prefetch" href="/react-blog/assets/js/23.3e2c069f.js"><link rel="prefetch" href="/react-blog/assets/js/24.16287cbc.js"><link rel="prefetch" href="/react-blog/assets/js/26.03bcf156.js"><link rel="prefetch" href="/react-blog/assets/js/27.2e75196a.js"><link rel="prefetch" href="/react-blog/assets/js/28.71dcfa28.js"><link rel="prefetch" href="/react-blog/assets/js/29.0534c7d4.js"><link rel="prefetch" href="/react-blog/assets/js/3.1f92403b.js"><link rel="prefetch" href="/react-blog/assets/js/30.70a1b1a5.js"><link rel="prefetch" href="/react-blog/assets/js/31.8d8007c6.js"><link rel="prefetch" href="/react-blog/assets/js/32.f55b2b21.js"><link rel="prefetch" href="/react-blog/assets/js/33.dea713d0.js"><link rel="prefetch" href="/react-blog/assets/js/34.16302cd1.js"><link rel="prefetch" href="/react-blog/assets/js/35.58ce8424.js"><link rel="prefetch" href="/react-blog/assets/js/36.21c87dbf.js"><link rel="prefetch" href="/react-blog/assets/js/37.e9ccbb00.js"><link rel="prefetch" href="/react-blog/assets/js/38.eda7b7d3.js"><link rel="prefetch" href="/react-blog/assets/js/39.28c4eb15.js"><link rel="prefetch" href="/react-blog/assets/js/4.ace4b147.js"><link rel="prefetch" href="/react-blog/assets/js/40.13eceae9.js"><link rel="prefetch" href="/react-blog/assets/js/41.e5e3f4ba.js"><link rel="prefetch" href="/react-blog/assets/js/42.1ab022fc.js"><link rel="prefetch" href="/react-blog/assets/js/43.eca03ba8.js"><link rel="prefetch" href="/react-blog/assets/js/44.be104c53.js"><link rel="prefetch" href="/react-blog/assets/js/5.68075c63.js"><link rel="prefetch" href="/react-blog/assets/js/6.01147cc3.js"><link rel="prefetch" href="/react-blog/assets/js/7.630cc1a8.js"><link rel="prefetch" href="/react-blog/assets/js/8.80d0f023.js"><link rel="prefetch" href="/react-blog/assets/js/9.f8d3ba3a.js">
+    <link rel="stylesheet" href="/react-blog/assets/css/0.styles.7c9b7da0.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/react-blog/" class="home-link router-link-active"><!----> <span class="site-name">React笔记</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><a href="https://next-blog.irocen.top" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  nextjs笔记
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div><div class="nav-item"><a href="https://github.com/Rocen" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  github
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <!----></nav></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><nav class="nav-links"><div class="nav-item"><a href="https://next-blog.irocen.top" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  nextjs笔记
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div><div class="nav-item"><a href="https://github.com/Rocen" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  github
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <!----></nav>  <ul class="sidebar-links"><li><section class="sidebar-group depth-0"><a href="/react-blog/" class="sidebar-heading clickable router-link-active"><span>开始</span> <!----></a> <ul class="sidebar-links sidebar-group-items"><li><a href="/react-blog/docs/start/directory.html" class="sidebar-link">目录</a></li></ul></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>理念</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>架构</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>原理</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>概念</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>Hooks</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading open"><span>Concurrent Mode</span> <span class="arrow down"></span></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/react-blog/docs/concurrent/scheduler.html" class="sidebar-link">Scheduler工作流程</a></li><li><a href="/react-blog/docs/concurrent/lane.html" class="sidebar-link">lane模型</a></li><li><a href="/react-blog/docs/concurrent/batchedUpdates.html" class="sidebar-link">批量更新</a></li><li><a href="/react-blog/docs/concurrent/suspense.html" class="sidebar-link">Suspense</a></li><li><a href="/react-blog/docs/concurrent/starve.html" aria-current="page" class="active sidebar-link">饥饿问题</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/react-blog/docs/concurrent/starve.html#饥饿问题" class="sidebar-link">饥饿问题</a></li><li class="sidebar-sub-header"><a href="/react-blog/docs/concurrent/starve.html#解决方式" class="sidebar-link">解决方式</a></li><li class="sidebar-sub-header"><a href="/react-blog/docs/concurrent/starve.html#收尾工作" class="sidebar-link">收尾工作</a></li></ul></li></ul></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>实现</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>发现</span> <span class="arrow right"></span></p> <!----></section></li></ul> </aside> <main class="page"> <div class="theme-default-content content__default"><h2 id="饥饿问题"><a href="#饥饿问题" class="header-anchor">#</a> 饥饿问题</h2> <p>因为状态更新存在优先级，所以当一直存在高优先级的更新，导致低优先级的更新阻塞不能被执行。这就是饥饿问题。</p> <h2 id="解决方式"><a href="#解决方式" class="header-anchor">#</a> 解决方式</h2> <p>在<code>ensureRootIsScheduled</code>方法中，会调用<code>markStarvedLanesAsExpired</code>方法。这个方法就是用来处理饥饿问题的。</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">function</span> <span class="token function">markStarvedLanesAsExpired</span><span class="token punctuation">(</span>
+  <span class="token parameter">root<span class="token operator">:</span> FiberRoot<span class="token punctuation">,</span>
+  currentTime<span class="token operator">:</span> number<span class="token punctuation">,</span></span>
+<span class="token punctuation">)</span><span class="token operator">:</span> <span class="token keyword">void</span> <span class="token punctuation">{</span>
+  <span class="token comment">// 获取变量</span>
+  <span class="token keyword">const</span> pendingLanes <span class="token operator">=</span> root<span class="token punctuation">.</span>pendingLanes<span class="token punctuation">;</span>
+  <span class="token keyword">const</span> suspendedLanes <span class="token operator">=</span> root<span class="token punctuation">.</span>suspendedLanes<span class="token punctuation">;</span>
+  <span class="token keyword">const</span> pingedLanes <span class="token operator">=</span> root<span class="token punctuation">.</span>pingedLanes<span class="token punctuation">;</span>
+  <span class="token keyword">const</span> expirationTimes <span class="token operator">=</span> root<span class="token punctuation">.</span>expirationTimes<span class="token punctuation">;</span>
+  <span class="token comment">// pendingLanes就是根节点保存的需要进行但还没有进行的lane</span>
+  <span class="token keyword">let</span> lanes <span class="token operator">=</span> pendingLanes<span class="token punctuation">;</span>
+  <span class="token comment">// lanes有值，则遍历lanes</span>
+  <span class="token keyword">while</span> <span class="token punctuation">(</span>lanes <span class="token operator">&gt;</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// pickArbitraryLaneIndex方法的定义：31 - clz32(lanes)</span>
+    <span class="token comment">// clz32(lanes)可以计算出lanes开头0的个数。所以31 - clz32(lanes)就可以得出最左边的lane，即优先级最低的lane坐在的位置</span>
+    <span class="token keyword">const</span> index <span class="token operator">=</span> <span class="token function">pickArbitraryLaneIndex</span><span class="token punctuation">(</span>lanes<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">// 获取这个优先级最低的lane</span>
+    <span class="token keyword">const</span> lane <span class="token operator">=</span> <span class="token number">1</span> <span class="token operator">&lt;&lt;</span> index<span class="token punctuation">;</span>
+    <span class="token comment">// 获取这个lane对应的过期时间</span>
+    <span class="token comment">// expirationTimes是一个31个长度的数组，初始值都是-1，表示没有时间戳，即这个lane没有被定义过期时间</span>
+    <span class="token keyword">const</span> expirationTime <span class="token operator">=</span> expirationTimes<span class="token punctuation">[</span>index<span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token comment">// NoTimestamp = -1，作为判断这个lane是否有定义过期时间</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>expirationTime <span class="token operator">===</span> NoTimestamp<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>
+        <span class="token punctuation">(</span>lane <span class="token operator">&amp;</span> suspendedLanes<span class="token punctuation">)</span> <span class="token operator">===</span> NoLanes <span class="token operator">||</span>
+        <span class="token punctuation">(</span>lane <span class="token operator">&amp;</span> pingedLanes<span class="token punctuation">)</span> <span class="token operator">!==</span> NoLanes
+      <span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment">// 没有定义过期时间则调用computeExpirationTime方法计算一个过期时间</span>
+        expirationTimes<span class="token punctuation">[</span>index<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token function">computeExpirationTime</span><span class="token punctuation">(</span>lane<span class="token punctuation">,</span> currentTime<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>expirationTime <span class="token operator">&lt;=</span> currentTime<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token comment">// 如果这个lane定义的过期时间小于当前时间，说明这个lane过期了，需要被执行</span>
+      <span class="token comment">// 将这个lane合并到expiredLanes中</span>
+      root<span class="token punctuation">.</span>expiredLanes <span class="token operator">|=</span> lane<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token comment">// 清除这个被定义过期时间的lane</span>
+    lanes <span class="token operator">&amp;=</span> <span class="token operator">~</span>lane<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p><code>markStarvedLanesAsExpired</code>方法主要做的工作是从<code>pendingLanes</code>中找到优先级最低的<code>lane</code>，并为它设置过期时间。如果这个<code>lane</code>已经过期的话，则会将这个<code>lane</code>合并到<code>expiredLanes</code>。</p> <p>那<code>expiredLanes</code>上保存的过期的<code>lane</code>又会如何执行呢？在<code>performConcurrentWorkOnRoot</code>方法中会调用<code>shouldTimeSlice</code>方法：</p> <div class="language-js extra-class"><pre class="language-js"><code>  <span class="token keyword">let</span> exitStatus <span class="token operator">=</span>
+    <span class="token function">shouldTimeSlice</span><span class="token punctuation">(</span>root<span class="token punctuation">,</span> lanes<span class="token punctuation">)</span> <span class="token operator">&amp;&amp;</span>
+    <span class="token punctuation">(</span>disableSchedulerTimeoutInWorkLoop <span class="token operator">||</span> <span class="token operator">!</span>didTimeout<span class="token punctuation">)</span>
+      <span class="token operator">?</span> <span class="token function">renderRootConcurrent</span><span class="token punctuation">(</span>root<span class="token punctuation">,</span> lanes<span class="token punctuation">)</span>
+      <span class="token operator">:</span> <span class="token function">renderRootSync</span><span class="token punctuation">(</span>root<span class="token punctuation">,</span> lanes<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+</code></pre></div><p>这个方法的定义：</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">function</span> <span class="token function">shouldTimeSlice</span><span class="token punctuation">(</span><span class="token parameter">root<span class="token operator">:</span> FiberRoot<span class="token punctuation">,</span> lanes<span class="token operator">:</span> Lanes</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// lanes是通过getNextLanes获取的最高优先级，只有这个lanes中包含过期的任务才会使用同步模式执行工作流程</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>lanes <span class="token operator">&amp;</span> root<span class="token punctuation">.</span>expiredLanes<span class="token punctuation">)</span> <span class="token operator">!==</span> NoLanes<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>
+    allowConcurrentByDefault <span class="token operator">&amp;&amp;</span>
+    <span class="token punctuation">(</span>root<span class="token punctuation">.</span>current<span class="token punctuation">.</span>mode <span class="token operator">&amp;</span> ConcurrentUpdatesByDefaultMode<span class="token punctuation">)</span> <span class="token operator">!==</span> NoMode
+  <span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 默认情况下，并发更新总是使用时间切片，即使用并发模式执行工作流程</span>
+    <span class="token keyword">return</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token keyword">const</span> SyncDefaultLanes <span class="token operator">=</span>
+    InputContinuousHydrationLane <span class="token operator">|</span>
+    InputContinuousLane <span class="token operator">|</span>
+    DefaultHydrationLane <span class="token operator">|</span>
+    DefaultLane<span class="token punctuation">;</span>
+  <span class="token comment">// lanes不包含以上这些lane的优先级，则会使用并发模式执行工作流程，否则使用同步模式执行工作流程</span>
+  <span class="token keyword">return</span> <span class="token punctuation">(</span>lanes <span class="token operator">&amp;</span> SyncDefaultLanes<span class="token punctuation">)</span> <span class="token operator">===</span> NoLanes<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>当优先级较低的更新过期之后，且产生的较高优先级更新都执行完成后，会以同步的方式执行较低优先级的更新对应的工作流程。</p> <h2 id="收尾工作"><a href="#收尾工作" class="header-anchor">#</a> 收尾工作</h2> <p>在<code>commitRootImpl</code>方法中会调用<code>markRootFinished</code>进行<code>lane</code>相关的收尾工作。</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">function</span> <span class="token function">markRootFinished</span><span class="token punctuation">(</span><span class="token parameter">root<span class="token operator">:</span> FiberRoot<span class="token punctuation">,</span> remainingLanes<span class="token operator">:</span> Lanes</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// remainingLanes会收集当前Fiber树上应该进行但还没有进行的lanes</span>
+  <span class="token comment">// 而将pendingLanes移除与remainingLanes相关的lanes，就得到了已经完成的lanes</span>
+  <span class="token keyword">const</span> noLongerPendingLanes <span class="token operator">=</span> root<span class="token punctuation">.</span>pendingLanes <span class="token operator">&amp;</span> <span class="token operator">~</span>remainingLanes<span class="token punctuation">;</span>
+  <span class="token comment">// 将应该进行但还没有进行的lanes赋值给pendingLanes</span>
+  root<span class="token punctuation">.</span>pendingLanes <span class="token operator">=</span> remainingLanes<span class="token punctuation">;</span>
+
+  <span class="token comment">// 将本次应该进行但还没有进行的lanes都合并到expiredLanes</span>
+  root<span class="token punctuation">.</span>expiredLanes <span class="token operator">&amp;=</span> remainingLanes<span class="token punctuation">;</span>
+
+  <span class="token keyword">const</span> expirationTimes <span class="token operator">=</span> root<span class="token punctuation">.</span>expirationTimes<span class="token punctuation">;</span>
+
+  <span class="token comment">// 重置expirationTimes中虽然定义了过期时间，但是已经完成的lane</span>
+  <span class="token keyword">let</span> lanes <span class="token operator">=</span> noLongerPendingLanes<span class="token punctuation">;</span>
+  <span class="token keyword">while</span> <span class="token punctuation">(</span>lanes <span class="token operator">&gt;</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> index <span class="token operator">=</span> <span class="token function">pickArbitraryLaneIndex</span><span class="token punctuation">(</span>lanes<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> lane <span class="token operator">=</span> <span class="token number">1</span> <span class="token operator">&lt;&lt;</span> index<span class="token punctuation">;</span>
+
+    eventTimes<span class="token punctuation">[</span>index<span class="token punctuation">]</span> <span class="token operator">=</span> NoTimestamp<span class="token punctuation">;</span>
+    <span class="token comment">// 重置过期时间为-1</span>
+    expirationTimes<span class="token punctuation">[</span>index<span class="token punctuation">]</span> <span class="token operator">=</span> NoTimestamp<span class="token punctuation">;</span>
+
+    lanes <span class="token operator">&amp;=</span> <span class="token operator">~</span>lane<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div></div> <footer class="page-edit"><!----> <!----></footer> <div class="page-nav"><p class="inner"><span class="prev">
+      ←
+      <a href="/react-blog/docs/concurrent/suspense.html" class="prev">
+        Suspense
+      </a></span> <span class="next"><a href="/react-blog/docs/implement/useState.html">
+        实现简易useState
+      </a>
+      →
+    </span></p></div> </main></div><div class="global-ui"><!----></div></div>
+    <script src="/react-blog/assets/js/app.1296abc1.js" defer></script><script src="/react-blog/assets/js/2.2aa2ea89.js" defer></script><script src="/react-blog/assets/js/25.c9819b86.js" defer></script>
+  </body>
+</html>

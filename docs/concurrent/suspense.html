@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Suspense | React笔记</title>
+    <meta name="generator" content="VuePress 1.9.5">
+    <link rel="icon" href="/react-blog/logo.svg">
+    <meta name="description" content="React">
+    
+    <link rel="preload" href="/react-blog/assets/css/0.styles.7c9b7da0.css" as="style"><link rel="preload" href="/react-blog/assets/js/app.1296abc1.js" as="script"><link rel="preload" href="/react-blog/assets/js/2.2aa2ea89.js" as="script"><link rel="preload" href="/react-blog/assets/js/11.90e7ad9c.js" as="script"><link rel="prefetch" href="/react-blog/assets/js/10.eec084d2.js"><link rel="prefetch" href="/react-blog/assets/js/12.ec712917.js"><link rel="prefetch" href="/react-blog/assets/js/13.5fd1705f.js"><link rel="prefetch" href="/react-blog/assets/js/14.33d6319e.js"><link rel="prefetch" href="/react-blog/assets/js/15.b49ac970.js"><link rel="prefetch" href="/react-blog/assets/js/16.915d1a33.js"><link rel="prefetch" href="/react-blog/assets/js/17.0d48f94a.js"><link rel="prefetch" href="/react-blog/assets/js/18.162dd664.js"><link rel="prefetch" href="/react-blog/assets/js/19.897cc694.js"><link rel="prefetch" href="/react-blog/assets/js/20.c0d68b54.js"><link rel="prefetch" href="/react-blog/assets/js/21.23f5c8b7.js"><link rel="prefetch" href="/react-blog/assets/js/22.17cddd5f.js"><link rel="prefetch" href="/react-blog/assets/js/23.3e2c069f.js"><link rel="prefetch" href="/react-blog/assets/js/24.16287cbc.js"><link rel="prefetch" href="/react-blog/assets/js/25.c9819b86.js"><link rel="prefetch" href="/react-blog/assets/js/26.03bcf156.js"><link rel="prefetch" href="/react-blog/assets/js/27.2e75196a.js"><link rel="prefetch" href="/react-blog/assets/js/28.71dcfa28.js"><link rel="prefetch" href="/react-blog/assets/js/29.0534c7d4.js"><link rel="prefetch" href="/react-blog/assets/js/3.1f92403b.js"><link rel="prefetch" href="/react-blog/assets/js/30.70a1b1a5.js"><link rel="prefetch" href="/react-blog/assets/js/31.8d8007c6.js"><link rel="prefetch" href="/react-blog/assets/js/32.f55b2b21.js"><link rel="prefetch" href="/react-blog/assets/js/33.dea713d0.js"><link rel="prefetch" href="/react-blog/assets/js/34.16302cd1.js"><link rel="prefetch" href="/react-blog/assets/js/35.58ce8424.js"><link rel="prefetch" href="/react-blog/assets/js/36.21c87dbf.js"><link rel="prefetch" href="/react-blog/assets/js/37.e9ccbb00.js"><link rel="prefetch" href="/react-blog/assets/js/38.eda7b7d3.js"><link rel="prefetch" href="/react-blog/assets/js/39.28c4eb15.js"><link rel="prefetch" href="/react-blog/assets/js/4.ace4b147.js"><link rel="prefetch" href="/react-blog/assets/js/40.13eceae9.js"><link rel="prefetch" href="/react-blog/assets/js/41.e5e3f4ba.js"><link rel="prefetch" href="/react-blog/assets/js/42.1ab022fc.js"><link rel="prefetch" href="/react-blog/assets/js/43.eca03ba8.js"><link rel="prefetch" href="/react-blog/assets/js/44.be104c53.js"><link rel="prefetch" href="/react-blog/assets/js/5.68075c63.js"><link rel="prefetch" href="/react-blog/assets/js/6.01147cc3.js"><link rel="prefetch" href="/react-blog/assets/js/7.630cc1a8.js"><link rel="prefetch" href="/react-blog/assets/js/8.80d0f023.js"><link rel="prefetch" href="/react-blog/assets/js/9.f8d3ba3a.js">
+    <link rel="stylesheet" href="/react-blog/assets/css/0.styles.7c9b7da0.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/react-blog/" class="home-link router-link-active"><!----> <span class="site-name">React笔记</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><a href="https://next-blog.irocen.top" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  nextjs笔记
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div><div class="nav-item"><a href="https://github.com/Rocen" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  github
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <!----></nav></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><nav class="nav-links"><div class="nav-item"><a href="https://next-blog.irocen.top" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  nextjs笔记
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div><div class="nav-item"><a href="https://github.com/Rocen" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  github
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <!----></nav>  <ul class="sidebar-links"><li><section class="sidebar-group depth-0"><a href="/react-blog/" class="sidebar-heading clickable router-link-active"><span>开始</span> <!----></a> <ul class="sidebar-links sidebar-group-items"><li><a href="/react-blog/docs/start/directory.html" class="sidebar-link">目录</a></li></ul></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>理念</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>架构</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>原理</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>概念</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>Hooks</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading open"><span>Concurrent Mode</span> <span class="arrow down"></span></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/react-blog/docs/concurrent/scheduler.html" class="sidebar-link">Scheduler工作流程</a></li><li><a href="/react-blog/docs/concurrent/lane.html" class="sidebar-link">lane模型</a></li><li><a href="/react-blog/docs/concurrent/batchedUpdates.html" class="sidebar-link">批量更新</a></li><li><a href="/react-blog/docs/concurrent/suspense.html" aria-current="page" class="active sidebar-link">Suspense</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/react-blog/docs/concurrent/suspense.html#suspense" class="sidebar-link">Suspense</a></li><li class="sidebar-sub-header"><a href="/react-blog/docs/concurrent/suspense.html#动态加载" class="sidebar-link">动态加载</a></li><li class="sidebar-sub-header"><a href="/react-blog/docs/concurrent/suspense.html#suspense的实现" class="sidebar-link">Suspense的实现</a></li><li class="sidebar-sub-header"><a href="/react-blog/docs/concurrent/suspense.html#lazy的实现" class="sidebar-link">Lazy的实现</a></li><li class="sidebar-sub-header"><a href="/react-blog/docs/concurrent/suspense.html#总结" class="sidebar-link">总结</a></li></ul></li><li><a href="/react-blog/docs/concurrent/starve.html" class="sidebar-link">饥饿问题</a></li></ul></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>实现</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>发现</span> <span class="arrow right"></span></p> <!----></section></li></ul> </aside> <main class="page"> <div class="theme-default-content content__default"><h2 id="suspense"><a href="#suspense" class="header-anchor">#</a> Suspense</h2> <p><code>React</code>官网对于<code>Suspense</code>的描述是：</p> <blockquote><p>Suspense 使得组件可以“等待”某些操作结束后，再进行渲染。</p></blockquote> <p><code>Suspense</code>是<code>React</code>提出的一种以同步的代码来实现异步操作的方案。<code>Suspense</code>让组件<em>等待</em>异步操作，异步请求结束后再进行组件的渲染，也就是所谓的<strong>异步渲染</strong>。</p> <p>而且<code>Suspense</code>的用法也比较简单，通常作为一种容器组件使用就可以。它具有一个<code>fallback</code>属性，用来代替当<code>Suspense</code>处于<code>loading</code>状态下渲染的内容，<code>Suspense</code>的<code>children</code>就是异步组件。多个异步组件可以用<code>Suspense</code>嵌套使用。</p> <p>例如：</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">const</span> LazyComponent <span class="token operator">=</span> React<span class="token punctuation">.</span><span class="token function">lazy</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">=&gt;</span><span class="token keyword">import</span><span class="token punctuation">(</span><span class="token string">'./index'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+<span class="token keyword">function</span> <span class="token function">Index</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+
+    <span class="token keyword">return</span> <span class="token operator">&lt;</span>div<span class="token operator">&gt;</span>
+        <span class="token operator">&lt;</span>Suspense fallback<span class="token operator">=</span><span class="token punctuation">{</span> <span class="token operator">&lt;</span>div<span class="token operator">&gt;</span><span class="token constant">LOADING</span><span class="token operator">...</span><span class="token operator">&lt;</span><span class="token operator">/</span>div<span class="token operator">&gt;</span> <span class="token punctuation">}</span><span class="token operator">&gt;</span>
+            <span class="token operator">&lt;</span>LazyComponent <span class="token operator">/</span><span class="token operator">&gt;</span>
+        <span class="token operator">&lt;</span><span class="token operator">/</span>Suspense<span class="token operator">&gt;</span>
+    <span class="token operator">&lt;</span><span class="token operator">/</span>div<span class="token operator">&gt;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p><code>Suspense</code>包裹异步渲染组件<code>LazyComponent</code>，当<code>LazyComponent</code>处于加载状态下，将会降级展示<code>fallback</code>属性中的内容。</p> <h2 id="动态加载"><a href="#动态加载" class="header-anchor">#</a> 动态加载</h2> <p>通常<code>Suspense</code>会配合<code>React.lazy</code>实现动态加载的功能。</p> <p>用法如下：</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">const</span> LazyComponent <span class="token operator">=</span> React<span class="token punctuation">.</span><span class="token function">lazy</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">=&gt;</span><span class="token keyword">import</span><span class="token punctuation">(</span><span class="token string">'./index'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><p><code>React.lazy</code>接收一个函数，这个函数需要动态调用<code>import</code>方法。它必须返回一个<code>Promise</code>，该<code>Promise</code>需要<code>resolve</code>一个以<code>export default</code>方式导出的<code>React</code>组件。</p> <p>使用<code>React.lazy</code>动态引入的组件，很利于<strong>代码分割</strong>，可以在项目初始化的时候不必加载大量的文件，以此来提升性能。</p> <h2 id="suspense的实现"><a href="#suspense的实现" class="header-anchor">#</a> Suspense的实现</h2> <p><code>Suspense</code>属于一种组件，所以会在<code>beginWork</code>方法中处理该类型的组件。</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">function</span> <span class="token function">beginWork</span><span class="token punctuation">(</span>
+  <span class="token parameter">current<span class="token operator">:</span> Fiber <span class="token operator">|</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
+  workInProgress<span class="token operator">:</span> Fiber<span class="token punctuation">,</span>
+  renderLanes<span class="token operator">:</span> Lanes<span class="token punctuation">,</span></span>
+<span class="token punctuation">)</span><span class="token operator">:</span> Fiber <span class="token operator">|</span> <span class="token keyword">null</span> <span class="token punctuation">{</span>
+  <span class="token comment">// order code...</span>
+
+  <span class="token keyword">switch</span> <span class="token punctuation">(</span>workInProgress<span class="token punctuation">.</span>tag<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+
+    <span class="token keyword">case</span> SuspenseComponent<span class="token operator">:</span>
+      <span class="token keyword">return</span> <span class="token function">updateSuspenseComponent</span><span class="token punctuation">(</span>current<span class="token punctuation">,</span> workInProgress<span class="token punctuation">,</span> renderLanes<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    
+  <span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// order code...</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>从这段代码可以看到，<code>Suspense</code>类型的组件会调用<code>updateSuspenseComponent</code>方法处理。</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token comment">// 由于代码量非常多，所以只关注主要的逻辑</span>
+<span class="token keyword">function</span> <span class="token function">updateSuspenseComponent</span><span class="token punctuation">(</span><span class="token parameter">current<span class="token punctuation">,</span> workInProgress<span class="token punctuation">,</span> renderLanes</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> nextProps <span class="token operator">=</span> workInProgress<span class="token punctuation">.</span>pendingProps<span class="token punctuation">;</span>
+
+  <span class="token keyword">let</span> suspenseContext<span class="token operator">:</span> SuspenseContext <span class="token operator">=</span> suspenseStackCursor<span class="token punctuation">.</span>current<span class="token punctuation">;</span>
+  <span class="token comment">// 是否显示fallback</span>
+  <span class="token keyword">let</span> showFallback <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+  <span class="token comment">// 是否悬停，需要通过判断flags是否包含DidCapture flags</span>
+  <span class="token comment">// DidCapture表示捕获了错误，如果捕获了错误的话，则需要悬停来处理这个错误</span>
+  <span class="token keyword">const</span> didSuspend <span class="token operator">=</span> <span class="token punctuation">(</span>workInProgress<span class="token punctuation">.</span>flags <span class="token operator">&amp;</span> DidCapture<span class="token punctuation">)</span> <span class="token operator">!==</span> NoFlags<span class="token punctuation">;</span>
+  <span class="token comment">// 是否需要悬停</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>
+    didSuspend
+  <span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 需要悬停</span>
+    <span class="token comment">// 赋值showFallback</span>
+    showFallback <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
+    <span class="token comment">// 为workInProgress fiber清除DidCapture flags</span>
+    workInProgress<span class="token punctuation">.</span>flags <span class="token operator">&amp;=</span> <span class="token operator">~</span>DidCapture<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+   <span class="token keyword">if</span> <span class="token punctuation">(</span>current <span class="token operator">===</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">//  mount时</span>
+
+    <span class="token comment">// 获取原始子组件</span>
+    <span class="token keyword">const</span> nextPrimaryChildren <span class="token operator">=</span> nextProps<span class="token punctuation">.</span>children<span class="token punctuation">;</span>
+    <span class="token comment">// 获取fallback对应的组件</span>
+    <span class="token keyword">const</span> nextFallbackChildren <span class="token operator">=</span> nextProps<span class="token punctuation">.</span>fallback<span class="token punctuation">;</span>
+    <span class="token comment">// 是否展示fallback</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>showFallback<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token comment">// 展示fallback</span>
+      <span class="token comment">// 通过mountSuspenseFallbackChildren方法创建fallback对应的fiber节点</span>
+      <span class="token keyword">const</span> fallbackFragment <span class="token operator">=</span> <span class="token function">mountSuspenseFallbackChildren</span><span class="token punctuation">(</span>
+        workInProgress<span class="token punctuation">,</span>
+        nextPrimaryChildren<span class="token punctuation">,</span>
+        nextFallbackChildren<span class="token punctuation">,</span>
+        renderLanes<span class="token punctuation">,</span>
+      <span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token comment">// 获取原始子组件对应的fiber节点</span>
+      <span class="token keyword">const</span> primaryChildFragment<span class="token operator">:</span> Fiber <span class="token operator">=</span> <span class="token punctuation">(</span>workInProgress<span class="token punctuation">.</span>child<span class="token operator">:</span> any<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token comment">// 赋值变量</span>
+      primaryChildFragment<span class="token punctuation">.</span>memoizedState <span class="token operator">=</span> <span class="token function">mountSuspenseOffscreenState</span><span class="token punctuation">(</span>
+        renderLanes<span class="token punctuation">,</span>
+      <span class="token punctuation">)</span><span class="token punctuation">;</span>
+      workInProgress<span class="token punctuation">.</span>memoizedState <span class="token operator">=</span> <span class="token constant">SUSPENDED_MARKER</span><span class="token punctuation">;</span>
+      <span class="token comment">// 返回fallback对应的fiber节点</span>
+      <span class="token comment">// 这样在页面显示就是fallback对应的组件，而不显示真正的子组件</span>
+      <span class="token keyword">return</span> fallbackFragment<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+      <span class="token comment">// 不展示fallback，则显示真正的子组件，创建子组件对应的fiber节点</span>
+      <span class="token keyword">return</span> <span class="token function">mountSuspensePrimaryChildren</span><span class="token punctuation">(</span>
+        workInProgress<span class="token punctuation">,</span>
+        nextPrimaryChildren<span class="token punctuation">,</span>
+        renderLanes<span class="token punctuation">,</span>
+      <span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+    <span class="token comment">// update时</span>
+
+    <span class="token comment">// 如果current fiber存在suspenseState属性，说明已经展示过fallback了</span>
+    <span class="token keyword">const</span> prevState<span class="token operator">:</span> <span class="token keyword">null</span> <span class="token operator">|</span> SuspenseState <span class="token operator">=</span> current<span class="token punctuation">.</span>memoizedState<span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>prevState <span class="token operator">!==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token comment">// current fiber树已经展示fallback</span>
+
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>showFallback<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment">// 展示fallback</span>
+        <span class="token comment">// 获取fallback属性</span>
+        <span class="token keyword">const</span> nextFallbackChildren <span class="token operator">=</span> nextProps<span class="token punctuation">.</span>fallback<span class="token punctuation">;</span>
+        <span class="token comment">// 获取子组件</span>
+        <span class="token keyword">const</span> nextPrimaryChildren <span class="token operator">=</span> nextProps<span class="token punctuation">.</span>children<span class="token punctuation">;</span>
+        <span class="token comment">// 创建fallback对应的fiber节点</span>
+        <span class="token keyword">const</span> fallbackChildFragment <span class="token operator">=</span> <span class="token function">updateSuspenseFallbackChildren</span><span class="token punctuation">(</span>
+          current<span class="token punctuation">,</span>
+          workInProgress<span class="token punctuation">,</span>
+          nextPrimaryChildren<span class="token punctuation">,</span>
+          nextFallbackChildren<span class="token punctuation">,</span>
+          renderLanes<span class="token punctuation">,</span>
+        <span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment">// 获取子组件对应的fiber节点</span>
+        <span class="token keyword">const</span> primaryChildFragment<span class="token operator">:</span> Fiber <span class="token operator">=</span> <span class="token punctuation">(</span>workInProgress<span class="token punctuation">.</span>child<span class="token operator">:</span> any<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment">// 获取current fiber上的memoizedState属性</span>
+        <span class="token keyword">const</span> prevOffscreenState<span class="token operator">:</span> OffscreenState <span class="token operator">|</span> <span class="token keyword">null</span> <span class="token operator">=</span> <span class="token punctuation">(</span>current<span class="token punctuation">.</span>child<span class="token operator">:</span> any<span class="token punctuation">)</span>
+          <span class="token punctuation">.</span>memoizedState<span class="token punctuation">;</span>
+        <span class="token comment">// 判断子组件是否存在变化</span>
+        primaryChildFragment<span class="token punctuation">.</span>memoizedState <span class="token operator">=</span>
+          prevOffscreenState <span class="token operator">===</span> <span class="token keyword">null</span>
+            <span class="token operator">?</span> <span class="token function">mountSuspenseOffscreenState</span><span class="token punctuation">(</span>renderLanes<span class="token punctuation">)</span>
+            <span class="token operator">:</span> <span class="token function">updateSuspenseOffscreenState</span><span class="token punctuation">(</span>prevOffscreenState<span class="token punctuation">,</span> renderLanes<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        primaryChildFragment<span class="token punctuation">.</span>childLanes <span class="token operator">=</span> <span class="token function">getRemainingWorkInPrimaryTree</span><span class="token punctuation">(</span>
+          current<span class="token punctuation">,</span>
+          renderLanes<span class="token punctuation">,</span>
+        <span class="token punctuation">)</span><span class="token punctuation">;</span>
+        workInProgress<span class="token punctuation">.</span>memoizedState <span class="token operator">=</span> <span class="token constant">SUSPENDED_MARKER</span><span class="token punctuation">;</span>
+        <span class="token comment">// 返回fallback对应的fiber</span>
+        <span class="token keyword">return</span> fallbackChildFragment<span class="token punctuation">;</span>
+      <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+        <span class="token comment">// 不需要展示fallback</span>
+        <span class="token comment">// 获取子组件</span>
+        <span class="token keyword">const</span> nextPrimaryChildren <span class="token operator">=</span> nextProps<span class="token punctuation">.</span>children<span class="token punctuation">;</span>
+        <span class="token comment">// 创建子组件对应的fiber节点</span>
+        <span class="token keyword">const</span> primaryChildFragment <span class="token operator">=</span> <span class="token function">updateSuspensePrimaryChildren</span><span class="token punctuation">(</span>
+          current<span class="token punctuation">,</span>
+          workInProgress<span class="token punctuation">,</span>
+          nextPrimaryChildren<span class="token punctuation">,</span>
+          renderLanes<span class="token punctuation">,</span>
+        <span class="token punctuation">)</span><span class="token punctuation">;</span>
+        workInProgress<span class="token punctuation">.</span>memoizedState <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+        <span class="token comment">// 返回子组件对应的fiber节点</span>
+        <span class="token keyword">return</span> primaryChildFragment<span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+      <span class="token comment">// 跟上面的逻辑几乎一致</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>showFallback<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">const</span> nextFallbackChildren <span class="token operator">=</span> nextProps<span class="token punctuation">.</span>fallback<span class="token punctuation">;</span>
+        <span class="token keyword">const</span> nextPrimaryChildren <span class="token operator">=</span> nextProps<span class="token punctuation">.</span>children<span class="token punctuation">;</span>
+        <span class="token keyword">const</span> fallbackChildFragment <span class="token operator">=</span> <span class="token function">updateSuspenseFallbackChildren</span><span class="token punctuation">(</span>
+          current<span class="token punctuation">,</span>
+          workInProgress<span class="token punctuation">,</span>
+          nextPrimaryChildren<span class="token punctuation">,</span>
+          nextFallbackChildren<span class="token punctuation">,</span>
+          renderLanes<span class="token punctuation">,</span>
+        <span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">const</span> primaryChildFragment<span class="token operator">:</span> Fiber <span class="token operator">=</span> <span class="token punctuation">(</span>workInProgress<span class="token punctuation">.</span>child<span class="token operator">:</span> any<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">const</span> prevOffscreenState<span class="token operator">:</span> OffscreenState <span class="token operator">|</span> <span class="token keyword">null</span> <span class="token operator">=</span> <span class="token punctuation">(</span>current<span class="token punctuation">.</span>child<span class="token operator">:</span> any<span class="token punctuation">)</span>
+          <span class="token punctuation">.</span>memoizedState<span class="token punctuation">;</span>
+        primaryChildFragment<span class="token punctuation">.</span>memoizedState <span class="token operator">=</span>
+          prevOffscreenState <span class="token operator">===</span> <span class="token keyword">null</span>
+            <span class="token operator">?</span> <span class="token function">mountSuspenseOffscreenState</span><span class="token punctuation">(</span>renderLanes<span class="token punctuation">)</span>
+            <span class="token operator">:</span> <span class="token function">updateSuspenseOffscreenState</span><span class="token punctuation">(</span>prevOffscreenState<span class="token punctuation">,</span> renderLanes<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        primaryChildFragment<span class="token punctuation">.</span>childLanes <span class="token operator">=</span> <span class="token function">getRemainingWorkInPrimaryTree</span><span class="token punctuation">(</span>
+          current<span class="token punctuation">,</span>
+          renderLanes<span class="token punctuation">,</span>
+        <span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment">// Skip the primary children, and continue working on the</span>
+        <span class="token comment">// fallback children.</span>
+        workInProgress<span class="token punctuation">.</span>memoizedState <span class="token operator">=</span> <span class="token constant">SUSPENDED_MARKER</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> fallbackChildFragment<span class="token punctuation">;</span>
+      <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+        <span class="token comment">// Still haven't timed out. Continue rendering the children, like we</span>
+        <span class="token comment">// normally do.</span>
+        <span class="token keyword">const</span> nextPrimaryChildren <span class="token operator">=</span> nextProps<span class="token punctuation">.</span>children<span class="token punctuation">;</span>
+        <span class="token keyword">const</span> primaryChildFragment <span class="token operator">=</span> <span class="token function">updateSuspensePrimaryChildren</span><span class="token punctuation">(</span>
+          current<span class="token punctuation">,</span>
+          workInProgress<span class="token punctuation">,</span>
+          nextPrimaryChildren<span class="token punctuation">,</span>
+          renderLanes<span class="token punctuation">,</span>
+        <span class="token punctuation">)</span><span class="token punctuation">;</span>
+        workInProgress<span class="token punctuation">.</span>memoizedState <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> primaryChildFragment<span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>从这段代码可以看到，<code>updateSuspenseComponent</code>方法主要做的工作就是判断是否展示<code>fallback</code>，然后创建并返回相应的<code>fiber</code>节点。</p> <p>如果需要显示<code>fallback</code>则返回<code>fallback</code>对应的<code>fiber</code>节点，如果不需要显示<code>fallback</code>则返回真正子组件对应的<code>fiber</code>节点。</p> <p>那么子<code>fiber</code>节点是怎么创建的呢？</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token comment">// 创建原始子组件对应的fiber节点</span>
+<span class="token keyword">function</span> <span class="token function">mountSuspensePrimaryChildren</span><span class="token punctuation">(</span>
+  <span class="token parameter">workInProgress<span class="token punctuation">,</span>
+  primaryChildren<span class="token punctuation">,</span>
+  renderLanes<span class="token punctuation">,</span></span>
+<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> mode <span class="token operator">=</span> workInProgress<span class="token punctuation">.</span>mode<span class="token punctuation">;</span>
+  <span class="token comment">// 创建子fiber节点的props</span>
+  <span class="token keyword">const</span> primaryChildProps<span class="token operator">:</span> OffscreenProps <span class="token operator">=</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 子组件是否可见</span>
+    mode<span class="token operator">:</span> <span class="token string">'visible'</span><span class="token punctuation">,</span>
+    <span class="token comment">// 子组件</span>
+    children<span class="token operator">:</span> primaryChildren<span class="token punctuation">,</span>
+  <span class="token punctuation">}</span><span class="token punctuation">;</span>
+  <span class="token comment">// 创建子组件对应的fiber节点</span>
+  <span class="token keyword">const</span> primaryChildFragment <span class="token operator">=</span> <span class="token function">mountWorkInProgressOffscreenFiber</span><span class="token punctuation">(</span>
+    primaryChildProps<span class="token punctuation">,</span>
+    mode<span class="token punctuation">,</span>
+    renderLanes<span class="token punctuation">,</span>
+  <span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// 将子fiber节点与父级fiber节点连接形成fiber树</span>
+  <span class="token comment">// 子组件fiber节点的return指针指向父级fiber节点</span>
+  primaryChildFragment<span class="token punctuation">.</span>return <span class="token operator">=</span> workInProgress<span class="token punctuation">;</span>
+  <span class="token comment">// 父级fiber节点的child指针指向子组件fiber节点</span>
+  workInProgress<span class="token punctuation">.</span>child <span class="token operator">=</span> primaryChildFragment<span class="token punctuation">;</span>
+  <span class="token comment">// 返回子fiber节点</span>
+  <span class="token keyword">return</span> primaryChildFragment<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token comment">// 创建fallback组件对应的fiber节点</span>
+<span class="token keyword">function</span> <span class="token function">mountSuspenseFallbackChildren</span><span class="token punctuation">(</span>
+  <span class="token parameter">workInProgress<span class="token punctuation">,</span>
+  primaryChildren<span class="token punctuation">,</span>
+  fallbackChildren<span class="token punctuation">,</span>
+  renderLanes<span class="token punctuation">,</span></span>
+<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// 获取workInProgress fiber的mode属性</span>
+  <span class="token keyword">const</span> mode <span class="token operator">=</span> workInProgress<span class="token punctuation">.</span>mode<span class="token punctuation">;</span>
+  <span class="token comment">// 获取workInProgress fiber的子fiber节点</span>
+  <span class="token keyword">const</span> progressedPrimaryFragment<span class="token operator">:</span> Fiber <span class="token operator">|</span> <span class="token keyword">null</span> <span class="token operator">=</span> workInProgress<span class="token punctuation">.</span>child<span class="token punctuation">;</span>
+  <span class="token comment">// 创建子fiber节点的props</span>
+  <span class="token keyword">const</span> primaryChildProps<span class="token operator">:</span> OffscreenProps <span class="token operator">=</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 子组件是否可见</span>
+    mode<span class="token operator">:</span> <span class="token string">'hidden'</span><span class="token punctuation">,</span>
+    <span class="token comment">// 子组件</span>
+    children<span class="token operator">:</span> primaryChildren<span class="token punctuation">,</span>
+  <span class="token punctuation">}</span><span class="token punctuation">;</span>
+  <span class="token keyword">let</span> primaryChildFragment<span class="token punctuation">;</span>
+  <span class="token keyword">let</span> fallbackChildFragment<span class="token punctuation">;</span>
+  <span class="token comment">// 创建子组件对应的fiber节点</span>
+  primaryChildFragment <span class="token operator">=</span> <span class="token function">mountWorkInProgressOffscreenFiber</span><span class="token punctuation">(</span>
+    primaryChildProps<span class="token punctuation">,</span>
+    mode<span class="token punctuation">,</span>
+    NoLanes<span class="token punctuation">,</span>
+  <span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// 创建fallback对应的fiber节点</span>
+  fallbackChildFragment <span class="token operator">=</span> <span class="token function">createFiberFromFragment</span><span class="token punctuation">(</span>
+    fallbackChildren<span class="token punctuation">,</span>
+    mode<span class="token punctuation">,</span>
+    renderLanes<span class="token punctuation">,</span>
+    <span class="token keyword">null</span><span class="token punctuation">,</span>
+  <span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// 将这两个fiber节点连接起来，与父级fiber节点一并形成fiber树</span>
+  <span class="token comment">// 子组件fiber节点的return指针指向父级fiber节点</span>
+  primaryChildFragment<span class="token punctuation">.</span>return <span class="token operator">=</span> workInProgress<span class="token punctuation">;</span>
+  <span class="token comment">// fallback fiber节点的return指针也指向父级fiber节点</span>
+  fallbackChildFragment<span class="token punctuation">.</span>return <span class="token operator">=</span> workInProgress<span class="token punctuation">;</span>
+  <span class="token comment">// 子组件fiber节点的sibling指针指向fallback fiber节点，因为它们两个是兄弟节点</span>
+  primaryChildFragment<span class="token punctuation">.</span>sibling <span class="token operator">=</span> fallbackChildFragment<span class="token punctuation">;</span>
+  <span class="token comment">// 父级fiber节点的child指针指向子组件fiber节点</span>
+  workInProgress<span class="token punctuation">.</span>child <span class="token operator">=</span> primaryChildFragment<span class="token punctuation">;</span>
+  <span class="token comment">// 返回fallback fiber节点</span>
+  <span class="token keyword">return</span> fallbackChildFragment<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>从这段代码可以看到，子组件对应的<code>fiber</code>节点其实是<code>OffscreenFiber</code>，就是离屏的<code>fiber</code>节点，对应的组件类型是<code>OffscreenComponent</code>。所以接下来在<code>beginWork</code>方法中会使用<code>updateOffscreenComponent</code>方法处理<code>OffscreenComponent</code>类型的组件。</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">function</span> <span class="token function">updateOffscreenComponent</span><span class="token punctuation">(</span>
+  <span class="token parameter">current<span class="token operator">:</span> Fiber <span class="token operator">|</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
+  workInProgress<span class="token operator">:</span> Fiber<span class="token punctuation">,</span>
+  renderLanes<span class="token operator">:</span> Lanes<span class="token punctuation">,</span></span>
+<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> nextProps<span class="token operator">:</span> OffscreenProps <span class="token operator">=</span> workInProgress<span class="token punctuation">.</span>pendingProps<span class="token punctuation">;</span>
+  <span class="token keyword">const</span> nextChildren <span class="token operator">=</span> nextProps<span class="token punctuation">.</span>children<span class="token punctuation">;</span>
+
+  <span class="token keyword">const</span> prevState<span class="token operator">:</span> OffscreenState <span class="token operator">|</span> <span class="token keyword">null</span> <span class="token operator">=</span>
+    current <span class="token operator">!==</span> <span class="token keyword">null</span> <span class="token operator">?</span> current<span class="token punctuation">.</span>memoizedState <span class="token operator">:</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">let</span> spawnedCachePool<span class="token operator">:</span> SpawnedCachePool <span class="token operator">|</span> <span class="token keyword">null</span> <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>
+    nextProps<span class="token punctuation">.</span>mode <span class="token operator">===</span> <span class="token string">'hidden'</span> <span class="token operator">||</span>
+    nextProps<span class="token punctuation">.</span>mode <span class="token operator">===</span> <span class="token string">'unstable-defer-without-hiding'</span>
+  <span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 渲染隐藏的fiber树</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">includesSomeLane</span><span class="token punctuation">(</span>renderLanes<span class="token punctuation">,</span> <span class="token punctuation">(</span>OffscreenLane<span class="token operator">:</span> Lane<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+
+      <span class="token keyword">let</span> nextBaseLanes<span class="token punctuation">;</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>prevState <span class="token operator">!==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">const</span> prevBaseLanes <span class="token operator">=</span> prevState<span class="token punctuation">.</span>baseLanes<span class="token punctuation">;</span>
+        nextBaseLanes <span class="token operator">=</span> <span class="token function">mergeLanes</span><span class="token punctuation">(</span>prevBaseLanes<span class="token punctuation">,</span> renderLanes<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>enableCache<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          <span class="token comment">// Save the cache pool so we can resume later.</span>
+          spawnedCachePool <span class="token operator">=</span> <span class="token function">getOffscreenDeferredCachePool</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+          <span class="token comment">// We don't need to push to the cache pool because we're about to</span>
+          <span class="token comment">// bail out. There won't be a context mismatch because we only pop</span>
+          <span class="token comment">// the cache pool if `updateQueue` is non-null.</span>
+        <span class="token punctuation">}</span>
+      <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+        nextBaseLanes <span class="token operator">=</span> renderLanes<span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+
+      <span class="token comment">// Schedule this fiber to re-render at offscreen priority. Then bailout.</span>
+      workInProgress<span class="token punctuation">.</span>lanes <span class="token operator">=</span> workInProgress<span class="token punctuation">.</span>childLanes <span class="token operator">=</span> <span class="token function">laneToLanes</span><span class="token punctuation">(</span>
+        OffscreenLane<span class="token punctuation">,</span>
+      <span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">const</span> nextState<span class="token operator">:</span> OffscreenState <span class="token operator">=</span> <span class="token punctuation">{</span>
+        baseLanes<span class="token operator">:</span> nextBaseLanes<span class="token punctuation">,</span>
+        cachePool<span class="token operator">:</span> spawnedCachePool<span class="token punctuation">,</span>
+      <span class="token punctuation">}</span><span class="token punctuation">;</span>
+      workInProgress<span class="token punctuation">.</span>memoizedState <span class="token operator">=</span> nextState<span class="token punctuation">;</span>
+      workInProgress<span class="token punctuation">.</span>updateQueue <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+      <span class="token comment">// We're about to bail out, but we need to push this to the stack anyway</span>
+      <span class="token comment">// to avoid a push/pop misalignment.</span>
+      <span class="token function">pushRenderLanes</span><span class="token punctuation">(</span>workInProgress<span class="token punctuation">,</span> nextBaseLanes<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>enableLazyContextPropagation <span class="token operator">&amp;&amp;</span> current <span class="token operator">!==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment">// Since this tree will resume rendering in a separate render, we need</span>
+        <span class="token comment">// to propagate parent contexts now so we don't lose track of which</span>
+        <span class="token comment">// ones changed.</span>
+        <span class="token function">propagateParentContextChangesToDeferredTree</span><span class="token punctuation">(</span>
+          current<span class="token punctuation">,</span>
+          workInProgress<span class="token punctuation">,</span>
+          renderLanes<span class="token punctuation">,</span>
+        <span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+
+      <span class="token keyword">return</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+      <span class="token comment">// This is the second render. The surrounding visible content has already</span>
+      <span class="token comment">// committed. Now we resume rendering the hidden tree.</span>
+
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>enableCache <span class="token operator">&amp;&amp;</span> prevState <span class="token operator">!==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment">// If the render that spawned this one accessed the cache pool, resume</span>
+        <span class="token comment">// using the same cache. Unless the parent changed, since that means</span>
+        <span class="token comment">// there was a refresh.</span>
+        <span class="token keyword">const</span> prevCachePool <span class="token operator">=</span> prevState<span class="token punctuation">.</span>cachePool<span class="token punctuation">;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>prevCachePool <span class="token operator">!==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          spawnedCachePool <span class="token operator">=</span> <span class="token function">restoreSpawnedCachePool</span><span class="token punctuation">(</span>
+            workInProgress<span class="token punctuation">,</span>
+            prevCachePool<span class="token punctuation">,</span>
+          <span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+      <span class="token punctuation">}</span>
+
+      <span class="token comment">// Rendering at offscreen, so we can clear the base lanes.</span>
+      <span class="token keyword">const</span> nextState<span class="token operator">:</span> OffscreenState <span class="token operator">=</span> <span class="token punctuation">{</span>
+        baseLanes<span class="token operator">:</span> NoLanes<span class="token punctuation">,</span>
+        cachePool<span class="token operator">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
+      <span class="token punctuation">}</span><span class="token punctuation">;</span>
+      workInProgress<span class="token punctuation">.</span>memoizedState <span class="token operator">=</span> nextState<span class="token punctuation">;</span>
+      <span class="token comment">// Push the lanes that were skipped when we bailed out.</span>
+      <span class="token keyword">const</span> subtreeRenderLanes <span class="token operator">=</span>
+        prevState <span class="token operator">!==</span> <span class="token keyword">null</span> <span class="token operator">?</span> prevState<span class="token punctuation">.</span>baseLanes <span class="token operator">:</span> renderLanes<span class="token punctuation">;</span>
+      <span class="token function">pushRenderLanes</span><span class="token punctuation">(</span>workInProgress<span class="token punctuation">,</span> subtreeRenderLanes<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 渲染可见的fiber树</span>
+    <span class="token keyword">let</span> subtreeRenderLanes<span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>prevState <span class="token operator">!==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token comment">// We're going from hidden -&gt; visible.</span>
+
+      subtreeRenderLanes <span class="token operator">=</span> <span class="token function">mergeLanes</span><span class="token punctuation">(</span>prevState<span class="token punctuation">.</span>baseLanes<span class="token punctuation">,</span> renderLanes<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>enableCache<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment">// If the render that spawned this one accessed the cache pool, resume</span>
+        <span class="token comment">// using the same cache. Unless the parent changed, since that means</span>
+        <span class="token comment">// there was a refresh.</span>
+        <span class="token keyword">const</span> prevCachePool <span class="token operator">=</span> prevState<span class="token punctuation">.</span>cachePool<span class="token punctuation">;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>prevCachePool <span class="token operator">!==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          spawnedCachePool <span class="token operator">=</span> <span class="token function">restoreSpawnedCachePool</span><span class="token punctuation">(</span>
+            workInProgress<span class="token punctuation">,</span>
+            prevCachePool<span class="token punctuation">,</span>
+          <span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+      <span class="token punctuation">}</span>
+
+      <span class="token comment">// Since we're not hidden anymore, reset the state</span>
+      workInProgress<span class="token punctuation">.</span>memoizedState <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+      <span class="token comment">// We weren't previously hidden, and we still aren't, so there's nothing</span>
+      <span class="token comment">// special to do. Need to push to the stack regardless, though, to avoid</span>
+      <span class="token comment">// a push/pop misalignment.</span>
+      subtreeRenderLanes <span class="token operator">=</span> renderLanes<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token function">pushRenderLanes</span><span class="token punctuation">(</span>workInProgress<span class="token punctuation">,</span> subtreeRenderLanes<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>enableCache<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// If we have a cache pool from a previous render attempt, then this will be</span>
+    <span class="token comment">// non-null. We use this to infer whether to push/pop the cache context.</span>
+    workInProgress<span class="token punctuation">.</span>updateQueue <span class="token operator">=</span> spawnedCachePool<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>supportsPersistence<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// In persistent mode, the offscreen children are wrapped in a host node.</span>
+    <span class="token comment">// TODO: Optimize this to use the OffscreenComponent fiber instead of</span>
+    <span class="token comment">// an extra HostComponent fiber. Need to make sure this doesn't break Fabric</span>
+    <span class="token comment">// or some other infra that expects a HostComponent.</span>
+    <span class="token keyword">const</span> isHidden <span class="token operator">=</span>
+      nextProps<span class="token punctuation">.</span>mode <span class="token operator">===</span> <span class="token string">'hidden'</span> <span class="token operator">&amp;&amp;</span>
+      workInProgress<span class="token punctuation">.</span>tag <span class="token operator">!==</span> LegacyHiddenComponent<span class="token punctuation">;</span>
+    <span class="token keyword">const</span> offscreenContainer <span class="token operator">=</span> <span class="token function">reconcileOffscreenHostContainer</span><span class="token punctuation">(</span>
+      current<span class="token punctuation">,</span>
+      workInProgress<span class="token punctuation">,</span>
+      isHidden<span class="token punctuation">,</span>
+      nextChildren<span class="token punctuation">,</span>
+      renderLanes<span class="token punctuation">,</span>
+    <span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> offscreenContainer<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>supportsMutation<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token function">reconcileChildren</span><span class="token punctuation">(</span>current<span class="token punctuation">,</span> workInProgress<span class="token punctuation">,</span> nextChildren<span class="token punctuation">,</span> renderLanes<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> workInProgress<span class="token punctuation">.</span>child<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  <span class="token keyword">return</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>其中很大一部分逻辑是处理缓存的，暂时还不需要理解这些代码，只要知道最后会根据<code>children</code>创建对应的<code>fiber</code>节点就可以了（如果使用了<code>lazy</code>方法，这个<code>fiber</code>节点对应的组件就是<code>LazyComponent</code>）。</p> <h2 id="lazy的实现"><a href="#lazy的实现" class="header-anchor">#</a> Lazy的实现</h2> <p>在<code>beginWork</code>方法中通过<code>mountLazyComponent</code>方法处理<code>LazyComponent</code>类型的组件。</p> <p>但是在此之前我们需要先知道<code>React.lazy</code>这个方法是怎么实现的，才能更好的了解<code>LazyComponent</code>具有哪些特点。</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">function</span> lazy<span class="token operator">&lt;</span><span class="token constant">T</span><span class="token operator">&gt;</span><span class="token punctuation">(</span>
+  <span class="token function-variable function">ctor</span><span class="token operator">:</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> Thenable<span class="token operator">&lt;</span><span class="token punctuation">{</span><span class="token keyword">default</span><span class="token operator">:</span> <span class="token constant">T</span><span class="token punctuation">,</span> <span class="token operator">...</span><span class="token punctuation">}</span><span class="token operator">&gt;</span><span class="token punctuation">,</span>
+<span class="token punctuation">)</span><span class="token operator">:</span> LazyComponent<span class="token operator">&lt;</span><span class="token constant">T</span><span class="token punctuation">,</span> Payload<span class="token operator">&lt;</span><span class="token constant">T</span><span class="token operator">&gt;&gt;</span> <span class="token punctuation">{</span>
+  <span class="token comment">// 定义一个对象</span>
+  <span class="token keyword">const</span> payload<span class="token operator">:</span> Payload<span class="token operator">&lt;</span><span class="token constant">T</span><span class="token operator">&gt;</span> <span class="token operator">=</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 记录thenable方法对应的状态</span>
+    _status<span class="token operator">:</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span>
+    <span class="token comment">// 通过参数传入的thenable方法</span>
+    _result<span class="token operator">:</span> ctor<span class="token punctuation">,</span>
+  <span class="token punctuation">}</span><span class="token punctuation">;</span>
+  <span class="token comment">// 创建LazyComponent对应的数据结构</span>
+  <span class="token keyword">const</span> lazyType<span class="token operator">:</span> LazyComponent<span class="token operator">&lt;</span><span class="token constant">T</span><span class="token punctuation">,</span> Payload<span class="token operator">&lt;</span><span class="token constant">T</span><span class="token operator">&gt;&gt;</span> <span class="token operator">=</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 组件类型</span>
+    $$<span class="token keyword">typeof</span><span class="token operator">:</span> <span class="token constant">REACT_LAZY_TYPE</span><span class="token punctuation">,</span>
+    <span class="token comment">// payload对象</span>
+    _payload<span class="token operator">:</span> payload<span class="token punctuation">,</span>
+    <span class="token comment">// 执行thenable状态的方法</span>
+    _init<span class="token operator">:</span> lazyInitializer<span class="token punctuation">,</span>
+  <span class="token punctuation">}</span><span class="token punctuation">;</span>
+  <span class="token comment">// 返回REACT_LAZY_TYPE类型的ReactElement</span>
+  <span class="token keyword">return</span> lazyType<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">function</span> lazyInitializer<span class="token operator">&lt;</span><span class="token constant">T</span><span class="token operator">&gt;</span><span class="token punctuation">(</span>payload<span class="token operator">:</span> Payload<span class="token operator">&lt;</span><span class="token constant">T</span><span class="token operator">&gt;</span><span class="token punctuation">)</span><span class="token operator">:</span> <span class="token constant">T</span> <span class="token punctuation">{</span>
+  <span class="token comment">// 判断thenable的状态，Uninitialized的值为 -1，即未初始化</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>payload<span class="token punctuation">.</span>_status <span class="token operator">===</span> Uninitialized<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 还没初始化</span>
+    <span class="token comment">// 获取thenable方法</span>
+    <span class="token keyword">const</span> ctor <span class="token operator">=</span> payload<span class="token punctuation">.</span>_result<span class="token punctuation">;</span>
+    <span class="token comment">// 执行thenable方法</span>
+    <span class="token keyword">const</span> thenable <span class="token operator">=</span> <span class="token function">ctor</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">// 定义then方法</span>
+    thenable<span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span>
+      <span class="token parameter">moduleObject</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+        <span class="token comment">// 加载成功时的回调函数</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>payload<span class="token punctuation">.</span>_status <span class="token operator">===</span> Pending <span class="token operator">||</span> payload<span class="token punctuation">.</span>_status <span class="token operator">===</span> Uninitialized<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          <span class="token comment">// 改变这个promise的状态为resolved</span>
+          <span class="token keyword">const</span> resolved<span class="token operator">:</span> ResolvedPayload<span class="token operator">&lt;</span><span class="token constant">T</span><span class="token operator">&gt;</span> <span class="token operator">=</span> <span class="token punctuation">(</span>payload<span class="token operator">:</span> any<span class="token punctuation">)</span><span class="token punctuation">;</span>
+          <span class="token comment">// 赋值状态和结果</span>
+          <span class="token comment">// Resolved的值为1</span>
+          resolved<span class="token punctuation">.</span>_status <span class="token operator">=</span> Resolved<span class="token punctuation">;</span>
+          <span class="token comment">// moduleObject就是导出的模块对象</span>
+          resolved<span class="token punctuation">.</span>_result <span class="token operator">=</span> moduleObject<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+      <span class="token punctuation">}</span><span class="token punctuation">,</span>
+      <span class="token parameter">error</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+        <span class="token comment">// 加载失败时的回调函数</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>payload<span class="token punctuation">.</span>_status <span class="token operator">===</span> Pending <span class="token operator">||</span> payload<span class="token punctuation">.</span>_status <span class="token operator">===</span> Uninitialized<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          <span class="token comment">// 改变这个promise的状态为rejected</span>
+          <span class="token keyword">const</span> rejected<span class="token operator">:</span> RejectedPayload <span class="token operator">=</span> <span class="token punctuation">(</span>payload<span class="token operator">:</span> any<span class="token punctuation">)</span><span class="token punctuation">;</span>
+          <span class="token comment">// 赋值状态和结果</span>
+          <span class="token comment">// Rejected的值为2</span>
+          rejected<span class="token punctuation">.</span>_status <span class="token operator">=</span> Rejected<span class="token punctuation">;</span>
+          <span class="token comment">// error就是导出过程中遇到的错误</span>
+          rejected<span class="token punctuation">.</span>_result <span class="token operator">=</span> error<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+      <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>payload<span class="token punctuation">.</span>_status <span class="token operator">===</span> Uninitialized<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token comment">// 在这种情况下，我们仍然没有初始化，然后我们等待thenable函数的执行。在此期间将其设置为待处理。</span>
+      <span class="token keyword">const</span> pending<span class="token operator">:</span> PendingPayload <span class="token operator">=</span> <span class="token punctuation">(</span>payload<span class="token operator">:</span> any<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      pending<span class="token punctuation">.</span>_status <span class="token operator">=</span> Pending<span class="token punctuation">;</span>
+      pending<span class="token punctuation">.</span>_result <span class="token operator">=</span> thenable<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>payload<span class="token punctuation">.</span>_status <span class="token operator">===</span> Resolved<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 状态为resolved，说明执行成功了，则获取执行的结果</span>
+    <span class="token keyword">const</span> moduleObject <span class="token operator">=</span> payload<span class="token punctuation">.</span>_result<span class="token punctuation">;</span>
+    <span class="token comment">// 返回default对应的导出模块的内容</span>
+    <span class="token keyword">return</span> moduleObject<span class="token punctuation">.</span>default<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 状态不为resolved的时候，都会走这里的逻辑，包括pending状态和rejected状态</span>
+    <span class="token comment">// pending状态payload._result的值是thenable，即Promise对象</span>
+    <span class="token comment">// rejected状态payload._result的值是error</span>
+    <span class="token keyword">throw</span> payload<span class="token punctuation">.</span>_result<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>从这段代码可以看到，<code>lazy</code>方法主要做的工作是构建<code>LazyComponent</code>的数据结构，其中包括记录<em>Promise</em>状态的对象和改变<em>Promise</em>状态的函数。只有在<em>Promise</em>状态变为<em>resolved</em>时才会返回导出结果，否则都将<code>throw</code>一个变量（可能是<code>error</code>，也可能是状态为<em>pending</em>或<em>rejected</em>的<code>Promise</code>对象）。</p> <p>调用<code>mountLazyComponent</code>方法处理<code>LazyComponent</code>：</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">function</span> <span class="token function">mountLazyComponent</span><span class="token punctuation">(</span>
+  <span class="token parameter">_current<span class="token punctuation">,</span>
+  workInProgress<span class="token punctuation">,</span>
+  elementType<span class="token punctuation">,</span>
+  renderLanes<span class="token punctuation">,</span></span>
+<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>_current <span class="token operator">!==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// _curren不为null，说明是update</span>
+    <span class="token comment">// 惰性组件只有挂载在非并发树中，处于不一致状态时才会挂载。所以把它当做mount来处理</span>
+    <span class="token comment">// 清除alternate指针的连接</span>
+    _current<span class="token punctuation">.</span>alternate <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+    workInProgress<span class="token punctuation">.</span>alternate <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+    <span class="token comment">// 标记Placement flags</span>
+    workInProgress<span class="token punctuation">.</span>flags <span class="token operator">|=</span> Placement<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  <span class="token comment">// 获取props属性</span>
+  <span class="token keyword">const</span> props <span class="token operator">=</span> workInProgress<span class="token punctuation">.</span>pendingProps<span class="token punctuation">;</span>
+  <span class="token comment">// elementType是一个对象具有两个属性</span>
+  <span class="token keyword">const</span> lazyComponent<span class="token operator">:</span> LazyComponentType<span class="token operator">&lt;</span>any<span class="token punctuation">,</span> any<span class="token operator">&gt;</span> <span class="token operator">=</span> elementType<span class="token punctuation">;</span>
+  <span class="token comment">// 获取payload对象</span>
+  <span class="token keyword">const</span> payload <span class="token operator">=</span> lazyComponent<span class="token punctuation">.</span>_payload<span class="token punctuation">;</span>
+  <span class="token comment">// 获取init方法</span>
+  <span class="token keyword">const</span> init <span class="token operator">=</span> lazyComponent<span class="token punctuation">.</span>_init<span class="token punctuation">;</span>
+  <span class="token comment">// 执行init，并获取执行结果，执行结果就是导出的模块内容，通常也是一个组件</span>
+  <span class="token keyword">let</span> Component <span class="token operator">=</span> <span class="token function">init</span><span class="token punctuation">(</span>payload<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// 赋值</span>
+  workInProgress<span class="token punctuation">.</span>type <span class="token operator">=</span> Component<span class="token punctuation">;</span>
+  <span class="token comment">// 判断Component对应的组件类型</span>
+  <span class="token keyword">const</span> resolvedTag <span class="token operator">=</span> <span class="token punctuation">(</span>workInProgress<span class="token punctuation">.</span>tag <span class="token operator">=</span> <span class="token function">resolveLazyComponentTag</span><span class="token punctuation">(</span>Component<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// 将需要计算的pendingProps和组件自身的baseProps进行合并，然后返回合并的结果</span>
+  <span class="token keyword">const</span> resolvedProps <span class="token operator">=</span> <span class="token function">resolveDefaultProps</span><span class="token punctuation">(</span>Component<span class="token punctuation">,</span> props<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">let</span> child<span class="token punctuation">;</span>
+  <span class="token comment">// 根据组件类型的不同，通过不同方法创建相应的子fiber节点</span>
+  <span class="token keyword">switch</span> <span class="token punctuation">(</span>resolvedTag<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 函数组件</span>
+    <span class="token keyword">case</span> FunctionComponent<span class="token operator">:</span> <span class="token punctuation">{</span>
+      child <span class="token operator">=</span> <span class="token function">updateFunctionComponent</span><span class="token punctuation">(</span>
+        <span class="token keyword">null</span><span class="token punctuation">,</span>
+        workInProgress<span class="token punctuation">,</span>
+        Component<span class="token punctuation">,</span>
+        resolvedProps<span class="token punctuation">,</span>
+        renderLanes<span class="token punctuation">,</span>
+      <span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">return</span> child<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token comment">// 类组件</span>
+    <span class="token keyword">case</span> ClassComponent<span class="token operator">:</span> <span class="token punctuation">{</span>
+      child <span class="token operator">=</span> <span class="token function">updateClassComponent</span><span class="token punctuation">(</span>
+        <span class="token keyword">null</span><span class="token punctuation">,</span>
+        workInProgress<span class="token punctuation">,</span>
+        Component<span class="token punctuation">,</span>
+        resolvedProps<span class="token punctuation">,</span>
+        renderLanes<span class="token punctuation">,</span>
+      <span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">return</span> child<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>理想情况下，在<code>mountLazyComponent</code>方法中执行<code>init</code>方法想要拿到<em>import</em>方法返回的<em>Promise</em>对象，即导出的模块内容。然后再根据导出的模块内容对应的组件类型进行不同的处理，最终得到组件对应的子<code>fiber</code>节点。</p> <p>我们知道动态加载一个模块有时不可能立即完成，这个过程需要等待一段时间。而在这段时间里当第一次执行<code>lazyInitializer</code>方法时<code>thenable</code>代表的<code>Promise</code>对象状态还是<code>pending</code>状态，如果是<code>pending</code>状态将会执行<code>throw payload._result</code>这行代码。而<code>payload._result</code>的值还是<code>thenable</code>这个<code>Promise</code>对象。</p> <p>而源码中使用<code>throw</code>抛出的这个<code>Promise</code>对象会被当做一个错误处理。因为以上过程发生在<code>beginWork</code>方法中，所以属于<code>render</code>阶段。而<code>render</code>阶段内所有<code>throw</code>抛出的变量，都会被<code>handleError</code>这个方法接收。</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">function</span> <span class="token function">renderRootConcurrent</span><span class="token punctuation">(</span><span class="token parameter">root<span class="token operator">:</span> FiberRoot<span class="token punctuation">,</span> lanes<span class="token operator">:</span> Lanes</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// ...</span>
+
+  <span class="token keyword">do</span> <span class="token punctuation">{</span>
+    <span class="token keyword">try</span> <span class="token punctuation">{</span>
+      <span class="token function">workLoopConcurrent</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">break</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span>thrownValue<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token comment">// thrownValue就是throw抛出的值</span>
+      <span class="token function">handleError</span><span class="token punctuation">(</span>root<span class="token punctuation">,</span> thrownValue<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span> <span class="token keyword">while</span> <span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token comment">// ...</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p><code>handleError</code>接收到了<code>throw</code>抛出的变量，在内部会调用<code>throwException</code>方法中进行处理。</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">function</span> <span class="token function">throwException</span><span class="token punctuation">(</span>
+  <span class="token parameter">root<span class="token operator">:</span> FiberRoot<span class="token punctuation">,</span>
+  returnFiber<span class="token operator">:</span> Fiber<span class="token punctuation">,</span>
+  sourceFiber<span class="token operator">:</span> Fiber<span class="token punctuation">,</span>
+  value<span class="token operator">:</span> mixed<span class="token punctuation">,</span>
+  rootRenderLanes<span class="token operator">:</span> Lanes<span class="token punctuation">,</span></span>
+<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// 把目标fiber节点标记Incomplete flags</span>
+  sourceFiber<span class="token punctuation">.</span>flags <span class="token operator">|=</span> Incomplete<span class="token punctuation">;</span>
+
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>
+    value <span class="token operator">!==</span> <span class="token keyword">null</span> <span class="token operator">&amp;&amp;</span>
+    <span class="token keyword">typeof</span> value <span class="token operator">===</span> <span class="token string">'object'</span> <span class="token operator">&amp;&amp;</span>
+    <span class="token keyword">typeof</span> value<span class="token punctuation">.</span>then <span class="token operator">===</span> <span class="token string">'function'</span>
+  <span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 说明value是一个Promise对象</span>
+    <span class="token comment">// 定义wakeable</span>
+    <span class="token keyword">const</span> wakeable<span class="token operator">:</span> Wakeable <span class="token operator">=</span> <span class="token punctuation">(</span>value<span class="token operator">:</span> any<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">// 调度到最近的Suspense进行重新渲染视图</span>
+    <span class="token keyword">let</span> workInProgress <span class="token operator">=</span> returnFiber<span class="token punctuation">;</span>
+    <span class="token keyword">do</span> <span class="token punctuation">{</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>
+        workInProgress<span class="token punctuation">.</span>tag <span class="token operator">===</span> SuspenseComponent <span class="token operator">&amp;&amp;</span>
+        <span class="token function">shouldCaptureSuspense</span><span class="token punctuation">(</span>workInProgress<span class="token punctuation">,</span> hasInvisibleParentBoundary<span class="token punctuation">)</span>
+      <span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment">// 找到最近的边界</span>
+        <span class="token keyword">const</span> wakeables<span class="token operator">:</span> Set<span class="token operator">&lt;</span>Wakeable<span class="token operator">&gt;</span> <span class="token operator">=</span> <span class="token punctuation">(</span>workInProgress<span class="token punctuation">.</span>updateQueue<span class="token operator">:</span> any<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment">// 如果updateQueue为null</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>wakeables <span class="token operator">===</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          <span class="token comment">// 初始化updateQueue</span>
+          <span class="token keyword">const</span> updateQueue <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">Set</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">:</span> any<span class="token punctuation">)</span><span class="token punctuation">;</span>
+          <span class="token comment">// 将Wakeable保存到SuspenseComponent的updateQueue属性中</span>
+          updateQueue<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>wakeable<span class="token punctuation">)</span><span class="token punctuation">;</span>
+          workInProgress<span class="token punctuation">.</span>updateQueue <span class="token operator">=</span> updateQueue<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+          <span class="token comment">// 将Wakeable保存到SuspenseComponent的updateQueue属性中</span>
+          wakeables<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>wakeable<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        <span class="token comment">// 处理Promise对象</span>
+        <span class="token function">attachPingListener</span><span class="token punctuation">(</span>root<span class="token punctuation">,</span> wakeable<span class="token punctuation">,</span> rootRenderLanes<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment">// 赋值</span>
+        workInProgress<span class="token punctuation">.</span>flags <span class="token operator">|=</span> ShouldCapture<span class="token punctuation">;</span>
+        workInProgress<span class="token punctuation">.</span>lanes <span class="token operator">=</span> rootRenderLanes<span class="token punctuation">;</span>
+        <span class="token comment">// 返回</span>
+        <span class="token keyword">return</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+      <span class="token comment">// 这个边界在渲染过程中已经被捕获了，遍历到下一个边界。</span>
+      workInProgress <span class="token operator">=</span> workInProgress<span class="token punctuation">.</span>return<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword">while</span> <span class="token punctuation">(</span>workInProgress <span class="token operator">!==</span> <span class="token keyword">null</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token comment">// ordero code...</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>这个地方的关键在于调用的<code>attachPingListener</code>方法：</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">function</span> <span class="token function">attachPingListener</span><span class="token punctuation">(</span><span class="token parameter">root<span class="token operator">:</span> FiberRoot<span class="token punctuation">,</span> wakeable<span class="token operator">:</span> Wakeable<span class="token punctuation">,</span> lanes<span class="token operator">:</span> Lanes</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// 绑定一个监听器到这个根节点上</span>
+  <span class="token keyword">let</span> pingCache <span class="token operator">=</span> root<span class="token punctuation">.</span>pingCache<span class="token punctuation">;</span>
+  <span class="token comment">// 当根节点不存在渲染的情况下，会开启一次状态更新</span>
+  <span class="token keyword">let</span> threadIDs<span class="token punctuation">;</span>
+  <span class="token comment">// 处理pingCache</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>pingCache <span class="token operator">===</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    pingCache <span class="token operator">=</span> root<span class="token punctuation">.</span>pingCache <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">PossiblyWeakMap</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    threadIDs <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Set</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    pingCache<span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span>wakeable<span class="token punctuation">,</span> threadIDs<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+    threadIDs <span class="token operator">=</span> pingCache<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>wakeable<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>threadIDs <span class="token operator">===</span> <span class="token keyword">undefined</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      threadIDs <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Set</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      pingCache<span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span>wakeable<span class="token punctuation">,</span> threadIDs<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+  <span class="token comment">// 不存在更新</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>threadIDs<span class="token punctuation">.</span><span class="token function">has</span><span class="token punctuation">(</span>lanes<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 使用线程ID来防止冗余的侦听器</span>
+    threadIDs<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>lanes<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> ping <span class="token operator">=</span> <span class="token function">pingSuspendedRoot</span><span class="token punctuation">.</span><span class="token function">bind</span><span class="token punctuation">(</span><span class="token keyword">null</span><span class="token punctuation">,</span> root<span class="token punctuation">,</span> wakeable<span class="token punctuation">,</span> lanes<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">// 将Promise对象再定义一个then方法，回调函数都为ping，即pingSuspendedRoot</span>
+    wakeable<span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span>ping<span class="token punctuation">,</span> ping<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p><code>attachPingListener</code>函数为<code>Promise</code>定义了一个<code>then</code>方法，所以当<code>Promise</code>的状态改变后会调用回调函数<code>ping</code>，对应的就是<code>pingSuspendedRoot</code>方法。</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">function</span> <span class="token function">pingSuspendedRoot</span><span class="token punctuation">(</span>
+  <span class="token parameter">root<span class="token operator">:</span> FiberRoot<span class="token punctuation">,</span>
+  wakeable<span class="token operator">:</span> Wakeable<span class="token punctuation">,</span>
+  pingedLanes<span class="token operator">:</span> Lanes<span class="token punctuation">,</span></span>
+<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// 获取pingCache</span>
+  <span class="token keyword">const</span> pingCache <span class="token operator">=</span> root<span class="token punctuation">.</span>pingCache<span class="token punctuation">;</span>
+  <span class="token comment">// 如果pingCache不为null</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>pingCache <span class="token operator">!==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 从pingCache中删除这个wakeable</span>
+    pingCache<span class="token punctuation">.</span><span class="token function">delete</span><span class="token punctuation">(</span>wakeable<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  <span class="token comment">// 获取一个事件时间</span>
+  <span class="token keyword">const</span> eventTime <span class="token operator">=</span> <span class="token function">requestEventTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// 标记root根节点为pingedLanes</span>
+  <span class="token function">markRootPinged</span><span class="token punctuation">(</span>root<span class="token punctuation">,</span> pingedLanes<span class="token punctuation">,</span> eventTime<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// 调度更新</span>
+  <span class="token function">ensureRootIsScheduled</span><span class="token punctuation">(</span>root<span class="token punctuation">,</span> eventTime<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p><code>pingSuspendedRoot</code>方法主要的作用是从根节点再次开启调度更新，目的是进行<code>fallback -&gt; children</code>的渲染。因为<code>Promise</code>对象此时也已经完成了状态变化，所以在<code>render</code>阶段的<code>beginWork</code>方法中，调用<code>mountLazyComponent</code>方法可以正确执行<code>init(payload)</code>，从而得到导出的组件并根据组件创建对应的<code>fiber</code>节点。之后再顺利完成<code>render</code>阶段和<code>commot</code>阶段，页面上的显示效果就会从<code>fallback</code>切换到子组件。</p> <p>其中还有非常重要的一步是如何控制<code>fallback</code>的显示。在执行完<code>throwException</code>方法后会接着调用<code>completeUnitOfWork</code>方法：</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">function</span> <span class="token function">completeUnitOfWork</span><span class="token punctuation">(</span><span class="token parameter">unitOfWork<span class="token operator">:</span> Fiber</span><span class="token punctuation">)</span><span class="token operator">:</span> <span class="token keyword">void</span> <span class="token punctuation">{</span>
+  <span class="token comment">// 此时unitOfWork是lazy对应的fiber节点</span>
+  <span class="token keyword">let</span> completedWork <span class="token operator">=</span> unitOfWork<span class="token punctuation">;</span>
+  <span class="token keyword">do</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 获取变量</span>
+    <span class="token keyword">const</span> current <span class="token operator">=</span> completedWork<span class="token punctuation">.</span>alternate<span class="token punctuation">;</span>
+    <span class="token keyword">const</span> returnFiber <span class="token operator">=</span> completedWork<span class="token punctuation">.</span>return<span class="token punctuation">;</span>
+
+    <span class="token comment">// 检查工作是否完成，或者是否有throw值</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>completedWork<span class="token punctuation">.</span>flags <span class="token operator">&amp;</span> Incomplete<span class="token punctuation">)</span> <span class="token operator">===</span> NoFlags<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token comment">// 当前fiber节点完成了工作</span>
+      <span class="token keyword">let</span> next<span class="token punctuation">;</span>
+      inext <span class="token operator">=</span> <span class="token function">completeWork</span><span class="token punctuation">(</span>current<span class="token punctuation">,</span> completedWork<span class="token punctuation">,</span> subtreeRenderLanes<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>next <span class="token operator">!==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment">// 这个fiber节点完成了工作，继续执行接下来的流程</span>
+        workInProgress <span class="token operator">=</span> next<span class="token punctuation">;</span>
+        <span class="token comment">// 返回</span>
+        <span class="token keyword">return</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+      <span class="token comment">// 当前fiber节点未完成工作</span>
+      <span class="token comment">// 需要获取边界对应的fiber节点</span>
+      <span class="token keyword">const</span> next <span class="token operator">=</span> <span class="token function">unwindWork</span><span class="token punctuation">(</span>completedWork<span class="token punctuation">,</span> subtreeRenderLanes<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>next <span class="token operator">!==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment">// 如果next有值，获取到了这个边界fiber节点，通常对应suspense</span>
+        next<span class="token punctuation">.</span>flags <span class="token operator">&amp;=</span> HostEffectMask<span class="token punctuation">;</span>
+        <span class="token comment">// 返回这个fiber节点</span>
+        workInProgress <span class="token operator">=</span> next<span class="token punctuation">;</span>
+        <span class="token comment">// 返回</span>
+        <span class="token keyword">return</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>returnFiber <span class="token operator">!==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment">// 将父级fiber标记为Incomplete并清除它的子树标记</span>
+        returnFiber<span class="token punctuation">.</span>flags <span class="token operator">|=</span> Incomplete<span class="token punctuation">;</span>
+        returnFiber<span class="token punctuation">.</span>subtreeFlags <span class="token operator">=</span> NoFlags<span class="token punctuation">;</span>
+        returnFiber<span class="token punctuation">.</span>deletions <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+    <span class="token comment">// 获取兄弟Fiber节点</span>
+    <span class="token keyword">const</span> siblingFiber <span class="token operator">=</span> completedWork<span class="token punctuation">.</span>sibling<span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>siblingFiber <span class="token operator">!==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token comment">// 如果存在兄弟fiber节点，则还需要处理兄弟fiber节点</span>
+      workInProgress <span class="token operator">=</span> siblingFiber<span class="token punctuation">;</span>
+      <span class="token comment">// 返回</span>
+      <span class="token keyword">return</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token comment">// 向上遍历父级fiber节点</span>
+    completedWork <span class="token operator">=</span> returnFiber<span class="token punctuation">;</span>
+    <span class="token comment">// 更新workInProgress变量</span>
+    workInProgress <span class="token operator">=</span> completedWork<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span> <span class="token keyword">while</span> <span class="token punctuation">(</span>completedWork <span class="token operator">!==</span> <span class="token keyword">null</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token comment">// 如果到达了rootfiber节点</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>workInProgressRootExitStatus <span class="token operator">===</span> RootIncomplete<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    workInProgressRootExitStatus <span class="token operator">=</span> RootCompleted<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>调用<code>unwindWork</code>方法：</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token comment">// 简化后的代码</span>
+<span class="token keyword">function</span> <span class="token function">unwindWork</span><span class="token punctuation">(</span><span class="token parameter">workInProgress<span class="token operator">:</span> Fiber<span class="token punctuation">,</span> renderLanes<span class="token operator">:</span> Lanes</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">switch</span> <span class="token punctuation">(</span>workInProgress<span class="token punctuation">.</span>tag<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 通常会由suspense组件捕获throw的值</span>
+    <span class="token keyword">case</span> SuspenseComponent<span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token keyword">const</span> flags <span class="token operator">=</span> workInProgress<span class="token punctuation">.</span>flags<span class="token punctuation">;</span>
+      <span class="token comment">// 如果flags包含ShouldCapture</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>flags <span class="token operator">&amp;</span> ShouldCapture<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment">// 为flags标记DidCapture</span>
+        workInProgress<span class="token punctuation">.</span>flags <span class="token operator">=</span> <span class="token punctuation">(</span>flags <span class="token operator">&amp;</span> <span class="token operator">~</span>ShouldCapture<span class="token punctuation">)</span> <span class="token operator">|</span> DidCapture<span class="token punctuation">;</span>
+        <span class="token comment">// 由suspense捕获到了值，重新渲染它.</span>
+        <span class="token keyword">return</span> workInProgress<span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+      <span class="token keyword">return</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">default</span><span class="token operator">:</span>
+      <span class="token keyword">return</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>在<code>unwindWork</code>方法中主要做的工作是为<code>Suspense</code>对应的<code>fiber</code>节点标记<code>DidCapture flags</code>。而且当<code>unwindWork</code>方法返回<code>SuspenseComponent</code>对应的<code>fiber</code>节点<code>next</code>时，会赋值<code>workInProgress = next</code>，然后退出<code>completeUnitOfWork</code>方法。</p> <p>因为这个过程发生在<code>do while</code>循环里，所以又会调用<code>workLoopConcurrent</code>方法然后执行<code>beginWork</code>方法处理<code>workInProgress</code>。这个<code>workInProgress</code>对应的组件类型是<code>SuspenseComponent</code>，所以会再次调用<code>updateSuspenseComponent</code>方法。</p> <p>当执行到这行代码：</p> <div class="language-js extra-class"><pre class="language-js"><code> <span class="token keyword">const</span> didSuspend <span class="token operator">=</span> <span class="token punctuation">(</span>workInProgress<span class="token punctuation">.</span>flags <span class="token operator">&amp;</span> DidCapture<span class="token punctuation">)</span> <span class="token operator">!==</span> NoFlags<span class="token punctuation">;</span>
+</code></pre></div><p>因为<code>Suspense</code>对应的<code>fiber</code>节点在<code>unwindWork</code>方法中已经被标记了<code>DidCapture</code>，所以这时得到的<code>didSuspend</code>值就是<code>true</code>。</p> <p>接着执行：</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">if</span> <span class="token punctuation">(</span>
+    didSuspend <span class="token operator">||</span>
+    <span class="token function">shouldRemainOnFallback</span><span class="token punctuation">(</span>
+      suspenseContext<span class="token punctuation">,</span>
+      current<span class="token punctuation">,</span>
+      workInProgress<span class="token punctuation">,</span>
+      renderLanes<span class="token punctuation">,</span>
+    <span class="token punctuation">)</span>
+  <span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 需要展示fallback，showFallback置为true</span>
+    showFallback <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
+    <span class="token comment">// 然后从flags中清除DidCapture标记</span>
+    workInProgress<span class="token punctuation">.</span>flags <span class="token operator">&amp;=</span> <span class="token operator">~</span>DidCapture<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span> 
+</code></pre></div><p>然后会进入展示<code>fallback</code>的逻辑：</p> <div class="language-js extra-class"><pre class="language-js"><code>  <span class="token keyword">if</span> <span class="token punctuation">(</span>showFallback<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">const</span> fallbackFragment <span class="token operator">=</span> <span class="token function">mountSuspenseFallbackChildren</span><span class="token punctuation">(</span>
+        workInProgress<span class="token punctuation">,</span>
+        nextPrimaryChildren<span class="token punctuation">,</span>
+        nextFallbackChildren<span class="token punctuation">,</span>
+        renderLanes<span class="token punctuation">,</span>
+      <span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">const</span> primaryChildFragment<span class="token operator">:</span> Fiber <span class="token operator">=</span> <span class="token punctuation">(</span>workInProgress<span class="token punctuation">.</span>child<span class="token operator">:</span> any<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      primaryChildFragment<span class="token punctuation">.</span>memoizedState <span class="token operator">=</span> <span class="token function">mountSuspenseOffscreenState</span><span class="token punctuation">(</span>
+        renderLanes<span class="token punctuation">,</span>
+      <span class="token punctuation">)</span><span class="token punctuation">;</span>
+      workInProgress<span class="token punctuation">.</span>memoizedState <span class="token operator">=</span> <span class="token constant">SUSPENDED_MARKER</span><span class="token punctuation">;</span>
+      <span class="token keyword">return</span> fallbackFragment<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span> 
+</code></pre></div><p>对于<code>SuspenseComponent</code>类型的组件，返回的是<code>fallback</code>对应的子<code>fiber</code>节点。当完成<code>render</code>阶段和<code>commit</code>阶段之后，页面上显示的效果就是<code>LOADING...</code>。</p> <p>等到<code>Promise</code>对象完成状态变化<code>resolve</code>了模块内容，然后触发<code>then</code>方法的成功回调函数，调用<code>ensureRootIsScheduled</code>方法开启调度更新。</p> <p>这次再执行<code>updateLazyComponent</code>方法就能顺利执行<code>init(payload)</code>，改变<code>payload.status</code>和<code>payload.result</code>的值并返回<code>moduleObject.default</code>，然后创建子组件对应的<code>fiber</code>节点。在顺利完成<code>render</code>阶段和<code>commit</code>阶段后，页面上的显示效果就是导出模块的内容。</p> <h2 id="总结"><a href="#总结" class="header-anchor">#</a> 总结</h2> <p>Suspense相关流程图：
+</p><div align="center"><img width="100%" src="/react-blog/assets/img/suspense.a512524c.png" alt="suspenseWorkProcess"></div><p></p></div> <footer class="page-edit"><!----> <!----></footer> <div class="page-nav"><p class="inner"><span class="prev">
+      ←
+      <a href="/react-blog/docs/concurrent/batchedUpdates.html" class="prev">
+        批量更新
+      </a></span> <span class="next"><a href="/react-blog/docs/concurrent/starve.html">
+        饥饿问题
+      </a>
+      →
+    </span></p></div> </main></div><div class="global-ui"><!----></div></div>
+    <script src="/react-blog/assets/js/app.1296abc1.js" defer></script><script src="/react-blog/assets/js/2.2aa2ea89.js" defer></script><script src="/react-blog/assets/js/11.90e7ad9c.js" defer></script>
+  </body>
+</html>

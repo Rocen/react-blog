@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>事件系统 | React笔记</title>
+    <meta name="generator" content="VuePress 1.9.5">
+    <link rel="icon" href="/react-blog/logo.svg">
+    <meta name="description" content="React">
+    
+    <link rel="preload" href="/react-blog/assets/css/0.styles.7c9b7da0.css" as="style"><link rel="preload" href="/react-blog/assets/js/app.1296abc1.js" as="script"><link rel="preload" href="/react-blog/assets/js/2.2aa2ea89.js" as="script"><link rel="preload" href="/react-blog/assets/js/21.23f5c8b7.js" as="script"><link rel="prefetch" href="/react-blog/assets/js/10.eec084d2.js"><link rel="prefetch" href="/react-blog/assets/js/11.90e7ad9c.js"><link rel="prefetch" href="/react-blog/assets/js/12.ec712917.js"><link rel="prefetch" href="/react-blog/assets/js/13.5fd1705f.js"><link rel="prefetch" href="/react-blog/assets/js/14.33d6319e.js"><link rel="prefetch" href="/react-blog/assets/js/15.b49ac970.js"><link rel="prefetch" href="/react-blog/assets/js/16.915d1a33.js"><link rel="prefetch" href="/react-blog/assets/js/17.0d48f94a.js"><link rel="prefetch" href="/react-blog/assets/js/18.162dd664.js"><link rel="prefetch" href="/react-blog/assets/js/19.897cc694.js"><link rel="prefetch" href="/react-blog/assets/js/20.c0d68b54.js"><link rel="prefetch" href="/react-blog/assets/js/22.17cddd5f.js"><link rel="prefetch" href="/react-blog/assets/js/23.3e2c069f.js"><link rel="prefetch" href="/react-blog/assets/js/24.16287cbc.js"><link rel="prefetch" href="/react-blog/assets/js/25.c9819b86.js"><link rel="prefetch" href="/react-blog/assets/js/26.03bcf156.js"><link rel="prefetch" href="/react-blog/assets/js/27.2e75196a.js"><link rel="prefetch" href="/react-blog/assets/js/28.71dcfa28.js"><link rel="prefetch" href="/react-blog/assets/js/29.0534c7d4.js"><link rel="prefetch" href="/react-blog/assets/js/3.1f92403b.js"><link rel="prefetch" href="/react-blog/assets/js/30.70a1b1a5.js"><link rel="prefetch" href="/react-blog/assets/js/31.8d8007c6.js"><link rel="prefetch" href="/react-blog/assets/js/32.f55b2b21.js"><link rel="prefetch" href="/react-blog/assets/js/33.dea713d0.js"><link rel="prefetch" href="/react-blog/assets/js/34.16302cd1.js"><link rel="prefetch" href="/react-blog/assets/js/35.58ce8424.js"><link rel="prefetch" href="/react-blog/assets/js/36.21c87dbf.js"><link rel="prefetch" href="/react-blog/assets/js/37.e9ccbb00.js"><link rel="prefetch" href="/react-blog/assets/js/38.eda7b7d3.js"><link rel="prefetch" href="/react-blog/assets/js/39.28c4eb15.js"><link rel="prefetch" href="/react-blog/assets/js/4.ace4b147.js"><link rel="prefetch" href="/react-blog/assets/js/40.13eceae9.js"><link rel="prefetch" href="/react-blog/assets/js/41.e5e3f4ba.js"><link rel="prefetch" href="/react-blog/assets/js/42.1ab022fc.js"><link rel="prefetch" href="/react-blog/assets/js/43.eca03ba8.js"><link rel="prefetch" href="/react-blog/assets/js/44.be104c53.js"><link rel="prefetch" href="/react-blog/assets/js/5.68075c63.js"><link rel="prefetch" href="/react-blog/assets/js/6.01147cc3.js"><link rel="prefetch" href="/react-blog/assets/js/7.630cc1a8.js"><link rel="prefetch" href="/react-blog/assets/js/8.80d0f023.js"><link rel="prefetch" href="/react-blog/assets/js/9.f8d3ba3a.js">
+    <link rel="stylesheet" href="/react-blog/assets/css/0.styles.7c9b7da0.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/react-blog/" class="home-link router-link-active"><!----> <span class="site-name">React笔记</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><a href="https://next-blog.irocen.top" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  nextjs笔记
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div><div class="nav-item"><a href="https://github.com/Rocen" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  github
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <!----></nav></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><nav class="nav-links"><div class="nav-item"><a href="https://next-blog.irocen.top" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  nextjs笔记
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div><div class="nav-item"><a href="https://github.com/Rocen" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  github
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <!----></nav>  <ul class="sidebar-links"><li><section class="sidebar-group depth-0"><a href="/react-blog/" class="sidebar-heading clickable router-link-active"><span>开始</span> <!----></a> <ul class="sidebar-links sidebar-group-items"><li><a href="/react-blog/docs/start/directory.html" class="sidebar-link">目录</a></li></ul></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>理念</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>架构</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>原理</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading open"><span>概念</span> <span class="arrow down"></span></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/react-blog/docs/concept/lifeCycle.html" class="sidebar-link">生命周期</a></li><li><a href="/react-blog/docs/concept/eventSystem.html" aria-current="page" class="active sidebar-link">事件系统</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/react-blog/docs/concept/eventSystem.html#事件系统" class="sidebar-link">事件系统</a></li><li class="sidebar-sub-header"><a href="/react-blog/docs/concept/eventSystem.html#事件绑定" class="sidebar-link">事件绑定</a></li><li class="sidebar-sub-header"><a href="/react-blog/docs/concept/eventSystem.html#事件触发" class="sidebar-link">事件触发</a></li><li class="sidebar-sub-header"><a href="/react-blog/docs/concept/eventSystem.html#总结" class="sidebar-link">总结</a></li></ul></li><li><a href="/react-blog/docs/concept/errorBoundary.html" class="sidebar-link">错误边界</a></li></ul></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>Hooks</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>Concurrent Mode</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>实现</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>发现</span> <span class="arrow right"></span></p> <!----></section></li></ul> </aside> <main class="page"> <div class="theme-default-content content__default"><h2 id="事件系统"><a href="#事件系统" class="header-anchor">#</a> 事件系统</h2> <p>在开发中，我们通过<code>JSX</code>语法在标签上绑定的事件是并不是真实的事件，而是<code>React</code>构造的合成事件。</p> <p><code>React</code>官网对于合成事件的描述是：</p> <blockquote><p>SyntheticEvent 实例将被传递给你的事件处理函数，它是浏览器的原生事件的跨浏览器包装器。
+合成事件与浏览器的原生事件不同，也不会直接映射到原生事件。</p></blockquote> <p>也就是说，在<code>React</code>应用中，我们所看到的的<code>React</code>事件都是“假”的。</p> <ul><li>给元素绑定的事件，并不是真正的事件处理函数</li> <li>在冒泡或捕获阶段触发的事件，也不是在冒泡或捕获阶段执行</li> <li>并且在事件处理函数中拿到的事件源<code>event</code>，也不是真正的事件源<code>event</code></li></ul> <p>那么<code>React</code>这么处理的目的是什么呢？</p> <p>因为，对于不同的浏览器，不同的事件存在一定的兼容性问题，导致原生事件的表现不一致。最终<code>React</code>想要实现一个浏览器全兼容性的事件系统，以此抹平不同浏览器间的差异。</p> <p>所以，<code>React</code>对于元素绑定的事件（这个事件是<strong>dispatchEvent</strong>）会统一绑定在应用容器上，通常指的<code>div.root</code>标签上。然后再将注册回调函数收集起来，通过执行的顺序来模拟：事件捕获 -&gt; 目标阶段-&gt; 事件冒泡 的事件模型。当然还包括重写事件源<code>event</code>对象。</p> <h2 id="事件绑定"><a href="#事件绑定" class="header-anchor">#</a> 事件绑定</h2> <p>事件系统的入口函数<code>listenToAllSupportedEvents</code>会通过<code>ReactDOM.createRoot</code>或者<code>ReactDOM.render</code>方法调用。</p> <p>从<code>listenToAllSupportedEvents</code>方法开始会依次执行事件绑定和事件触发。</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">const</span> listeningMarker <span class="token operator">=</span>
+  <span class="token string">'_reactListening'</span> <span class="token operator">+</span>
+  Math<span class="token punctuation">.</span><span class="token function">random</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token number">36</span><span class="token punctuation">)</span>
+    <span class="token punctuation">.</span><span class="token function">slice</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token keyword">function</span> <span class="token function">listenToAllSupportedEvents</span><span class="token punctuation">(</span><span class="token parameter">rootContainerElement<span class="token operator">:</span> EventTarget</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 如果容器元素上没有监听过的标记</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token punctuation">(</span>rootContainerElement<span class="token operator">:</span> any<span class="token punctuation">)</span><span class="token punctuation">[</span>listeningMarker<span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token punctuation">(</span>rootContainerElement<span class="token operator">:</span> any<span class="token punctuation">)</span><span class="token punctuation">[</span>listeningMarker<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
+
+        allNativeEvents<span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span><span class="token parameter">domEventName</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>domEventName <span class="token operator">!==</span> <span class="token string">'selectionchange'</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token comment">// 不需要委托的事件，如click等事件是需要委托在容器元素上，通过冒泡的方式触发</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>nonDelegatedEvents<span class="token punctuation">.</span><span class="token function">has</span><span class="token punctuation">(</span>domEventName<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                <span class="token comment">// 监听冒泡事件</span>
+                <span class="token function">listenToNativeEvent</span><span class="token punctuation">(</span>domEventName<span class="token punctuation">,</span> <span class="token boolean">false</span><span class="token punctuation">,</span> rootContainerElement<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+            <span class="token comment">// 监听捕获事件，其他类型的事件需要绑定在元素本身上</span>
+            <span class="token function">listenToNativeEvent</span><span class="token punctuation">(</span>domEventName<span class="token punctuation">,</span> <span class="token boolean">true</span><span class="token punctuation">,</span> rootContainerElement<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">function</span> <span class="token function">listenToNativeEvent</span><span class="token punctuation">(</span>
+  <span class="token parameter">domEventName<span class="token operator">:</span> DOMEventName<span class="token punctuation">,</span>
+  isCapturePhaseListener<span class="token operator">:</span> boolean<span class="token punctuation">,</span>
+  target<span class="token operator">:</span> EventTarget<span class="token punctuation">,</span></span>
+<span class="token punctuation">)</span><span class="token operator">:</span> <span class="token keyword">void</span> <span class="token punctuation">{</span>
+  <span class="token keyword">let</span> eventSystemFlags <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>isCapturePhaseListener<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    eventSystemFlags <span class="token operator">|=</span> <span class="token constant">IS_CAPTURE_PHASE</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  <span class="token function">addTrappedEventListener</span><span class="token punctuation">(</span>
+    target<span class="token punctuation">,</span>
+    domEventName<span class="token punctuation">,</span>
+    eventSystemFlags<span class="token punctuation">,</span>
+    isCapturePhaseListener<span class="token punctuation">,</span>
+  <span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">function</span> <span class="token function">addTrappedEventListener</span><span class="token punctuation">(</span>
+  <span class="token parameter">targetContainer<span class="token operator">:</span> EventTarget<span class="token punctuation">,</span>
+  domEventName<span class="token operator">:</span> DOMEventName<span class="token punctuation">,</span>
+  eventSystemFlags<span class="token operator">:</span> EventSystemFlags<span class="token punctuation">,</span>
+  isCapturePhaseListener<span class="token operator">:</span> boolean<span class="token punctuation">,</span>
+  isDeferredListenerForLegacyFBSupport<span class="token operator">?</span><span class="token operator">:</span> boolean<span class="token punctuation">,</span></span>
+<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 创建事件监听容器</span>
+    <span class="token keyword">let</span> listener <span class="token operator">=</span> <span class="token function">createEventListenerWrapperWithPriority</span><span class="token punctuation">(</span>
+        targetContainer<span class="token punctuation">,</span>
+        domEventName<span class="token punctuation">,</span>
+        eventSystemFlags<span class="token punctuation">,</span>
+    <span class="token punctuation">)</span><span class="token punctuation">;</span>
+    targetContainer <span class="token operator">=</span> targetContainer
+
+    <span class="token keyword">let</span> unsubscribeListener<span class="token punctuation">;</span>
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>isCapturePhaseListener<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment">// 捕获阶段</span>
+        <span class="token comment">// addEventCaptureListener = targetContainer.addEventListener(domEventName, listener, true);</span>
+        unsubscribeListener <span class="token operator">=</span> <span class="token function">addEventCaptureListener</span><span class="token punctuation">(</span>
+            targetContainer<span class="token punctuation">,</span>
+            domEventName<span class="token punctuation">,</span>
+            listener<span class="token punctuation">,</span>
+        <span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+        <span class="token comment">// 冒泡阶段</span>
+        <span class="token comment">// addEventBubbleListener = targetContainer.addEventListener(domEventName, listener, false);</span>
+        unsubscribeListener <span class="token operator">=</span> <span class="token function">addEventBubbleListener</span><span class="token punctuation">(</span>
+            targetContainer<span class="token punctuation">,</span>
+            domEventName<span class="token punctuation">,</span>
+            listener<span class="token punctuation">,</span>
+        <span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>这段代码最重要的是在<code>addTrappedEventListener</code>函数中执行<code>addEventCaptureListener</code>或<code>addEventBubbleListener</code>方法。</p> <p>这两个方法的本质都是调用容器的<code>addEventListener</code>方法以特定的事件类型绑定<code>listener</code>回调函数。在上边可以看到<code>listener</code>是通过<code>createEventListenerWrapperWithPriority</code>函数创建出来的。</p> <p>以下是<code>createEventListenerWrapperWithPriority</code>函数的定义：</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">function</span> <span class="token function">createEventListenerWrapperWithPriority</span><span class="token punctuation">(</span>
+  <span class="token parameter">targetContainer<span class="token operator">:</span> EventTarget<span class="token punctuation">,</span>
+  domEventName<span class="token operator">:</span> DOMEventName<span class="token punctuation">,</span>
+  eventSystemFlags<span class="token operator">:</span> EventSystemFlags<span class="token punctuation">,</span></span>
+<span class="token punctuation">)</span><span class="token operator">:</span> Function <span class="token punctuation">{</span>
+    <span class="token comment">// 获取事件的优先级</span>
+    <span class="token comment">// 如click事件对应的优先级是DiscreteEventPriority，对应的lane模型是SyncLane，优先级最高</span>
+    <span class="token comment">// 如drag，mousemove，scroll等事件对应的优先级是ContinuousEventPriority，对应的lane模型是InputContinuousLane，优先级比较高</span>
+    <span class="token keyword">const</span> eventPriority <span class="token operator">=</span> <span class="token function">getEventPriority</span><span class="token punctuation">(</span>domEventName<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">let</span> listenerWrapper<span class="token punctuation">;</span>
+    <span class="token keyword">switch</span> <span class="token punctuation">(</span>eventPriority<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment">// click对应的dispatch就是dispatchDiscreteEvent，</span>
+        <span class="token keyword">case</span> DiscreteEventPriority<span class="token operator">:</span>
+          listenerWrapper <span class="token operator">=</span> dispatchDiscreteEvent<span class="token punctuation">;</span>
+          <span class="token keyword">break</span><span class="token punctuation">;</span>
+        <span class="token comment">// 鼠标移动等事件对应的dispatch就是dispatchContinuousEvent</span>
+        <span class="token keyword">case</span> ContinuousEventPriority<span class="token operator">:</span>
+          listenerWrapper <span class="token operator">=</span> dispatchContinuousEvent<span class="token punctuation">;</span>
+          <span class="token keyword">break</span><span class="token punctuation">;</span>
+        <span class="token keyword">case</span> DefaultEventPriority<span class="token operator">:</span>
+        <span class="token keyword">default</span><span class="token operator">:</span>
+          listenerWrapper <span class="token operator">=</span> dispatchEvent<span class="token punctuation">;</span>
+          <span class="token keyword">break</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">return</span> <span class="token function">listenerWrapper</span><span class="token punctuation">.</span><span class="token function">bind</span><span class="token punctuation">(</span>
+        <span class="token keyword">null</span><span class="token punctuation">,</span>
+        domEventName<span class="token punctuation">,</span>
+        eventSystemFlags<span class="token punctuation">,</span>
+        targetContainer<span class="token punctuation">,</span>
+    <span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token comment">// 触发离散事件</span>
+<span class="token keyword">function</span> <span class="token function">dispatchDiscreteEvent</span><span class="token punctuation">(</span>
+  <span class="token parameter">domEventName<span class="token punctuation">,</span>
+  eventSystemFlags<span class="token punctuation">,</span>
+  container<span class="token punctuation">,</span>
+  nativeEvent<span class="token punctuation">,</span></span>
+<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// 首先获取到当前事件的优先级</span>
+  <span class="token keyword">const</span> previousPriority <span class="token operator">=</span> <span class="token function">getCurrentUpdatePriority</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">try</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 然后设置当前触发事件的优先级</span>
+    <span class="token comment">// 如触发了click事件就会设置DiscreteEventPriority事件优先级，对应的lane模型是SyncLane</span>
+    <span class="token function">setCurrentUpdatePriority</span><span class="token punctuation">(</span>DiscreteEventPriority<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">// 然后执行这个click事件</span>
+    <span class="token function">dispatchEvent</span><span class="token punctuation">(</span>domEventName<span class="token punctuation">,</span> eventSystemFlags<span class="token punctuation">,</span> container<span class="token punctuation">,</span> nativeEvent<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span> <span class="token keyword">finally</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 当执行完click事件需要返还前一个事件的优先级</span>
+    <span class="token function">setCurrentUpdatePriority</span><span class="token punctuation">(</span>previousPriority<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>以上这两部分代码可以看做是事件合成或事件绑定，主要的工作是为容器元素调用<code>addEventListener</code>方法以事件类型和回调函数绑定监听器。并且这个回调函数并不是用户在<code>React Element</code>上注册的回调函数，而是一个名为<code>dispatchEvent</code>的方法。</p> <p>以<code>click</code>方法为例，当在某个元素上触发<code>click</code>方法，根据<em>DOM事件流</em>会从目标元素冒泡到容器元素，并触发容器元素的<code>click</code>事件对应的回调函数，即<code>dispatchEvent</code>方法。</p> <p>接着，调用<code>dispatchEvent</code>方法就会进入到<code>React</code>事件系统的事件触发阶段。</p> <h2 id="事件触发"><a href="#事件触发" class="header-anchor">#</a> 事件触发</h2> <p>接下来，让我们看下事件触发阶段都做了哪些工作。</p> <p>如代码所示：</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">function</span> <span class="token function">dispatchEvent</span><span class="token punctuation">(</span>
+  <span class="token parameter">domEventName<span class="token operator">:</span> DOMEventName<span class="token punctuation">,</span>
+  eventSystemFlags<span class="token operator">:</span> EventSystemFlags<span class="token punctuation">,</span>
+  targetContainer<span class="token operator">:</span> EventTarget<span class="token punctuation">,</span>
+  nativeEvent<span class="token operator">:</span> AnyNativeEvent<span class="token punctuation">,</span></span>
+<span class="token punctuation">)</span><span class="token operator">:</span> <span class="token keyword">void</span> <span class="token punctuation">{</span>
+    <span class="token comment">// some code...</span>
+
+  <span class="token comment">// 尝试触发事件</span>
+    <span class="token keyword">const</span> blockedOn <span class="token operator">=</span> <span class="token function">attemptToDispatchEvent</span><span class="token punctuation">(</span>
+        domEventName<span class="token punctuation">,</span>
+        eventSystemFlags<span class="token punctuation">,</span>
+        targetContainer<span class="token punctuation">,</span>
+        nativeEvent<span class="token punctuation">,</span>
+    <span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>blockedOn <span class="token operator">===</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment">// We successfully dispatched this event.</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>allowReplay<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          <span class="token function">clearIfContinuousEvent</span><span class="token punctuation">(</span>domEventName<span class="token punctuation">,</span> nativeEvent<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        <span class="token keyword">return</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">function</span> <span class="token function">attemptToDispatchEvent</span><span class="token punctuation">(</span>
+  <span class="token parameter">domEventName<span class="token operator">:</span> DOMEventName<span class="token punctuation">,</span>
+  eventSystemFlags<span class="token operator">:</span> EventSystemFlags<span class="token punctuation">,</span>
+  targetContainer<span class="token operator">:</span> EventTarget<span class="token punctuation">,</span>
+  nativeEvent<span class="token operator">:</span> AnyNativeEvent<span class="token punctuation">,</span></span>
+<span class="token punctuation">)</span><span class="token operator">:</span> <span class="token keyword">null</span> <span class="token operator">|</span> Container <span class="token operator">|</span> SuspenseInstance <span class="token punctuation">{</span>
+
+  <span class="token keyword">const</span> nativeEventTarget <span class="token operator">=</span> <span class="token function">getEventTarget</span><span class="token punctuation">(</span>nativeEvent<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">let</span> targetInst <span class="token operator">=</span> <span class="token function">getClosestInstanceFromNode</span><span class="token punctuation">(</span>nativeEventTarget<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// some code...</span>
+
+  <span class="token comment">// 通过插件事件系统触发事件</span>
+  <span class="token function">dispatchEventForPluginEventSystem</span><span class="token punctuation">(</span>
+    domEventName<span class="token punctuation">,</span>
+    eventSystemFlags<span class="token punctuation">,</span>
+    nativeEvent<span class="token punctuation">,</span>
+    targetInst<span class="token punctuation">,</span>
+    targetContainer<span class="token punctuation">,</span>
+  <span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// 没有被阻塞（为了处理特殊情况）</span>
+  <span class="token keyword">return</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">function</span> <span class="token function">dispatchEventForPluginEventSystem</span><span class="token punctuation">(</span>
+  <span class="token parameter">domEventName<span class="token operator">:</span> DOMEventName<span class="token punctuation">,</span>
+  eventSystemFlags<span class="token operator">:</span> EventSystemFlags<span class="token punctuation">,</span>
+  nativeEvent<span class="token operator">:</span> AnyNativeEvent<span class="token punctuation">,</span>
+  targetInst<span class="token operator">:</span> <span class="token keyword">null</span> <span class="token operator">|</span> Fiber<span class="token punctuation">,</span>
+  targetContainer<span class="token operator">:</span> EventTarget<span class="token punctuation">,</span></span>
+<span class="token punctuation">)</span><span class="token operator">:</span> <span class="token keyword">void</span> <span class="token punctuation">{</span>
+  <span class="token keyword">let</span> ancestorInst <span class="token operator">=</span> targetInst<span class="token punctuation">;</span>
+  <span class="token comment">// 批量更新</span>
+  <span class="token function">batchedUpdates</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span>
+    <span class="token comment">// 通过插件触发事件</span>
+    <span class="token function">dispatchEventsForPlugins</span><span class="token punctuation">(</span>
+      domEventName<span class="token punctuation">,</span>
+      eventSystemFlags<span class="token punctuation">,</span>
+      nativeEvent<span class="token punctuation">,</span>
+      ancestorInst<span class="token punctuation">,</span>
+      targetContainer<span class="token punctuation">,</span>
+    <span class="token punctuation">)</span><span class="token punctuation">,</span>
+  <span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">function</span> <span class="token function">dispatchEventsForPlugins</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 获取DOM节点</span>
+    <span class="token keyword">const</span> nativeEventTarget <span class="token operator">=</span> <span class="token function">getEventTarget</span><span class="token punctuation">(</span>nativeEvent<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">// 定义触发事件队列</span>
+    <span class="token keyword">const</span> dispatchQueue<span class="token operator">:</span> DispatchQueue <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token comment">// 开始收集触发事件队列</span>
+    <span class="token function">extractEvents</span><span class="token punctuation">(</span>
+        dispatchQueue<span class="token punctuation">,</span>
+        domEventName<span class="token punctuation">,</span>
+        targetInst<span class="token punctuation">,</span>
+        nativeEvent<span class="token punctuation">,</span>
+        nativeEventTarget<span class="token punctuation">,</span>
+        eventSystemFlags<span class="token punctuation">,</span>
+        targetContainer<span class="token punctuation">,</span>
+    <span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">// 执行触发事件队列</span>
+    <span class="token function">processDispatchQueue</span><span class="token punctuation">(</span>dispatchQueue<span class="token punctuation">,</span> eventSystemFlags<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>以上多个方法以线性关系依次调用，最后执行的方法是<code>dispatchEventsForPlugins</code>。这个方法的目的就是按顺序执行通过<code>React</code>事件注册的回调函数。</p> <p>这部分涉及到代码比较多，所以我们分两段看下。先是收集触发事件队列的部分：</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">function</span> <span class="token function">extractEvents</span><span class="token punctuation">(</span>
+  <span class="token parameter">dispatchQueue<span class="token operator">:</span> DispatchQueue<span class="token punctuation">,</span>
+  domEventName<span class="token operator">:</span> DOMEventName<span class="token punctuation">,</span>
+  targetInst<span class="token operator">:</span> <span class="token keyword">null</span> <span class="token operator">|</span> Fiber<span class="token punctuation">,</span>
+  nativeEvent<span class="token operator">:</span> AnyNativeEvent<span class="token punctuation">,</span>
+  nativeEventTarget<span class="token operator">:</span> <span class="token keyword">null</span> <span class="token operator">|</span> EventTarget<span class="token punctuation">,</span>
+  eventSystemFlags<span class="token operator">:</span> EventSystemFlags<span class="token punctuation">,</span>
+  targetContainer<span class="token operator">:</span> EventTarget<span class="token punctuation">,</span></span>
+<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  SimpleEventPlugin<span class="token punctuation">.</span><span class="token function">extractEvents</span><span class="token punctuation">(</span>
+    dispatchQueue<span class="token punctuation">,</span>
+    domEventName<span class="token punctuation">,</span>
+    targetInst<span class="token punctuation">,</span>
+    nativeEvent<span class="token punctuation">,</span>
+    nativeEventTarget<span class="token punctuation">,</span>
+    eventSystemFlags<span class="token punctuation">,</span>
+    targetContainer<span class="token punctuation">,</span>
+  <span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">function</span> <span class="token function">extractEvents</span><span class="token punctuation">(</span>
+  <span class="token parameter">dispatchQueue<span class="token operator">:</span> DispatchQueue<span class="token punctuation">,</span>
+  domEventName<span class="token operator">:</span> DOMEventName<span class="token punctuation">,</span>
+  targetInst<span class="token operator">:</span> <span class="token keyword">null</span> <span class="token operator">|</span> Fiber<span class="token punctuation">,</span>
+  nativeEvent<span class="token operator">:</span> AnyNativeEvent<span class="token punctuation">,</span>
+  nativeEventTarget<span class="token operator">:</span> <span class="token keyword">null</span> <span class="token operator">|</span> EventTarget<span class="token punctuation">,</span>
+  eventSystemFlags<span class="token operator">:</span> EventSystemFlags<span class="token punctuation">,</span>
+  targetContainer<span class="token operator">:</span> EventTarget<span class="token punctuation">,</span></span>
+<span class="token punctuation">)</span><span class="token operator">:</span> <span class="token keyword">void</span> <span class="token punctuation">{</span>
+    <span class="token comment">// domEventName是否有对应的React合成事件</span>
+    <span class="token keyword">const</span> reactName <span class="token operator">=</span> topLevelEventsToReactNames<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>domEventName<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>reactName <span class="token operator">===</span> <span class="token keyword">undefined</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment">// 如果没有对应的React合成事件，则直接退出</span>
+        <span class="token keyword">return</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token comment">// 默认的合成事件event</span>
+    <span class="token keyword">let</span> SyntheticEventCtor <span class="token operator">=</span> SyntheticEvent<span class="token punctuation">;</span>
+    <span class="token comment">// React事件名称</span>
+    <span class="token keyword">let</span> reactEventType<span class="token operator">:</span> string <span class="token operator">=</span> domEventName<span class="token punctuation">;</span>
+    <span class="token comment">//根据原生事件类型找到对应的事件源event对象</span>
+    <span class="token keyword">switch</span> <span class="token punctuation">(</span>domEventName<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">case</span> <span class="token string">'click'</span><span class="token operator">:</span>
+            <span class="token comment">// 定义事件源event</span>
+            SyntheticEventCtor <span class="token operator">=</span> SyntheticMouseEvent<span class="token punctuation">;</span> 
+            <span class="token keyword">break</span><span class="token punctuation">;</span>
+        <span class="token comment">// order code...</span>
+
+        <span class="token keyword">default</span><span class="token operator">:</span>
+            <span class="token keyword">break</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token comment">// 是否是捕获阶段</span>
+    <span class="token keyword">const</span> inCapturePhase <span class="token operator">=</span> <span class="token punctuation">(</span>eventSystemFlags <span class="token operator">&amp;</span> <span class="token constant">IS_CAPTURE_PHASE</span><span class="token punctuation">)</span> <span class="token operator">!==</span> <span class="token number">0</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>
+        enableCreateEventHandleAPI <span class="token operator">&amp;&amp;</span>
+        eventSystemFlags <span class="token operator">&amp;</span> <span class="token constant">IS_EVENT_HANDLE_NON_MANAGED_NODE</span>
+    <span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment">// order code...</span>
+
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+        <span class="token comment">// 是否只计算目标阶段</span>
+        <span class="token comment">// 这里当不在捕获阶段即inCapturePhase为false的话，accumulateTargetOnly就会为true，</span>
+        <span class="token comment">// 当accumulateTargetOnly为true就不会收集所有注册的回调函数，只会收集目标节点注册的回调函数</span>
+        <span class="token comment">// 在此React给出的解释是：有些事件不会在浏览器中冒泡。我们将尝试通过在React中不冒泡来接近浏览器的行为。会从onScroll不冒泡开始，然后展开。</span>
+        <span class="token keyword">const</span> accumulateTargetOnly <span class="token operator">=</span> <span class="token operator">!</span>inCapturePhase <span class="token operator">&amp;&amp;</span> domEventName <span class="token operator">===</span> <span class="token string">'scroll'</span><span class="token punctuation">;</span>
+        <span class="token comment">// 收集监听函数队列</span>
+        <span class="token keyword">const</span> listeners <span class="token operator">=</span> <span class="token function">accumulateSinglePhaseListeners</span><span class="token punctuation">(</span>
+            targetInst<span class="token punctuation">,</span>
+            reactName<span class="token punctuation">,</span>
+            nativeEvent<span class="token punctuation">.</span>type<span class="token punctuation">,</span>
+            inCapturePhase<span class="token punctuation">,</span>
+            accumulateTargetOnly<span class="token punctuation">,</span>
+            nativeEvent<span class="token punctuation">,</span>
+        <span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>listeners<span class="token punctuation">.</span>length <span class="token operator">&gt;</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token comment">// 创建事件源event</span>
+            <span class="token keyword">const</span> event <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">SyntheticEventCtor</span><span class="token punctuation">(</span>
+                reactName<span class="token punctuation">,</span>
+                reactEventType<span class="token punctuation">,</span>
+                <span class="token keyword">null</span><span class="token punctuation">,</span>
+                nativeEvent<span class="token punctuation">,</span>
+                nativeEventTarget<span class="token punctuation">,</span>
+            <span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token comment">// 将事件源event和监听函数队列组成的对象，push到事件触发队列中</span>
+            dispatchQueue<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span><span class="token punctuation">{</span>event<span class="token punctuation">,</span> listeners<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+<span class="token comment">// 收集单个阶段的监听器，捕获阶段或冒泡阶段</span>
+<span class="token keyword">function</span> <span class="token function">accumulateSinglePhaseListeners</span><span class="token punctuation">(</span>
+  <span class="token parameter">targetFiber<span class="token operator">:</span> Fiber <span class="token operator">|</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
+  reactName<span class="token operator">:</span> string <span class="token operator">|</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
+  nativeEventType<span class="token operator">:</span> string<span class="token punctuation">,</span>
+  inCapturePhase<span class="token operator">:</span> boolean<span class="token punctuation">,</span>
+  accumulateTargetOnly<span class="token operator">:</span> boolean<span class="token punctuation">,</span>
+  nativeEvent<span class="token operator">:</span> AnyNativeEvent<span class="token punctuation">,</span></span>
+<span class="token punctuation">)</span><span class="token operator">:</span> Array<span class="token operator">&lt;</span>DispatchListener<span class="token operator">&gt;</span> <span class="token punctuation">{</span>
+    <span class="token comment">// onClickCapture 为React事件的捕获事件</span>
+    <span class="token keyword">const</span> captureName <span class="token operator">=</span> reactName <span class="token operator">!==</span> <span class="token keyword">null</span> <span class="token operator">?</span> reactName <span class="token operator">+</span> <span class="token string">'Capture'</span> <span class="token operator">:</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+    <span class="token comment">// 在捕获阶段使用的事件名称是onClickCapture，不是捕获阶段则使用的事件名称是onClick</span>
+    <span class="token keyword">const</span> reactEventName <span class="token operator">=</span> inCapturePhase <span class="token operator">?</span> captureName <span class="token operator">:</span> reactName<span class="token punctuation">;</span>
+    <span class="token comment">// 初始化监听队列</span>
+    <span class="token keyword">let</span> listeners<span class="token operator">:</span> Array<span class="token operator">&lt;</span>DispatchListener<span class="token operator">&gt;</span> <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token comment">// instance指的是Fiber节点</span>
+    <span class="token keyword">let</span> instance <span class="token operator">=</span> targetFiber<span class="token punctuation">;</span>
+    <span class="token comment">// lastHostComponent指的是真实的DOM节点</span>
+    <span class="token keyword">let</span> lastHostComponent <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+
+    <span class="token comment">// 从目标Fiber节点一直向上遍历直到根节点</span>
+    <span class="token keyword">while</span> <span class="token punctuation">(</span>instance <span class="token operator">!==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">const</span> <span class="token punctuation">{</span>stateNode<span class="token punctuation">,</span> tag<span class="token punctuation">}</span> <span class="token operator">=</span> instance<span class="token punctuation">;</span>
+        <span class="token comment">// 原生节点，并且存在真实DOM节点，如div，span标签等</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>tag <span class="token operator">===</span> HostComponent <span class="token operator">&amp;&amp;</span> stateNode <span class="token operator">!==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token comment">// 赋值DOM节点</span>
+            lastHostComponent <span class="token operator">=</span> stateNode<span class="token punctuation">;</span>
+
+            <span class="token comment">// 正确的react合成事件名称</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>reactEventName <span class="token operator">!==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                <span class="token comment">// reactEventName是React合成事件的名字,如onClick </span>
+                <span class="token comment">// 通过props[registrationName]就能取到当前Fiber节点上onClick属性对应的回调函数</span>
+                <span class="token comment">// 下面这行代码可以简化为：listener = props[registrationName]</span>
+                <span class="token keyword">const</span> listener <span class="token operator">=</span> <span class="token function">getListener</span><span class="token punctuation">(</span>instance<span class="token punctuation">,</span> reactEventName<span class="token punctuation">)</span><span class="token punctuation">;</span> 
+                <span class="token keyword">if</span> <span class="token punctuation">(</span>listener <span class="token operator">!=</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                    <span class="token comment">// 存在以React合成事件注册的回调函数</span>
+                    <span class="token comment">// 将监听的相关内容push到listeners</span>
+                    listeners<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span>
+                        <span class="token comment">// createDispatchListener就是根据传入的参数作为属性，创建并返回一个对象</span>
+                        <span class="token comment">// {</span>
+                        <span class="token comment">//     instance, 回调函数对应的Fiber节点</span>
+                        <span class="token comment">//     listener, 回调函数</span>
+                        <span class="token comment">//     currentTarget, 回调函数对应的DOM节点</span>
+                        <span class="token comment">// };</span>
+                        <span class="token function">createDispatchListener</span><span class="token punctuation">(</span>instance<span class="token punctuation">,</span> listener<span class="token punctuation">,</span> lastHostComponent<span class="token punctuation">)</span><span class="token punctuation">,</span>
+                    <span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token punctuation">}</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span>
+        <span class="token comment">// 只收集目标阶段则会直接退出循环</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>accumulateTargetOnly<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">break</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        <span class="token comment">// 向上遍历,寻找父级Fiber节点</span>
+        instance <span class="token operator">=</span> instance<span class="token punctuation">.</span>return<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token comment">// 最后返回监听队列</span>
+    <span class="token keyword">return</span> listeners<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token comment">// 收集两个阶段的监听器，捕获阶段和冒泡阶段</span>
+<span class="token keyword">function</span> <span class="token function">accumulateTwoPhaseListeners</span><span class="token punctuation">(</span>
+  <span class="token parameter">targetFiber<span class="token operator">:</span> Fiber <span class="token operator">|</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
+  reactName<span class="token operator">:</span> string<span class="token punctuation">,</span></span>
+<span class="token punctuation">)</span><span class="token operator">:</span> Array<span class="token operator">&lt;</span>DispatchListener<span class="token operator">&gt;</span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> captureName <span class="token operator">=</span> reactName <span class="token operator">+</span> <span class="token string">'Capture'</span><span class="token punctuation">;</span>
+  <span class="token keyword">const</span> listeners<span class="token operator">:</span> Array<span class="token operator">&lt;</span>DispatchListener<span class="token operator">&gt;</span> <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+  <span class="token keyword">let</span> instance <span class="token operator">=</span> targetFiber<span class="token punctuation">;</span>
+
+  <span class="token comment">// 从目标Fiber节点一直向上遍历直到根节点</span>
+  <span class="token keyword">while</span> <span class="token punctuation">(</span>instance <span class="token operator">!==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> <span class="token punctuation">{</span>stateNode<span class="token punctuation">,</span> tag<span class="token punctuation">}</span> <span class="token operator">=</span> instance<span class="token punctuation">;</span>
+    <span class="token comment">// 原生节点，并且存在真实DOM节点，如div，p标签等</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>tag <span class="token operator">===</span> HostComponent <span class="token operator">&amp;&amp;</span> stateNode <span class="token operator">!==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">const</span> currentTarget <span class="token operator">=</span> stateNode<span class="token punctuation">;</span>
+      <span class="token comment">// reactEventName是React合成事件的名字,如onClick </span>
+      <span class="token comment">// 通过props[registrationName]就能取到onClick对应的回调函数了</span>
+      <span class="token comment">// 下面这行代码可以简化为：listener = props[registrationName]</span>
+
+      <span class="token comment">// 获取捕获阶段的监听器</span>
+      <span class="token keyword">const</span> captureListener <span class="token operator">=</span> <span class="token function">getListener</span><span class="token punctuation">(</span>instance<span class="token punctuation">,</span> captureName<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>captureListener <span class="token operator">!=</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment">// 重点，unshift到监听器队列的前面</span>
+        listeners<span class="token punctuation">.</span><span class="token function">unshift</span><span class="token punctuation">(</span>
+          <span class="token comment">// createDispatchListener就是根据传入的参数作为属性，创建并返回一个对象</span>
+          <span class="token comment">// {</span>
+          <span class="token comment">//     instance, 回调函数对应的Fiber节点</span>
+          <span class="token comment">//     listener, 回调函数</span>
+          <span class="token comment">//     currentTarget, 回调函数对应的DOM节点</span>
+          <span class="token comment">// };</span>
+          <span class="token function">createDispatchListener</span><span class="token punctuation">(</span>instance<span class="token punctuation">,</span> captureListener<span class="token punctuation">,</span> currentTarget<span class="token punctuation">)</span><span class="token punctuation">,</span>
+        <span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+       <span class="token comment">// 获取冒泡阶段的监听器</span>
+      <span class="token keyword">const</span> bubbleListener <span class="token operator">=</span> <span class="token function">getListener</span><span class="token punctuation">(</span>instance<span class="token punctuation">,</span> reactName<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>bubbleListener <span class="token operator">!=</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+         <span class="token comment">// 重点，push到监听器队列的后面</span>
+        listeners<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span>
+          <span class="token comment">// createDispatchListener就是根据传入的参数作为属性，创建并返回一个对象</span>
+          <span class="token comment">// {</span>
+          <span class="token comment">//     instance, 回调函数对应的Fiber节点</span>
+          <span class="token comment">//     listener, 回调函数</span>
+          <span class="token comment">//     currentTarget, 回调函数对应的DOM节点</span>
+          <span class="token comment">// };</span>
+          <span class="token function">createDispatchListener</span><span class="token punctuation">(</span>instance<span class="token punctuation">,</span> bubbleListener<span class="token punctuation">,</span> currentTarget<span class="token punctuation">)</span><span class="token punctuation">,</span>
+        <span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+    <span class="token comment">// 向上遍历,寻找父级Fiber节点</span>
+    instance <span class="token operator">=</span> instance<span class="token punctuation">.</span>return<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  <span class="token comment">// 最后返回监听队列</span>
+  <span class="token keyword">return</span> listeners<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>从这段代码可以看到在<code>accumulateSinglePhaseListeners</code>方法中有一个<code>while</code>循环，目的是从目标<code>Fiber</code>节点一直向上遍历直到根节点<code>rootFiber</code>，收集这一条路径上通过<code>React</code>合成事件注册的回调函数，然后依次<em>push</em>到监听队列中。</p> <p>最终收集的监听队列和对应的事件源<code>event</code>会保存在<code>dispatchQueue</code>。</p> <p>接下来要做的就是调用<code>processDispatchQueue</code>方法遍历<code>dispatchQueue</code>然后执行监听队列：</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">function</span> <span class="token function">processDispatchQueue</span><span class="token punctuation">(</span>
+  <span class="token parameter">dispatchQueue<span class="token operator">:</span> DispatchQueue<span class="token punctuation">,</span>
+  eventSystemFlags<span class="token operator">:</span> EventSystemFlags<span class="token punctuation">,</span></span>
+<span class="token punctuation">)</span><span class="token operator">:</span> <span class="token keyword">void</span> <span class="token punctuation">{</span>
+  <span class="token comment">// 是否是捕获阶段</span>
+  <span class="token keyword">const</span> inCapturePhase <span class="token operator">=</span> <span class="token punctuation">(</span>eventSystemFlags <span class="token operator">&amp;</span> <span class="token constant">IS_CAPTURE_PHASE</span><span class="token punctuation">)</span> <span class="token operator">!==</span> <span class="token number">0</span><span class="token punctuation">;</span>
+  <span class="token comment">// 遍历dispatchQueue</span>
+  <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> dispatchQueue<span class="token punctuation">.</span>length<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 获取事件源event和监听对象</span>
+    <span class="token keyword">const</span> <span class="token punctuation">{</span>event<span class="token punctuation">,</span> listeners<span class="token punctuation">}</span> <span class="token operator">=</span> dispatchQueue<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token comment">// 执行监听队列</span>
+    <span class="token function">processDispatchQueueItemsInOrder</span><span class="token punctuation">(</span>event<span class="token punctuation">,</span> listeners<span class="token punctuation">,</span> inCapturePhase<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">function</span> <span class="token function">processDispatchQueueItemsInOrder</span><span class="token punctuation">(</span>
+  <span class="token parameter">event<span class="token operator">:</span> ReactSyntheticEvent<span class="token punctuation">,</span>
+  dispatchListeners<span class="token operator">:</span> Array<span class="token operator">&lt;</span>DispatchListener<span class="token operator">&gt;</span><span class="token punctuation">,</span>
+  inCapturePhase<span class="token operator">:</span> boolean<span class="token punctuation">,</span></span>
+<span class="token punctuation">)</span><span class="token operator">:</span> <span class="token keyword">void</span> <span class="token punctuation">{</span>
+  <span class="token keyword">let</span> previousInstance<span class="token punctuation">;</span>
+  <span class="token comment">// 是否是捕获阶段</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>inCapturePhase<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment">// 因为是捕获阶段，所以就从最后一项开始遍历直到第一项，相对应的DOM事件流就是捕获阶段然后进入向下的目标阶段</span>
+        <span class="token comment">// 节点的顺序 a -&gt; b -&gt; c -&gt; d （a是目标节点，d根节点）</span>
+        <span class="token comment">// 收集回调函数的顺序是 [a, b, c, d]</span>
+        <span class="token comment">// 捕获阶段是从根节点向下的顺序进行的，所以最终的执行回调函数的顺序是 d -&gt; c -&gt; b -&gt; a</span>
+        <span class="token comment">// 从尾部开始遍历</span>
+        <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> i <span class="token operator">=</span> dispatchListeners<span class="token punctuation">.</span>length <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">;</span> i <span class="token operator">&gt;=</span> <span class="token number">0</span><span class="token punctuation">;</span> i<span class="token operator">--</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          <span class="token keyword">const</span> <span class="token punctuation">{</span>instance<span class="token punctuation">,</span> currentTarget<span class="token punctuation">,</span> listener<span class="token punctuation">}</span> <span class="token operator">=</span> dispatchListeners<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">;</span>
+          <span class="token comment">// 对于合成事件源event对象，定义了isPropagationStopped方法，方法的返回值就是true</span>
+          <span class="token comment">// 当调用了isPropagationStopped则会进入到条件语句里面直接return掉，后续的回调函数也就不糊执行了，达到了阻止冒泡的目的</span>
+          <span class="token keyword">if</span> <span class="token punctuation">(</span>instance <span class="token operator">!==</span> previousInstance <span class="token operator">&amp;&amp;</span> event<span class="token punctuation">.</span><span class="token function">isPropagationStopped</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+              <span class="token keyword">return</span><span class="token punctuation">;</span>
+          <span class="token punctuation">}</span>
+          <span class="token comment">// 执行listener中保存的回调函数</span>
+          <span class="token function">executeDispatch</span><span class="token punctuation">(</span>event<span class="token punctuation">,</span> listener<span class="token punctuation">,</span> currentTarget<span class="token punctuation">)</span><span class="token punctuation">;</span>
+          previousInstance <span class="token operator">=</span> instance<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+        <span class="token comment">// 因为是冒泡阶段，所以就从第一项开始遍历直到最后一项，相对应的DOM事件流就是目标阶段然后进入向上的冒泡阶段</span>
+        <span class="token comment">// 节点的顺序 a -&gt; b -&gt; c -&gt; d （a是目标节点，d根节点）</span>
+        <span class="token comment">// 收集回调函数的顺序是 [dCapture, cCapture, bCapture, aCapture, a, b, c, d];</span>
+        <span class="token comment">// 带有Capture后缀表示捕获事件，不带Capture后缀表示冒泡事件</span>
+        <span class="token comment">// 捕获阶段是从根节点向下的顺序进行的，所以最终的执行回调函数的顺序是 dCapture -&gt; cCapture -&gt; bCapture -&gt; aCapture -&gt; a -&gt; b -&gt; c -&gt; d</span>
+        <span class="token comment">// 从头部开始遍历</span>
+        <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> dispatchListeners<span class="token punctuation">.</span>length<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          <span class="token keyword">const</span> <span class="token punctuation">{</span>instance<span class="token punctuation">,</span> currentTarget<span class="token punctuation">,</span> listener<span class="token punctuation">}</span> <span class="token operator">=</span> dispatchListeners<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">;</span>
+          <span class="token comment">// 对于合成事件源event对象，定义了isPropagationStopped方法，方法的返回值就是true</span>
+          <span class="token comment">// 当调用了isPropagationStopped则会进入到条件语句里面直接return掉，后续的回调函数也就不糊执行了，达到了阻止冒泡的目的</span>
+          <span class="token keyword">if</span> <span class="token punctuation">(</span>instance <span class="token operator">!==</span> previousInstance <span class="token operator">&amp;&amp;</span> event<span class="token punctuation">.</span><span class="token function">isPropagationStopped</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+              <span class="token keyword">return</span><span class="token punctuation">;</span>
+          <span class="token punctuation">}</span>
+          <span class="token comment">// 执行listener中保存的回调函数</span>
+          <span class="token function">executeDispatch</span><span class="token punctuation">(</span>event<span class="token punctuation">,</span> listener<span class="token punctuation">,</span> currentTarget<span class="token punctuation">)</span><span class="token punctuation">;</span>
+          previousInstance <span class="token operator">=</span> instance<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+
+<span class="token comment">// 因为executeDispatch会调用一系列的函数，所以下面是简化后的代码，只保留了最后回调函数执行的过程</span>
+<span class="token keyword">function</span> <span class="token function">executeDispatch</span><span class="token punctuation">(</span>
+  <span class="token parameter">event<span class="token operator">:</span> ReactSyntheticEvent<span class="token punctuation">,</span>
+  listener<span class="token operator">:</span> Function<span class="token punctuation">,</span>
+  currentTarget<span class="token operator">:</span> EventTarget<span class="token punctuation">,</span></span>
+<span class="token punctuation">)</span><span class="token operator">:</span> <span class="token keyword">void</span> <span class="token punctuation">{</span>
+  <span class="token function">invokeGuardedCallbackImpl</span><span class="token punctuation">.</span><span class="token function">apply</span><span class="token punctuation">(</span><span class="token keyword">null</span><span class="token punctuation">,</span> arguments<span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">if</span> <span class="token punctuation">(</span>
+    <span class="token keyword">typeof</span> window <span class="token operator">!==</span> <span class="token string">'undefined'</span> 
+    <span class="token operator">&amp;&amp;</span> <span class="token keyword">typeof</span> window<span class="token punctuation">.</span>dispatchEvent <span class="token operator">===</span> <span class="token string">'function'</span> 
+    <span class="token operator">&amp;&amp;</span> <span class="token keyword">typeof</span> document <span class="token operator">!==</span> <span class="token string">'undefined'</span> 
+    <span class="token operator">&amp;&amp;</span> <span class="token keyword">typeof</span> document<span class="token punctuation">.</span>createEvent <span class="token operator">===</span> <span class="token string">'function'</span>
+<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 创建一个虚拟dom</span>
+    <span class="token keyword">var</span> fakeNode <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">createElement</span><span class="token punctuation">(</span><span class="token string">'react'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token function-variable function">invokeGuardedCallbackImpl</span> <span class="token operator">=</span> <span class="token keyword">function</span> <span class="token function">invokeGuardedCallbackDev</span><span class="token punctuation">(</span><span class="token parameter">name<span class="token punctuation">,</span> func<span class="token punctuation">,</span> context<span class="token punctuation">,</span> a<span class="token punctuation">,</span> b<span class="token punctuation">,</span> c<span class="token punctuation">,</span> d<span class="token punctuation">,</span> e<span class="token punctuation">,</span> f</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment">// 创建一个事件名</span>
+        <span class="token keyword">var</span> evt <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">createEvent</span><span class="token punctuation">(</span><span class="token string">'Event'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">var</span> didCall <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">;</span> 
+        <span class="token comment">// 获取windowEvent</span>
+        <span class="token keyword">var</span> windowEvent <span class="token operator">=</span> window<span class="token punctuation">.</span>event<span class="token punctuation">;</span>
+
+        <span class="token keyword">function</span> <span class="token function">restoreAfterDispatch</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token comment">// 在执行回调函数后立刻移除回调函数，防止出现嵌套调用</span>
+            fakeNode<span class="token punctuation">.</span><span class="token function">removeEventListener</span><span class="token punctuation">(</span>evtType<span class="token punctuation">,</span> callCallback<span class="token punctuation">,</span> <span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>
+                <span class="token keyword">typeof</span> window<span class="token punctuation">.</span>event <span class="token operator">!==</span> <span class="token string">'undefined'</span> <span class="token operator">&amp;&amp;</span>
+                window<span class="token punctuation">.</span><span class="token function">hasOwnProperty</span><span class="token punctuation">(</span><span class="token string">'event'</span><span class="token punctuation">)</span>
+            <span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                window<span class="token punctuation">.</span>event <span class="token operator">=</span> windowEvent<span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span>
+        <span class="token comment">// 获取回调函数的参数</span>
+        <span class="token keyword">var</span> funcArgs <span class="token operator">=</span> <span class="token class-name">Array</span><span class="token punctuation">.</span>prototype<span class="token punctuation">.</span><span class="token function">slice</span><span class="token punctuation">.</span><span class="token function">call</span><span class="token punctuation">(</span>arguments<span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment">// 执行回调函数的方法</span>
+        <span class="token keyword">function</span> <span class="token function">callCallback</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            didCall <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
+            <span class="token function">restoreAfterDispatch</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token comment">// *** 终于!!!在这里执行回调函数，并传入上下文和参数 ***</span>
+            <span class="token function">func</span><span class="token punctuation">.</span><span class="token function">apply</span><span class="token punctuation">(</span>context<span class="token punctuation">,</span> funcArgs<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            didError <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span> 
+        <span class="token comment">// 定义一个假的事件类型</span>
+        <span class="token keyword">var</span> evtType <span class="token operator">=</span> <span class="token string">&quot;react-&quot;</span> <span class="token operator">+</span> <span class="token punctuation">(</span>name <span class="token operator">?</span> name <span class="token operator">:</span> <span class="token string">'invokeguardedcallback'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> 
+        <span class="token comment">// 在虚拟DOM节点上以自定义事件类型绑定调用回调函数</span>
+        fakeNode<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span>evtType<span class="token punctuation">,</span> callCallback<span class="token punctuation">,</span> <span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">;</span> 
+        <span class="token comment">// 初始化evtType实例</span>
+        evt<span class="token punctuation">.</span><span class="token function">initEvent</span><span class="token punctuation">(</span>evtType<span class="token punctuation">,</span> <span class="token boolean">false</span><span class="token punctuation">,</span> <span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment">// 触发在虚拟DOM节点上callCallback方法，然后执行回调函数</span>
+        fakeNode<span class="token punctuation">.</span><span class="token function">dispatchEvent</span><span class="token punctuation">(</span>evt<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token comment">// handle throw error...</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>至此，<code>React</code>事件系统相关的源码终于介绍完了。</p> <p>需要说明的是，为了学习的方便，以上的代码都是以<code>click</code>这种简单事件为例，并且触发的方式也是比较简单的。除此之外，还有像选择事件、鼠标移动事件、输入事件等。每种事件都做了许多额外的处理工作，并且也有各自不同的事件源<code>event</code>对象。</p> <h2 id="总结"><a href="#总结" class="header-anchor">#</a> 总结</h2> <p><code>React</code>的事件系统主要分成两个阶段，事件绑定和事件触发。</p> <ul><li>事件绑定阶段：会在容器根节点（<code>ReactDOM.createRoot</code>的一个参数或<code>ReactDOM.render</code>的第二个参数）上绑定一个<code>dispatchEvent</code>方法。</li> <li>事件触发阶段：当在目标节点触发一个点击事件后，根据<code>DOM</code>事件流向上冒泡到容器根节点，触发容器根节点的<code>dispatchEvent</code>方法。<code>dispatchEvent</code>方法会从目标<code>Fiber</code>节点一直向上遍历到容器根节点，同时收集遍历到<code>Fiber</code>节点上的注册事件的相关信息（<code>Fiber</code>节点和<code>callback</code>回调函数），然后依次<em>push</em>到监听器队列中，接着再和对应的事件源<code>event</code>组成对象<code>push</code>到<code>dispatchQueue</code>队列中。然后遍历<code>dispatchQueue</code>和调用<code>processDispatchQueueInOrder</code>方法遍历<code>dispatchListeners</code>（捕获事件会从<code>dispatchListeners</code>的尾部开始执行，冒泡事件会从<code>dispatchListeners</code>的头部开始执行）。最后对遍历到的<code>listener</code>调用<code>executeDispatch</code>方法执行对应的<em>callback回调函数</em>。</li></ul></div> <footer class="page-edit"><!----> <!----></footer> <div class="page-nav"><p class="inner"><span class="prev">
+      ←
+      <a href="/react-blog/docs/concept/lifeCycle.html" class="prev">
+        生命周期
+      </a></span> <span class="next"><a href="/react-blog/docs/concept/errorBoundary.html">
+        错误边界
+      </a>
+      →
+    </span></p></div> </main></div><div class="global-ui"><!----></div></div>
+    <script src="/react-blog/assets/js/app.1296abc1.js" defer></script><script src="/react-blog/assets/js/2.2aa2ea89.js" defer></script><script src="/react-blog/assets/js/21.23f5c8b7.js" defer></script>
+  </body>
+</html>

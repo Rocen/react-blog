@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Error Boundary | React笔记</title>
+    <meta name="generator" content="VuePress 1.9.5">
+    <link rel="icon" href="/react-blog/logo.svg">
+    <meta name="description" content="React">
+    
+    <link rel="preload" href="/react-blog/assets/css/0.styles.7c9b7da0.css" as="style"><link rel="preload" href="/react-blog/assets/js/app.1296abc1.js" as="script"><link rel="preload" href="/react-blog/assets/js/2.2aa2ea89.js" as="script"><link rel="preload" href="/react-blog/assets/js/9.f8d3ba3a.js" as="script"><link rel="prefetch" href="/react-blog/assets/js/10.eec084d2.js"><link rel="prefetch" href="/react-blog/assets/js/11.90e7ad9c.js"><link rel="prefetch" href="/react-blog/assets/js/12.ec712917.js"><link rel="prefetch" href="/react-blog/assets/js/13.5fd1705f.js"><link rel="prefetch" href="/react-blog/assets/js/14.33d6319e.js"><link rel="prefetch" href="/react-blog/assets/js/15.b49ac970.js"><link rel="prefetch" href="/react-blog/assets/js/16.915d1a33.js"><link rel="prefetch" href="/react-blog/assets/js/17.0d48f94a.js"><link rel="prefetch" href="/react-blog/assets/js/18.162dd664.js"><link rel="prefetch" href="/react-blog/assets/js/19.897cc694.js"><link rel="prefetch" href="/react-blog/assets/js/20.c0d68b54.js"><link rel="prefetch" href="/react-blog/assets/js/21.23f5c8b7.js"><link rel="prefetch" href="/react-blog/assets/js/22.17cddd5f.js"><link rel="prefetch" href="/react-blog/assets/js/23.3e2c069f.js"><link rel="prefetch" href="/react-blog/assets/js/24.16287cbc.js"><link rel="prefetch" href="/react-blog/assets/js/25.c9819b86.js"><link rel="prefetch" href="/react-blog/assets/js/26.03bcf156.js"><link rel="prefetch" href="/react-blog/assets/js/27.2e75196a.js"><link rel="prefetch" href="/react-blog/assets/js/28.71dcfa28.js"><link rel="prefetch" href="/react-blog/assets/js/29.0534c7d4.js"><link rel="prefetch" href="/react-blog/assets/js/3.1f92403b.js"><link rel="prefetch" href="/react-blog/assets/js/30.70a1b1a5.js"><link rel="prefetch" href="/react-blog/assets/js/31.8d8007c6.js"><link rel="prefetch" href="/react-blog/assets/js/32.f55b2b21.js"><link rel="prefetch" href="/react-blog/assets/js/33.dea713d0.js"><link rel="prefetch" href="/react-blog/assets/js/34.16302cd1.js"><link rel="prefetch" href="/react-blog/assets/js/35.58ce8424.js"><link rel="prefetch" href="/react-blog/assets/js/36.21c87dbf.js"><link rel="prefetch" href="/react-blog/assets/js/37.e9ccbb00.js"><link rel="prefetch" href="/react-blog/assets/js/38.eda7b7d3.js"><link rel="prefetch" href="/react-blog/assets/js/39.28c4eb15.js"><link rel="prefetch" href="/react-blog/assets/js/4.ace4b147.js"><link rel="prefetch" href="/react-blog/assets/js/40.13eceae9.js"><link rel="prefetch" href="/react-blog/assets/js/41.e5e3f4ba.js"><link rel="prefetch" href="/react-blog/assets/js/42.1ab022fc.js"><link rel="prefetch" href="/react-blog/assets/js/43.eca03ba8.js"><link rel="prefetch" href="/react-blog/assets/js/44.be104c53.js"><link rel="prefetch" href="/react-blog/assets/js/5.68075c63.js"><link rel="prefetch" href="/react-blog/assets/js/6.01147cc3.js"><link rel="prefetch" href="/react-blog/assets/js/7.630cc1a8.js"><link rel="prefetch" href="/react-blog/assets/js/8.80d0f023.js">
+    <link rel="stylesheet" href="/react-blog/assets/css/0.styles.7c9b7da0.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/react-blog/" class="home-link router-link-active"><!----> <span class="site-name">React笔记</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><a href="https://next-blog.irocen.top" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  nextjs笔记
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div><div class="nav-item"><a href="https://github.com/Rocen" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  github
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <!----></nav></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><nav class="nav-links"><div class="nav-item"><a href="https://next-blog.irocen.top" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  nextjs笔记
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div><div class="nav-item"><a href="https://github.com/Rocen" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  github
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <!----></nav>  <ul class="sidebar-links"><li><section class="sidebar-group depth-0"><a href="/react-blog/" class="sidebar-heading clickable router-link-active"><span>开始</span> <!----></a> <ul class="sidebar-links sidebar-group-items"><li><a href="/react-blog/docs/start/directory.html" class="sidebar-link">目录</a></li></ul></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>理念</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>架构</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>原理</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading open"><span>概念</span> <span class="arrow down"></span></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/react-blog/docs/concept/lifeCycle.html" class="sidebar-link">生命周期</a></li><li><a href="/react-blog/docs/concept/eventSystem.html" class="sidebar-link">事件系统</a></li><li><a href="/react-blog/docs/concept/errorBoundary.html" aria-current="page" class="active sidebar-link">错误边界</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/react-blog/docs/concept/errorBoundary.html#error-boundary" class="sidebar-link">Error Boundary</a></li><li class="sidebar-sub-header"><a href="/react-blog/docs/concept/errorBoundary.html#捕获错误" class="sidebar-link">捕获错误</a></li><li class="sidebar-sub-header"><a href="/react-blog/docs/concept/errorBoundary.html#构造callback" class="sidebar-link">构造callback</a></li><li class="sidebar-sub-header"><a href="/react-blog/docs/concept/errorBoundary.html#执行callback" class="sidebar-link">执行callback</a></li><li class="sidebar-sub-header"><a href="/react-blog/docs/concept/errorBoundary.html#总结" class="sidebar-link">总结</a></li></ul></li></ul></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>Hooks</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>Concurrent Mode</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>实现</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>发现</span> <span class="arrow right"></span></p> <!----></section></li></ul> </aside> <main class="page"> <div class="theme-default-content content__default"><h2 id="error-boundary"><a href="#error-boundary" class="header-anchor">#</a> Error Boundary</h2> <p>React官网对于错误边界的描述是：</p> <blockquote><p>错误边界是一种 React 组件，这种组件可以捕获发生在其子组件树任何位置的 JavaScript 错误，并打印这些错误，同时展示降级 UI，而并不会渲染那些发生崩溃的子组件树。<br>
+如果一个 class 组件中定义了 static getDerivedStateFromError() 或 componentDidCatch() 这两个生命周期方法中的任意一个（或两个）时，那么它就变成一个错误边界。</p></blockquote> <p>从这段描述中可以了解到，<code>Error Boundary</code>是一种组件，并且需要定义<code>static getDerivedStateFromError()</code>或<code>componentDidCatch()</code>生命周期方法。<br>
+它自身包括三种功能：</p> <ul><li>捕获渲染期间的错误</li> <li>打印这些错误</li> <li>展示降级UI</li></ul> <p>可以说，<code>Error Boundary</code>虽然是一个新的概念，但是功能和使用方式是比较单一的，只能作为组件存在，并且只负责捕获和处理React内部抛出的错误。</p> <p>接下来，将从源码的角度看看<code>React</code>是怎么实现的。</p> <h2 id="捕获错误"><a href="#捕获错误" class="header-anchor">#</a> 捕获错误</h2> <p>首先需要明确React的工作流程，一共分为三步：</p> <ul><li>触发更新</li> <li>在<code>render阶段</code>计算更新造成的副作用</li> <li>在<code>commit阶段</code>执行副作用</li></ul> <p><code>React</code>的工作流程只包括<code>render阶段</code>和<code>commit阶段</code>。所以只有发生在这两个阶段内部的错误才会被<code>Error Boundary</code>定义的方法捕获到。那么在工作流程中的错误都是被怎么样捕获的呢？</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">function</span> <span class="token function">renderRootSync</span><span class="token punctuation">(</span>
+    <span class="token parameter">root<span class="token operator">:</span> FiberRoot<span class="token punctuation">,</span> 
+    lanes<span class="token operator">:</span> Lanes</span>
+<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// order code...</span>
+
+    <span class="token keyword">do</span> <span class="token punctuation">{</span>
+        <span class="token keyword">try</span> <span class="token punctuation">{</span>
+            <span class="token function">workLoopSync</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token keyword">break</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span>thrownValue<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token comment">// 捕获render阶段抛出错误的方法</span>
+            <span class="token function">handleError</span><span class="token punctuation">(</span>root<span class="token punctuation">,</span> thrownValue<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span> <span class="token keyword">while</span> <span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">// order code...</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>从这段代码可以看出，在<code>render阶段</code>的入口函数<code>workLoopSync</code>被包裹在<code>try catch语句</code>中来捕获执行过程中可能抛出的错误，一旦有错误抛出就会被<code>catch</code>接收到并传递给<code>handleError</code>方法来处理这个错误。<br>
+而<code>commit阶段</code>使用的是相同的写法，将<code>captureCommitPhaseError</code>方法放在<code>catch</code>语句中接收被捕获的错误并做相应的处理。而因为<code>commit阶段</code>包括很多子阶段，所以在<code>commit阶段</code>的内部会出现很多被<code>try catch</code>语句包裹的地方，这些地方都同样使用了<code>captureCommitPhaseError</code>方法来处理错误。</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">try</span> <span class="token punctuation">{</span>
+    <span class="token comment">// commit阶段调用的方法</span>
+<span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span>error<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token function">captureCommitPhaseError</span><span class="token punctuation">(</span>fiber<span class="token punctuation">,</span> fiber<span class="token punctuation">.</span>return<span class="token punctuation">,</span> error<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h2 id="构造callback"><a href="#构造callback" class="header-anchor">#</a> 构造callback</h2> <p>不管是<code>handleError</code>还是<code>captureCommitPhaseError</code>，都会从发生错误的节点的父节点开始，逐层向上遍历，寻找离它最近的<code>Error Boundary</code>。当找到了<code>Error Boundary</code>，大致会做两件事：</p> <ul><li>构造用于执行<code>Error Boundary</code>方法的<code>callback</code></li> <li>构造用于抛出<code>React</code>提示信息的<code>callback</code></li></ul> <p>具体代码如下所示：</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">function</span> <span class="token function">createClassErrorUpdate</span><span class="token punctuation">(</span>
+  <span class="token parameter">fiber<span class="token operator">:</span> Fiber<span class="token punctuation">,</span>
+  errorInfo<span class="token operator">:</span> CapturedValue<span class="token operator">&lt;</span>mixed<span class="token operator">&gt;</span><span class="token punctuation">,</span>
+  lane<span class="token operator">:</span> Lane<span class="token punctuation">,</span></span>
+<span class="token punctuation">)</span><span class="token operator">:</span> Update<span class="token operator">&lt;</span>mixed<span class="token operator">&gt;</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 创建update对象</span>
+    <span class="token keyword">const</span> update <span class="token operator">=</span> <span class="token function">createUpdate</span><span class="token punctuation">(</span>NoTimestamp<span class="token punctuation">,</span> lane<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">// update的类型为捕获型Update</span>
+    update<span class="token punctuation">.</span>tag <span class="token operator">=</span> CaptureUpdate<span class="token punctuation">;</span>
+    <span class="token comment">// 获取静态方法getDerivedStateFromError</span>
+    <span class="token keyword">const</span> getDerivedStateFromError <span class="token operator">=</span> fiber<span class="token punctuation">.</span>type<span class="token punctuation">.</span>getDerivedStateFromError<span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">typeof</span> getDerivedStateFromError <span class="token operator">===</span> <span class="token string">'function'</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">const</span> error <span class="token operator">=</span> errorInfo<span class="token punctuation">.</span>value<span class="token punctuation">;</span>
+        <span class="token comment">// 用于执行getDerivedStateFromError的callback</span>
+        update<span class="token punctuation">.</span><span class="token function-variable function">payload</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+            <span class="token keyword">return</span> <span class="token function">getDerivedStateFromError</span><span class="token punctuation">(</span>error<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span><span class="token punctuation">;</span>
+        <span class="token comment">// 用于抛出React提示信息的callback</span>
+        update<span class="token punctuation">.</span><span class="token function-variable function">callback</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+            <span class="token function">logCapturedError</span><span class="token punctuation">(</span>fiber<span class="token punctuation">,</span> errorInfo<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">const</span> inst <span class="token operator">=</span> fiber<span class="token punctuation">.</span>stateNode<span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>inst <span class="token operator">!==</span> <span class="token keyword">null</span> <span class="token operator">&amp;&amp;</span> <span class="token keyword">typeof</span> inst<span class="token punctuation">.</span>componentDidCatch <span class="token operator">===</span> <span class="token string">'function'</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        update<span class="token punctuation">.</span><span class="token function-variable function">callback</span> <span class="token operator">=</span> <span class="token keyword">function</span> <span class="token function">callback</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token comment">// 用于抛出React提示信息的callback</span>
+            <span class="token function">logCapturedError</span><span class="token punctuation">(</span>fiber<span class="token punctuation">,</span> errorInfo<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token keyword">const</span> error <span class="token operator">=</span> errorInfo<span class="token punctuation">.</span>value<span class="token punctuation">;</span>
+            <span class="token keyword">const</span> stack <span class="token operator">=</span> errorInfo<span class="token punctuation">.</span>stack<span class="token punctuation">;</span>
+            <span class="token comment">// 用于执行componentDidCatch的callback</span>
+            <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">componentDidCatch</span><span class="token punctuation">(</span>error<span class="token punctuation">,</span> <span class="token punctuation">{</span>
+                componentStack<span class="token operator">:</span> stack <span class="token operator">!==</span> <span class="token keyword">null</span> <span class="token operator">?</span> stack <span class="token operator">:</span> <span class="token string">''</span><span class="token punctuation">,</span>
+            <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">return</span> update<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>如果没有找到<code>Error Boundary</code>，就会继续向上遍历直到根节点。同样也会构造两个<code>callback</code>。</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">function</span> <span class="token function">createRootErrorUpdate</span><span class="token punctuation">(</span>
+  <span class="token parameter">fiber<span class="token operator">:</span> Fiber<span class="token punctuation">,</span>
+  errorInfo<span class="token operator">:</span> CapturedValue<span class="token operator">&lt;</span>mixed<span class="token operator">&gt;</span><span class="token punctuation">,</span>
+  lane<span class="token operator">:</span> Lane<span class="token punctuation">,</span></span>
+<span class="token punctuation">)</span><span class="token operator">:</span> Update<span class="token operator">&lt;</span>mixed<span class="token operator">&gt;</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 创建update对象</span>
+    <span class="token keyword">const</span> update <span class="token operator">=</span> <span class="token function">createUpdate</span><span class="token punctuation">(</span>NoTimestamp<span class="token punctuation">,</span> lane<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    update<span class="token punctuation">.</span>tag <span class="token operator">=</span> CaptureUpdate<span class="token punctuation">;</span>
+    update<span class="token punctuation">.</span>payload <span class="token operator">=</span> <span class="token punctuation">{</span>element<span class="token operator">:</span> <span class="token keyword">null</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+    <span class="token comment">// 获取error</span>
+    <span class="token keyword">const</span> error <span class="token operator">=</span> errorInfo<span class="token punctuation">.</span>value<span class="token punctuation">;</span>
+    update<span class="token punctuation">.</span><span class="token function-variable function">callback</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+        <span class="token comment">// 抛出未捕获的错误的callback</span>
+        <span class="token function">onUncaughtError</span><span class="token punctuation">(</span>error<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment">// 抛出React提示信息的callback</span>
+        <span class="token function">logCapturedError</span><span class="token punctuation">(</span>fiber<span class="token punctuation">,</span> errorInfo<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> update<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>当构造完这两种<code>callback</code>，最终又是如何执行的呢？</p> <h2 id="执行callback"><a href="#执行callback" class="header-anchor">#</a> 执行callback</h2> <p>被构造的<code>callback</code>都被放在了一个匿名函数中，然后保存到<code>update.callback</code>属性上。而计算<code>update</code>的工作是在<code>processUpdateQueue</code>方法（render阶段的beginWork中调用）中进行的。</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">export</span> <span class="token keyword">function</span> processUpdateQueue<span class="token operator">&lt;</span>State<span class="token operator">&gt;</span><span class="token punctuation">(</span>
+  workInProgress<span class="token operator">:</span> Fiber<span class="token punctuation">,</span>
+   props<span class="token operator">:</span> any<span class="token punctuation">,</span>
+  instance<span class="token operator">:</span> any<span class="token punctuation">,</span>
+  renderLanes<span class="token operator">:</span> Lanes<span class="token punctuation">,</span>
+<span class="token punctuation">)</span><span class="token operator">:</span> <span class="token keyword">void</span> <span class="token punctuation">{</span>
+   <span class="token comment">// 计算update.payload</span>
+   <span class="token comment">// getDerivedStateFromError会在getStateFromUpdate方法内被执行</span>
+   <span class="token comment">// getDerivedStateFromError的返回值会合并到this.state中，合并的结果会作为getStateFromUpdate方法的返回值</span>
+    newState <span class="token operator">=</span> <span class="token function">getStateFromUpdate</span><span class="token punctuation">(</span>
+        workInProgress<span class="token punctuation">,</span>
+        queue<span class="token punctuation">,</span>
+        update<span class="token punctuation">,</span>
+        newState<span class="token punctuation">,</span>
+        props<span class="token punctuation">,</span>
+        instance<span class="token punctuation">,</span>
+    <span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">// 这个callback就是抛出未捕获的错误的callback和抛出React提示信息的callback的方法</span>
+    <span class="token keyword">const</span> callback <span class="token operator">=</span> update<span class="token punctuation">.</span>callback<span class="token punctuation">;</span>
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>
+        callback <span class="token operator">!==</span> <span class="token keyword">null</span> <span class="token operator">&amp;&amp;</span>
+        update<span class="token punctuation">.</span>lane <span class="token operator">!==</span> NoLane
+    <span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        workInProgress<span class="token punctuation">.</span>flags <span class="token operator">|=</span> Callback<span class="token punctuation">;</span>
+        <span class="token keyword">const</span> effects <span class="token operator">=</span> queue<span class="token punctuation">.</span>effects<span class="token punctuation">;</span>
+        <span class="token comment">// 具有callback的update，都会被保存到effects数组中</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>effects <span class="token operator">===</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            queue<span class="token punctuation">.</span>effects <span class="token operator">=</span> <span class="token punctuation">[</span>update<span class="token punctuation">]</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+            effects<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span>update<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>从这段代码可以看出，具有<code>callback</code>值的<code>update</code>会被保存到<code>effects</code>这个数组中。这个<code>effects</code>数组会收集所有具有副作用的<code>update</code>对象，最终在<code>commit阶段</code>执行，再准确一点就是<code>commit阶段</code>的子<code>layout阶段</code>。</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">function</span> commitUpdateQueue<span class="token operator">&lt;</span>State<span class="token operator">&gt;</span><span class="token punctuation">(</span>
+  finishedWork<span class="token operator">:</span> Fiber<span class="token punctuation">,</span>
+  finishedQueue<span class="token operator">:</span> UpdateQueue<span class="token operator">&lt;</span>State<span class="token operator">&gt;</span><span class="token punctuation">,</span>
+  instance<span class="token operator">:</span> any<span class="token punctuation">,</span>
+<span class="token punctuation">)</span><span class="token operator">:</span> <span class="token keyword">void</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 获取effects</span>
+    <span class="token keyword">const</span> effects <span class="token operator">=</span> finishedQueue<span class="token punctuation">.</span>effects<span class="token punctuation">;</span>
+    finishedQueue<span class="token punctuation">.</span>effects <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>effects <span class="token operator">!==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment">// 遍历effects数组</span>
+        <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> effects<span class="token punctuation">.</span>length<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">const</span> effect <span class="token operator">=</span> effects<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">;</span>
+            <span class="token keyword">const</span> callback <span class="token operator">=</span> effect<span class="token punctuation">.</span>callback<span class="token punctuation">;</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>callback <span class="token operator">!==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                effect<span class="token punctuation">.</span>callback <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+                <span class="token comment">// 执行callback</span>
+                <span class="token function">callCallback</span><span class="token punctuation">(</span>callback<span class="token punctuation">,</span> instance<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>执行副作用的方法是<code>commitUpdateQueue</code>，这个方法会通过<code>commitLayoutEffectOnFiber</code>函数调用。<br>
+其实整个上述<strong>构造callback</strong>和<strong>执行callback</strong>的流程和使用<code>this.setState</code>方法时的流程几乎是一致的，甚至可以说<code>React</code>利用这种<strong>执行自定义callback</strong>的特性所实现的新功能。<br>
+在React中有两个<strong>执行用户自定义callback</strong>的方法：</p> <ul><li>对于ClassComponent，<code>this.setState(newState, callback)</code></li> <li>对于根节点，<code>ReactDOM.render(element, container, callback)</code></li></ul> <p>在<code>this.setState</code>方法中，<code>newState</code>和<code>callback</code>都可以传递函数作为参数。所以对于调用<code>static getDerivedStateFromError</code>方法处理抛出的错误时，相当于调用<code>this.setState</code>主动触发了一次更新:</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">setState</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+  <span class="token comment">// 用于执行getDerivedStateFromError的callback</span>
+<span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+  <span class="token comment">// 用于抛出React提示信息的callback</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre></div><p>调用<code>componentDidCatch</code>生命周期方法的效果也是一样的：</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">setState</span><span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+  <span class="token comment">// 用于执行componentDidCatch的callback</span>
+  <span class="token comment">// 以及 用于抛出React提示信息的callback</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre></div><p>使用根节点捕获抛出的错误则是利用了<code>ReactDOM.render</code>方法的第三个参数<code>callback</code>：</p> <div class="language-js extra-class"><pre class="language-js"><code>ReactDOM<span class="token punctuation">.</span><span class="token function">render</span><span class="token punctuation">(</span>element<span class="token punctuation">,</span> container<span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 用于抛出“未捕获的错误”及“React的提示信息”的callback</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre></div><h2 id="总结"><a href="#总结" class="header-anchor">#</a> 总结</h2> <p>通过上述的讲解，相信各位对于<code>Error Boundary</code>的工作原理有了比较清楚的认识。<br> <code>React</code>官网，在介绍<code>Error Boundary</code>时明确说明了4种情况的错误不会被<code>Error Boundary</code>捕获：</p> <ul><li>事件处理</li> <li>异步代码</li> <li>服务端渲染</li> <li>它自身抛出来的错误</li></ul> <p>从原理的角度出发，一定能够解答造成这4种情况的原因。</p> <p>Error Boundary工作流程图：<br></p><div align="center"><img width="70%" src="/react-blog/assets/img/errorBoundary.a33b9805.png" alt="Error Boundary"></div><p></p></div> <footer class="page-edit"><!----> <!----></footer> <div class="page-nav"><p class="inner"><span class="prev">
+      ←
+      <a href="/react-blog/docs/concept/eventSystem.html" class="prev">
+        事件系统
+      </a></span> <span class="next"><a href="/react-blog/docs/hooks/useStateAnduseReducer.html">
+        useState和useReducer
+      </a>
+      →
+    </span></p></div> </main></div><div class="global-ui"><!----></div></div>
+    <script src="/react-blog/assets/js/app.1296abc1.js" defer></script><script src="/react-blog/assets/js/2.2aa2ea89.js" defer></script><script src="/react-blog/assets/js/9.f8d3ba3a.js" defer></script>
+  </body>
+</html>

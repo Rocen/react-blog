@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>实现简易useState | React笔记</title>
+    <meta name="generator" content="VuePress 1.9.5">
+    <link rel="icon" href="/react-blog/logo.svg">
+    <meta name="description" content="React">
+    
+    <link rel="preload" href="/react-blog/assets/css/0.styles.7c9b7da0.css" as="style"><link rel="preload" href="/react-blog/assets/js/app.1296abc1.js" as="script"><link rel="preload" href="/react-blog/assets/js/2.2aa2ea89.js" as="script"><link rel="preload" href="/react-blog/assets/js/13.5fd1705f.js" as="script"><link rel="prefetch" href="/react-blog/assets/js/10.eec084d2.js"><link rel="prefetch" href="/react-blog/assets/js/11.90e7ad9c.js"><link rel="prefetch" href="/react-blog/assets/js/12.ec712917.js"><link rel="prefetch" href="/react-blog/assets/js/14.33d6319e.js"><link rel="prefetch" href="/react-blog/assets/js/15.b49ac970.js"><link rel="prefetch" href="/react-blog/assets/js/16.915d1a33.js"><link rel="prefetch" href="/react-blog/assets/js/17.0d48f94a.js"><link rel="prefetch" href="/react-blog/assets/js/18.162dd664.js"><link rel="prefetch" href="/react-blog/assets/js/19.897cc694.js"><link rel="prefetch" href="/react-blog/assets/js/20.c0d68b54.js"><link rel="prefetch" href="/react-blog/assets/js/21.23f5c8b7.js"><link rel="prefetch" href="/react-blog/assets/js/22.17cddd5f.js"><link rel="prefetch" href="/react-blog/assets/js/23.3e2c069f.js"><link rel="prefetch" href="/react-blog/assets/js/24.16287cbc.js"><link rel="prefetch" href="/react-blog/assets/js/25.c9819b86.js"><link rel="prefetch" href="/react-blog/assets/js/26.03bcf156.js"><link rel="prefetch" href="/react-blog/assets/js/27.2e75196a.js"><link rel="prefetch" href="/react-blog/assets/js/28.71dcfa28.js"><link rel="prefetch" href="/react-blog/assets/js/29.0534c7d4.js"><link rel="prefetch" href="/react-blog/assets/js/3.1f92403b.js"><link rel="prefetch" href="/react-blog/assets/js/30.70a1b1a5.js"><link rel="prefetch" href="/react-blog/assets/js/31.8d8007c6.js"><link rel="prefetch" href="/react-blog/assets/js/32.f55b2b21.js"><link rel="prefetch" href="/react-blog/assets/js/33.dea713d0.js"><link rel="prefetch" href="/react-blog/assets/js/34.16302cd1.js"><link rel="prefetch" href="/react-blog/assets/js/35.58ce8424.js"><link rel="prefetch" href="/react-blog/assets/js/36.21c87dbf.js"><link rel="prefetch" href="/react-blog/assets/js/37.e9ccbb00.js"><link rel="prefetch" href="/react-blog/assets/js/38.eda7b7d3.js"><link rel="prefetch" href="/react-blog/assets/js/39.28c4eb15.js"><link rel="prefetch" href="/react-blog/assets/js/4.ace4b147.js"><link rel="prefetch" href="/react-blog/assets/js/40.13eceae9.js"><link rel="prefetch" href="/react-blog/assets/js/41.e5e3f4ba.js"><link rel="prefetch" href="/react-blog/assets/js/42.1ab022fc.js"><link rel="prefetch" href="/react-blog/assets/js/43.eca03ba8.js"><link rel="prefetch" href="/react-blog/assets/js/44.be104c53.js"><link rel="prefetch" href="/react-blog/assets/js/5.68075c63.js"><link rel="prefetch" href="/react-blog/assets/js/6.01147cc3.js"><link rel="prefetch" href="/react-blog/assets/js/7.630cc1a8.js"><link rel="prefetch" href="/react-blog/assets/js/8.80d0f023.js"><link rel="prefetch" href="/react-blog/assets/js/9.f8d3ba3a.js">
+    <link rel="stylesheet" href="/react-blog/assets/css/0.styles.7c9b7da0.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/react-blog/" class="home-link router-link-active"><!----> <span class="site-name">React笔记</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><a href="https://next-blog.irocen.top" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  nextjs笔记
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div><div class="nav-item"><a href="https://github.com/Rocen" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  github
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <!----></nav></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><nav class="nav-links"><div class="nav-item"><a href="https://next-blog.irocen.top" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  nextjs笔记
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div><div class="nav-item"><a href="https://github.com/Rocen" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  github
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <!----></nav>  <ul class="sidebar-links"><li><section class="sidebar-group depth-0"><a href="/react-blog/" class="sidebar-heading clickable router-link-active"><span>开始</span> <!----></a> <ul class="sidebar-links sidebar-group-items"><li><a href="/react-blog/docs/start/directory.html" class="sidebar-link">目录</a></li></ul></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>理念</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>架构</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>原理</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>概念</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>Hooks</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>Concurrent Mode</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading open"><span>实现</span> <span class="arrow down"></span></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/react-blog/docs/implement/useState.html" aria-current="page" class="active sidebar-link">实现简易useState</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/react-blog/docs/implement/useState.html#实现简易usestate" class="sidebar-link">实现简易useState</a></li><li class="sidebar-sub-header"><a href="/react-blog/docs/implement/useState.html#工作原理" class="sidebar-link">工作原理</a></li><li class="sidebar-sub-header"><a href="/react-blog/docs/implement/useState.html#声明阶段" class="sidebar-link">声明阶段</a></li><li class="sidebar-sub-header"><a href="/react-blog/docs/implement/useState.html#调用阶段" class="sidebar-link">调用阶段</a></li><li class="sidebar-sub-header"><a href="/react-blog/docs/implement/useState.html#开启调度更新" class="sidebar-link">开启调度更新</a></li><li class="sidebar-sub-header"><a href="/react-blog/docs/implement/useState.html#页面结构" class="sidebar-link">页面结构</a></li><li class="sidebar-sub-header"><a href="/react-blog/docs/implement/useState.html#完整代码" class="sidebar-link">完整代码</a></li><li class="sidebar-sub-header"><a href="/react-blog/docs/implement/useState.html#最终效果" class="sidebar-link">最终效果</a></li></ul></li></ul></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>发现</span> <span class="arrow right"></span></p> <!----></section></li></ul> </aside> <main class="page"> <div class="theme-default-content content__default"><h2 id="实现简易usestate"><a href="#实现简易usestate" class="header-anchor">#</a> 实现简易useState</h2> <p>这节是利用学习过的<code>hooks</code>相关知识，实现一个简易版的<code>useState</code>。</p> <p>这个使用原生实现的简易版的<code>useState</code>只具备触发状态更新和更新页面两个功能。</p> <h2 id="工作原理"><a href="#工作原理" class="header-anchor">#</a> 工作原理</h2> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">function</span> <span class="token function">App</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> <span class="token punctuation">[</span>num<span class="token punctuation">,</span> setNum<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token function">useState</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">return</span> <span class="token operator">&lt;</span>div onClick<span class="token operator">=</span><span class="token punctuation">{</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token function">setNum</span><span class="token punctuation">(</span><span class="token parameter">n</span> <span class="token operator">=&gt;</span> n <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">}</span><span class="token operator">&gt;</span><span class="token punctuation">{</span>num<span class="token punctuation">}</span><span class="token operator">&lt;</span><span class="token operator">/</span>div<span class="token operator">&gt;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>以这段代码为例，根据<code>useState</code>实现的原理，我们知道<code>useState</code>分为声明阶段和调用阶段。</p> <p>声明阶段是指<code>useState</code>在组件<code>mount</code>和<code>update</code>时会分别执行<code>mountState</code>和<code>updateReducer</code>。</p> <p>调用阶段是指调用<code>setNum</code>这个函数，然后而触发状态更新。</p> <h2 id="声明阶段"><a href="#声明阶段" class="header-anchor">#</a> 声明阶段</h2> <p>因为<code>hooks</code>会区分<code>mount</code>和<code>update</code>，再调用属于对应阶段的方法。但是因为属于简易版的实现，我们用一个<code>useState</code>方法和一个变量<code>isMount</code>来模拟该过程。</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token comment">// 区分mount和update</span>
+<span class="token keyword">let</span> isMount <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
+<span class="token comment">// 创建fiber节点，用来保存hook和真实DOM节点</span>
+<span class="token keyword">let</span> fiber <span class="token operator">=</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 保存hook链表</span>
+    memoizedState<span class="token operator">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
+    <span class="token comment">// 保存对应的DOM节点</span>
+    stateNode<span class="token operator">:</span> App
+<span class="token punctuation">}</span>
+<span class="token comment">// 当前正在执行的hook</span>
+<span class="token keyword">let</span> workInProgressHook <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+
+<span class="token keyword">const</span> <span class="token function-variable function">useState</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token parameter">initialState</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 声明一个hook</span>
+    <span class="token keyword">let</span> hook<span class="token punctuation">;</span>
+    <span class="token comment">// 判断是mount还是update</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>isMount<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment">// 如果是mount</span>
+        <span class="token comment">// 创建一个hook</span>
+        hook <span class="token operator">=</span> <span class="token punctuation">{</span>
+            <span class="token comment">// 保存state</span>
+            memoizedState<span class="token operator">:</span> initialState
+            <span class="token comment">// 用来保存update链表</span>
+            queue<span class="token operator">:</span> <span class="token punctuation">{</span>
+                pending<span class="token operator">:</span> <span class="token keyword">null</span>
+            <span class="token punctuation">}</span><span class="token punctuation">,</span>
+            <span class="token comment">// 指针，用来指向下一个hook</span>
+            next<span class="token operator">:</span> <span class="token keyword">null</span>
+        <span class="token punctuation">}</span><span class="token punctuation">;</span>
+        <span class="token comment">// 判断fiber.memoizedState是否有值</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>fiber<span class="token punctuation">.</span>memoizedState<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token comment">// fiber.memoizedState为null，说明还没有hook</span>
+            <span class="token comment">// 刚创建的hook是第一个hook，保存在fiber.memoizedState</span>
+            fiber<span class="token punctuation">.</span>memoizedState <span class="token operator">=</span> hook<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span><span class="token keyword">else</span> <span class="token punctuation">{</span>
+            <span class="token comment">// fiber.memoizedState有值，则不需要保存hook</span>
+            <span class="token comment">// 将创建的hook连接到workInProgressHook.next</span>
+            workInProgressHook<span class="token punctuation">.</span>next <span class="token operator">=</span> hook<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token keyword">else</span> <span class="token punctuation">{</span>
+        <span class="token comment">// 如果是update</span>
+        <span class="token comment">// 不需要创建hook，直接使用workInProgressHook这个条hook链表</span>
+        hook <span class="token operator">=</span> workInProgressHook<span class="token punctuation">;</span>
+        <span class="token comment">// 移动workInProgressHook</span>
+        workInProgressHook <span class="token operator">=</span> workInProgressHook<span class="token punctuation">.</span>next<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> 
+    <span class="token comment">// 赋值</span>
+    <span class="token keyword">let</span> basicState <span class="token operator">=</span> hook<span class="token punctuation">.</span>memoizedState<span class="token punctuation">;</span>
+    <span class="token comment">// 判断hook.queue.pending是否存在需要计算的update</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>hook<span class="token punctuation">.</span>queue<span class="token punctuation">.</span>pending <span class="token operator">!==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment">// 计算update</span>
+        <span class="token comment">// 获取第一个update</span>
+        <span class="token keyword">let</span> update <span class="token operator">=</span> hook<span class="token punctuation">.</span>queue<span class="token punctuation">.</span>pending<span class="token punctuation">.</span>next<span class="token punctuation">;</span>
+        <span class="token comment">// 遍历这条环状链表</span>
+        <span class="token keyword">do</span><span class="token punctuation">{</span>
+            <span class="token comment">// 获取action</span>
+            <span class="token keyword">const</span> action <span class="token operator">=</span> update<span class="token punctuation">.</span>action<span class="token punctuation">;</span>
+            <span class="token comment">// 判断action的类型，如果是函数类型，需要将state传入并执行后获取返回结果，否则是基础类型的值，直接保存</span>
+            basicState <span class="token operator">=</span> <span class="token keyword">typeof</span> action <span class="token operator">===</span> <span class="token string">'function'</span> <span class="token operator">?</span> <span class="token function">action</span><span class="token punctuation">(</span>basicState<span class="token punctuation">)</span> <span class="token operator">:</span> action<span class="token punctuation">;</span>
+            <span class="token comment">// 移动update</span>
+            update <span class="token operator">=</span> update<span class="token punctuation">.</span>next<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span><span class="token keyword">while</span><span class="token punctuation">(</span>update <span class="token operator">!==</span> hook<span class="token punctuation">.</span>queue<span class="token punctuation">.</span>pending<span class="token punctuation">.</span>next<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment">// 清空hook.queue.pending</span>
+        hook<span class="token punctuation">.</span>queue<span class="token punctuation">.</span>pending <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span> 
+    <span class="token punctuation">}</span>
+    <span class="token comment">//赋值memoizedState</span>
+    hook<span class="token punctuation">.</span>memoizedState <span class="token operator">=</span> basicState<span class="token punctuation">;</span>
+    <span class="token comment">// 获取dispatch</span>
+    <span class="token keyword">const</span> dispatch <span class="token operator">=</span> <span class="token function">dispatchAction</span><span class="token punctuation">.</span><span class="token function">bind</span><span class="token punctuation">(</span><span class="token keyword">null</span><span class="token punctuation">,</span> hook<span class="token punctuation">.</span>queue<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">// 返回</span>
+    <span class="token keyword">return</span> <span class="token punctuation">[</span>hook<span class="token punctuation">.</span>memoizedState<span class="token punctuation">,</span> dispatch<span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h2 id="调用阶段"><a href="#调用阶段" class="header-anchor">#</a> 调用阶段</h2> <p>调用阶段会调用<code>dispatchAction</code>方法，创建状态更新并开启调度更新。</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">const</span> <span class="token function-variable function">dispatchAction</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token parameter">queue<span class="token punctuation">,</span> action</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 创建状态更新</span>
+    <span class="token keyword">const</span> update <span class="token operator">=</span> <span class="token punctuation">{</span>
+        <span class="token comment">// action就是我们在调用setNum传入的回调函数</span>
+        action<span class="token punctuation">,</span>
+        <span class="token comment">// 指针，用于连接下一个update</span>
+        next<span class="token operator">:</span> <span class="token keyword">null</span>
+    <span class="token punctuation">}</span><span class="token punctuation">;</span>
+    <span class="token comment">// 将update插入到queue.pending中</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>queue<span class="token punctuation">.</span>pending <span class="token operator">===</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        update<span class="token punctuation">.</span>next <span class="token operator">=</span> update<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token keyword">else</span> <span class="token punctuation">{</span>
+        update<span class="token punctuation">.</span>next <span class="token operator">=</span> queue<span class="token punctuation">.</span>pending<span class="token punctuation">.</span>next<span class="token punctuation">;</span>
+        queue<span class="token punctuation">.</span>pending<span class="token punctuation">.</span>next <span class="token operator">=</span> update<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token comment">// queue.pending始终指向最后一个插入的update</span>
+    queue<span class="token punctuation">.</span>pending <span class="token operator">=</span> update<span class="token punctuation">;</span>
+    <span class="token comment">// 模拟开启调度更新</span>
+    <span class="token function">run</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h2 id="开启调度更新"><a href="#开启调度更新" class="header-anchor">#</a> 开启调度更新</h2> <p>因为主要目的是实现useState，所以开启调度更新这个方法只是为了让页面能够更新：</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">function</span> <span class="token function">run</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">//每次开启调度，都需要从fiber.memoizedState对应的第一个hook开始执行</span>
+    workInProgressHook <span class="token operator">=</span> fiber<span class="token punctuation">.</span>memoizedState<span class="token punctuation">;</span>
+    <span class="token comment">// 执行App方法，相当于更新组件</span>
+    <span class="token keyword">const</span> app <span class="token operator">=</span> fiber<span class="token punctuation">.</span><span class="token function">stateNode</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">// 赋值isMount，只有第一次是mount，之后都是update</span>
+    isMount <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+    <span class="token comment">// 返回组App方法的执行结果</span>
+    <span class="token keyword">return</span> app<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h2 id="页面结构"><a href="#页面结构" class="header-anchor">#</a> 页面结构</h2> <p>然后在例子上稍微改造一下，让我们可以通过一个按钮改变另一个节点的文本内容：</p> <div class="language-js extra-class"><pre class="language-js"><code>    <span class="token comment">// 按钮用于触发点击事件</span>
+    <span class="token operator">&lt;</span>button id<span class="token operator">=</span><span class="token string">&quot;btn&quot;</span><span class="token operator">&gt;</span>点击<span class="token operator">&lt;</span><span class="token operator">/</span>button<span class="token operator">&gt;</span>
+    <span class="token comment">// 显示变量的dom节点</span>
+    <span class="token operator">&lt;</span>div id<span class="token operator">=</span><span class="token string">&quot;dom&quot;</span><span class="token operator">&gt;</span><span class="token operator">&lt;</span><span class="token operator">/</span>div<span class="token operator">&gt;</span>
+    <span class="token comment">//获取dom元素</span>
+    <span class="token keyword">const</span> dom <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'dom'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> btn <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'btn'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">// 模拟函数组件</span>
+    <span class="token keyword">function</span> <span class="token function">App</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment">// 使用useState</span>
+        <span class="token keyword">const</span> <span class="token punctuation">[</span>num<span class="token punctuation">,</span> setNum<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token function">useState</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment">// 打印</span>
+        console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'num'</span><span class="token punctuation">,</span> setNum<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment">// 每次执行该组件时，都修改dom的文本内容，模拟dom节点的更新</span>
+        dom<span class="token punctuation">.</span>innerHTML <span class="token operator">=</span> num<span class="token punctuation">;</span>
+        <span class="token comment">// 定义一个onClick函数</span>
+        <span class="token keyword">const</span> <span class="token function-variable function">onClick</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+            <span class="token function">setNum</span><span class="token punctuation">(</span><span class="token parameter">num</span> <span class="token operator">=&gt;</span> num <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span>
+        <span class="token punctuation">}</span>
+        <span class="token comment">// 把这个函数返回出去</span>
+        <span class="token keyword">return</span> onClick<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token comment">// 获取onClick事件</span>
+    <span class="token keyword">const</span> event <span class="token operator">=</span> <span class="token function">run</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">// 将onClick事件绑定在button元素上，这样每次通过按钮的点击事件就可以触发setNum</span>
+    btn<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'click'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token function">event</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+</code></pre></div><h2 id="完整代码"><a href="#完整代码" class="header-anchor">#</a> 完整代码</h2> <details class="custom-block details"><summary>点击查看完整代码</summary> <div class="language-html extra-class"><pre class="language-html"><code>    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>button</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">&quot;</span>btn<span class="token punctuation">&quot;</span></span><span class="token punctuation">&gt;</span></span>点击<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>button</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">&quot;</span>dom<span class="token punctuation">&quot;</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span><span class="token punctuation">&gt;</span></span><span class="token script"><span class="token language-javascript">
+
+        <span class="token keyword">let</span> isMount <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
+        <span class="token keyword">let</span> workInProgressHook <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+        <span class="token keyword">let</span> fiber <span class="token operator">=</span> <span class="token punctuation">{</span>
+            memoizedState<span class="token operator">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
+            stateNode<span class="token operator">:</span> App
+        <span class="token punctuation">}</span>
+
+        <span class="token keyword">function</span> <span class="token function">run</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            workInProgressHook <span class="token operator">=</span> fiber<span class="token punctuation">.</span>memoizedState<span class="token punctuation">;</span>
+            <span class="token keyword">const</span> app <span class="token operator">=</span> fiber<span class="token punctuation">.</span><span class="token function">stateNode</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            isMount <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+            <span class="token keyword">return</span> app<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+
+        <span class="token keyword">function</span> <span class="token function">dispatchAction</span><span class="token punctuation">(</span><span class="token parameter">queue<span class="token punctuation">,</span> action</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">const</span> update <span class="token operator">=</span> <span class="token punctuation">{</span>
+                action<span class="token punctuation">,</span>
+                next<span class="token operator">:</span> <span class="token keyword">null</span>
+            <span class="token punctuation">}</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>queue<span class="token punctuation">.</span>pending <span class="token operator">===</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                update<span class="token punctuation">.</span>next <span class="token operator">=</span> update<span class="token punctuation">;</span>
+            <span class="token punctuation">}</span><span class="token keyword">else</span> <span class="token punctuation">{</span>
+                update<span class="token punctuation">.</span>next <span class="token operator">=</span> queue<span class="token punctuation">.</span>pending<span class="token punctuation">.</span>next<span class="token punctuation">;</span>
+                queue<span class="token punctuation">.</span>pending<span class="token punctuation">.</span>next <span class="token operator">=</span> update<span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+            queue<span class="token punctuation">.</span>pending <span class="token operator">=</span> update<span class="token punctuation">;</span>
+
+            <span class="token function">run</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+        <span class="token punctuation">}</span>
+
+        <span class="token keyword">function</span> <span class="token function">useState</span><span class="token punctuation">(</span><span class="token parameter">initialState</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">let</span> hook<span class="token punctuation">;</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>isMount<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                hook <span class="token operator">=</span> <span class="token punctuation">{</span>
+                    memoizedState<span class="token operator">:</span> initialState<span class="token punctuation">,</span>
+                    queue<span class="token operator">:</span> <span class="token punctuation">{</span>
+                        pending<span class="token operator">:</span> <span class="token keyword">null</span>
+                    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+                    next<span class="token operator">:</span> <span class="token keyword">null</span>
+                <span class="token punctuation">}</span>
+
+                <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>fiber<span class="token punctuation">.</span>memoizedState<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                    fiber<span class="token punctuation">.</span>memoizedState <span class="token operator">=</span> hook<span class="token punctuation">;</span>
+                <span class="token punctuation">}</span><span class="token keyword">else</span> <span class="token punctuation">{</span>
+                    workInProgressHook<span class="token punctuation">.</span>next <span class="token operator">=</span> hook<span class="token punctuation">;</span>
+                <span class="token punctuation">}</span>
+                workInProgressHook <span class="token operator">=</span> hook<span class="token punctuation">;</span>
+            <span class="token punctuation">}</span><span class="token keyword">else</span> <span class="token punctuation">{</span>
+                hook <span class="token operator">=</span> workInProgressHook<span class="token punctuation">;</span>
+                workInProgressHook <span class="token operator">=</span> workInProgressHook<span class="token punctuation">.</span>next<span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+
+            <span class="token keyword">let</span> basicState <span class="token operator">=</span> hook<span class="token punctuation">.</span>memoizedState<span class="token punctuation">;</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>hook<span class="token punctuation">.</span>queue<span class="token punctuation">.</span>pending<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                <span class="token keyword">let</span> firstUpdate <span class="token operator">=</span> hook<span class="token punctuation">.</span>queue<span class="token punctuation">.</span>pending<span class="token punctuation">.</span>next<span class="token punctuation">;</span>
+                <span class="token keyword">do</span> <span class="token punctuation">{</span>
+                    <span class="token keyword">const</span> action <span class="token operator">=</span> firstUpdate<span class="token punctuation">.</span>action<span class="token punctuation">;</span>
+                    basicState <span class="token operator">=</span> <span class="token keyword">typeof</span> action <span class="token operator">===</span> <span class="token string">'function'</span> <span class="token operator">?</span> <span class="token function">action</span><span class="token punctuation">(</span>basicState<span class="token punctuation">)</span> <span class="token operator">:</span> action<span class="token punctuation">;</span>
+                    firstUpdate <span class="token operator">=</span> firstUpdate<span class="token punctuation">.</span>next<span class="token punctuation">;</span>
+                <span class="token punctuation">}</span> <span class="token keyword">while</span> <span class="token punctuation">(</span>firstUpdate <span class="token operator">!==</span> hook<span class="token punctuation">.</span>queue<span class="token punctuation">.</span>pending<span class="token punctuation">.</span>next<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+                hook<span class="token punctuation">.</span>queue<span class="token punctuation">.</span>pending <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+
+            hook<span class="token punctuation">.</span>memoizedState <span class="token operator">=</span> basicState<span class="token punctuation">;</span>
+            <span class="token keyword">return</span> <span class="token punctuation">[</span>hook<span class="token punctuation">.</span>memoizedState<span class="token punctuation">,</span> <span class="token function">dispatchAction</span><span class="token punctuation">.</span><span class="token function">bind</span><span class="token punctuation">(</span><span class="token keyword">null</span><span class="token punctuation">,</span> hook<span class="token punctuation">.</span>queue<span class="token punctuation">)</span><span class="token punctuation">]</span>
+        <span class="token punctuation">}</span>
+
+        <span class="token keyword">const</span> dom <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'dom'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">const</span> btn <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'btn'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token keyword">function</span> <span class="token function">App</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+
+            <span class="token keyword">const</span> <span class="token punctuation">[</span>num<span class="token punctuation">,</span> setNum<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token function">useState</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'num='</span><span class="token punctuation">,</span> num<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            dom<span class="token punctuation">.</span>innerHTML <span class="token operator">=</span> num<span class="token punctuation">;</span>
+
+            <span class="token keyword">const</span> <span class="token function-variable function">onClick</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+                <span class="token function">setNum</span><span class="token punctuation">(</span><span class="token parameter">num</span> <span class="token operator">=&gt;</span> num <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span>
+            <span class="token punctuation">}</span>
+
+            <span class="token keyword">return</span> onClick<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+
+        <span class="token keyword">const</span> event <span class="token operator">=</span> <span class="token function">run</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        btn<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'click'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token function">event</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+    </span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
+</code></pre></div></details> <h2 id="最终效果"><a href="#最终效果" class="header-anchor">#</a> 最终效果</h2> <p>最终显示在页面上的效果：
+</p><div align="center"><img width="40%" src="/react-blog/assets/img/useState.6755142f.gif" alt="useState"></div><p></p></div> <footer class="page-edit"><!----> <!----></footer> <div class="page-nav"><p class="inner"><span class="prev">
+      ←
+      <a href="/react-blog/docs/concurrent/starve.html" class="prev">
+        饥饿问题
+      </a></span> <span class="next"><a href="/react-blog/docs/find/componentRenderAndOptimize.html">
+        组件渲染和性能优化
+      </a>
+      →
+    </span></p></div> </main></div><div class="global-ui"><!----></div></div>
+    <script src="/react-blog/assets/js/app.1296abc1.js" defer></script><script src="/react-blog/assets/js/2.2aa2ea89.js" defer></script><script src="/react-blog/assets/js/13.5fd1705f.js" defer></script>
+  </body>
+</html>

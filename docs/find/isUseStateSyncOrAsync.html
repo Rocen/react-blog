@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>useState是同步还是异步 | React笔记</title>
+    <meta name="generator" content="VuePress 1.9.5">
+    <link rel="icon" href="/react-blog/logo.svg">
+    <meta name="description" content="React">
+    
+    <link rel="preload" href="/react-blog/assets/css/0.styles.7c9b7da0.css" as="style"><link rel="preload" href="/react-blog/assets/js/app.1296abc1.js" as="script"><link rel="preload" href="/react-blog/assets/js/2.2aa2ea89.js" as="script"><link rel="preload" href="/react-blog/assets/js/28.71dcfa28.js" as="script"><link rel="prefetch" href="/react-blog/assets/js/10.eec084d2.js"><link rel="prefetch" href="/react-blog/assets/js/11.90e7ad9c.js"><link rel="prefetch" href="/react-blog/assets/js/12.ec712917.js"><link rel="prefetch" href="/react-blog/assets/js/13.5fd1705f.js"><link rel="prefetch" href="/react-blog/assets/js/14.33d6319e.js"><link rel="prefetch" href="/react-blog/assets/js/15.b49ac970.js"><link rel="prefetch" href="/react-blog/assets/js/16.915d1a33.js"><link rel="prefetch" href="/react-blog/assets/js/17.0d48f94a.js"><link rel="prefetch" href="/react-blog/assets/js/18.162dd664.js"><link rel="prefetch" href="/react-blog/assets/js/19.897cc694.js"><link rel="prefetch" href="/react-blog/assets/js/20.c0d68b54.js"><link rel="prefetch" href="/react-blog/assets/js/21.23f5c8b7.js"><link rel="prefetch" href="/react-blog/assets/js/22.17cddd5f.js"><link rel="prefetch" href="/react-blog/assets/js/23.3e2c069f.js"><link rel="prefetch" href="/react-blog/assets/js/24.16287cbc.js"><link rel="prefetch" href="/react-blog/assets/js/25.c9819b86.js"><link rel="prefetch" href="/react-blog/assets/js/26.03bcf156.js"><link rel="prefetch" href="/react-blog/assets/js/27.2e75196a.js"><link rel="prefetch" href="/react-blog/assets/js/29.0534c7d4.js"><link rel="prefetch" href="/react-blog/assets/js/3.1f92403b.js"><link rel="prefetch" href="/react-blog/assets/js/30.70a1b1a5.js"><link rel="prefetch" href="/react-blog/assets/js/31.8d8007c6.js"><link rel="prefetch" href="/react-blog/assets/js/32.f55b2b21.js"><link rel="prefetch" href="/react-blog/assets/js/33.dea713d0.js"><link rel="prefetch" href="/react-blog/assets/js/34.16302cd1.js"><link rel="prefetch" href="/react-blog/assets/js/35.58ce8424.js"><link rel="prefetch" href="/react-blog/assets/js/36.21c87dbf.js"><link rel="prefetch" href="/react-blog/assets/js/37.e9ccbb00.js"><link rel="prefetch" href="/react-blog/assets/js/38.eda7b7d3.js"><link rel="prefetch" href="/react-blog/assets/js/39.28c4eb15.js"><link rel="prefetch" href="/react-blog/assets/js/4.ace4b147.js"><link rel="prefetch" href="/react-blog/assets/js/40.13eceae9.js"><link rel="prefetch" href="/react-blog/assets/js/41.e5e3f4ba.js"><link rel="prefetch" href="/react-blog/assets/js/42.1ab022fc.js"><link rel="prefetch" href="/react-blog/assets/js/43.eca03ba8.js"><link rel="prefetch" href="/react-blog/assets/js/44.be104c53.js"><link rel="prefetch" href="/react-blog/assets/js/5.68075c63.js"><link rel="prefetch" href="/react-blog/assets/js/6.01147cc3.js"><link rel="prefetch" href="/react-blog/assets/js/7.630cc1a8.js"><link rel="prefetch" href="/react-blog/assets/js/8.80d0f023.js"><link rel="prefetch" href="/react-blog/assets/js/9.f8d3ba3a.js">
+    <link rel="stylesheet" href="/react-blog/assets/css/0.styles.7c9b7da0.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/react-blog/" class="home-link router-link-active"><!----> <span class="site-name">React笔记</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><a href="https://next-blog.irocen.top" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  nextjs笔记
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div><div class="nav-item"><a href="https://github.com/Rocen" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  github
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <!----></nav></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><nav class="nav-links"><div class="nav-item"><a href="https://next-blog.irocen.top" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  nextjs笔记
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div><div class="nav-item"><a href="https://github.com/Rocen" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  github
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <!----></nav>  <ul class="sidebar-links"><li><section class="sidebar-group depth-0"><a href="/react-blog/" class="sidebar-heading clickable router-link-active"><span>开始</span> <!----></a> <ul class="sidebar-links sidebar-group-items"><li><a href="/react-blog/docs/start/directory.html" class="sidebar-link">目录</a></li></ul></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>理念</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>架构</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>原理</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>概念</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>Hooks</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>Concurrent Mode</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>实现</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading open"><span>发现</span> <span class="arrow down"></span></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/react-blog/docs/find/componentRenderAndOptimize.html" class="sidebar-link">组件渲染和性能优化</a></li><li><a href="/react-blog/docs/find/differentBetweenSetStateAndUseState.html" class="sidebar-link">setState和useState的区别</a></li><li><a href="/react-blog/docs/find/isUseStateSyncOrAsync.html" aria-current="page" class="active sidebar-link">useState是同步还是异步</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/react-blog/docs/find/isUseStateSyncOrAsync.html#usestate是同步还是异步" class="sidebar-link">useState是同步还是异步</a></li><li class="sidebar-sub-header"><a href="/react-blog/docs/find/isUseStateSyncOrAsync.html#前置知识" class="sidebar-link">前置知识</a></li><li class="sidebar-sub-header"><a href="/react-blog/docs/find/isUseStateSyncOrAsync.html#回调函数的执行" class="sidebar-link">回调函数的执行</a></li><li class="sidebar-sub-header"><a href="/react-blog/docs/find/isUseStateSyncOrAsync.html#usestate" class="sidebar-link">useState</a></li><li class="sidebar-sub-header"><a href="/react-blog/docs/find/isUseStateSyncOrAsync.html#总结" class="sidebar-link">总结</a></li></ul></li><li><a href="/react-blog/docs/find/performanceOptimize.html" class="sidebar-link">React中的性能优化</a></li></ul></section></li></ul> </aside> <main class="page"> <div class="theme-default-content content__default"><h2 id="usestate是同步还是异步"><a href="#usestate是同步还是异步" class="header-anchor">#</a> useState是同步还是异步</h2> <p><code>useState</code>是同步还是异步？这应该是一个老生常谈的问题了，或许每个<code>React</code>开发者也都听说过这个问题。这对于考察<code>React</code>开发者是否了解<code>useState</code>底层的运行原理算是一个很好的问题。不知道各位是否知道并且理解答案呢？</p> <p>如果排除法也可以得到答案，视为一道选择题，不是选择同步就是选择异步，而且如果是同步的话可能也就不会出现这种问题了，那么正确答案只有一个：<strong>异步</strong>！</p> <p>因为这个问题涉及到的是<code>React</code>源码对于<code>useState</code>运行机制的原理，如果不了解<code>React</code>源码的话，很难真正的理解为什么<code>useState</code>是异步的。</p> <p>接下来就让我们从源码的角度去探究造成这种现象的原因是什么。</p> <div class="custom-block tip"><p class="custom-block-title">TIP</p> <p>为了描述的准确性，<code>const [state, setState] = useState(initialState)</code>这里<code>useState</code>是指<code>useState Hook</code>，而<code>setState</code>是指<code>useState</code>返回的第二参数，即更新<code>state</code>的函数。</p></div> <h2 id="前置知识"><a href="#前置知识" class="header-anchor">#</a> 前置知识</h2> <p>在<code>React</code>开发中，通过使用<code>setState</code>或<code>this.setState</code>来修改<code>state</code>进而造成组件更新的行为被称为<strong>触发状态更新</strong>。那么这种<strong>触发状态更新</strong>所<em>具象化</em>的数据结构被称为<code>Update</code>。</p> <div class="language-js extra-class"><pre class="language-js"><code>    <span class="token keyword">const</span> update<span class="token operator">:</span> Update<span class="token operator">&lt;</span><span class="token constant">S</span><span class="token punctuation">,</span> <span class="token constant">A</span><span class="token operator">&gt;</span> <span class="token operator">=</span> <span class="token punctuation">{</span>
+        lane<span class="token punctuation">,</span> <span class="token comment">// update本身具有的优先级，当存在多个update时，高优先级的update会被优先计算，低优先级的update可能会被跳过而之后计算</span>
+        action<span class="token punctuation">,</span> <span class="token comment">// 通过setState方法传入的参数，可以为一个值，也可以为一个函数</span>
+        eagerReducer<span class="token operator">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span> <span class="token comment">// 迫切的reducer，通常为basicStateReducer，暂时可不关注</span>
+        eagerState<span class="token operator">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span>   <span class="token comment">// 迫切的state，通常为更新时的一个值，暂时可不关注</span>
+        next<span class="token operator">:</span> <span class="token punctuation">(</span><span class="token keyword">null</span><span class="token operator">:</span> any<span class="token punctuation">)</span><span class="token punctuation">,</span>  <span class="token comment">// 指针，用于指向下一个update，多个update会连接形成单向环状链表，这个链表被保存在hook.queue.pending上</span>
+    <span class="token punctuation">}</span><span class="token punctuation">;</span>
+</code></pre></div><p>由此可见，<code>update</code>作为触发状态更新具象化的数据，保存了本次更新的相关内容。最终会在<code>updateReducer</code>函数中被计算并得到最终的结果，即新的<code>state</code>。新的<code>state</code>会被保存到<code>hook.memeoizedState</code>属性上。</p> <h2 id="回调函数的执行"><a href="#回调函数的执行" class="header-anchor">#</a> 回调函数的执行</h2> <p>在事件系统中学习了通过<code>React</code>合成事件注册的回调函数是如何执行的，而且毫无疑问回调函数内部的代码通常情况下也是<strong>同步执行</strong>的。</p> <p>但是当在这个回调函数里面使用了<code>setState</code>或<code>this.setState</code>等触发状态更新的方法就会进入<code>React</code>内部的更新流程里面执行相应的操作。所以我们就需要着重了解这些触发状态更新的方法做了什么，又是如何造成了<strong>异步执行</strong>的特性。</p> <h2 id="usestate"><a href="#usestate" class="header-anchor">#</a> useState</h2> <p>需要说明一下<code>React</code>对于<code>Hooks</code>实现一些特性。（详细的介绍可以看<a href="/react-blog/docs/hooks/useStateAnduseReducer.html">这篇</a>文章）</p> <p>首先，<code>Hooks</code>会通过<code>ReactCurrentDispatcher</code>变量来记录当前的使用的<code>Hooks</code>集合。而这个变量可能的取值是<code>HooksDispatcherOnMount</code>或<code>HooksDispatcherOnUpdate</code>。这两个变量用来区分当前组件是处在<code>mount</code>还是<code>update</code>。</p> <p>如果是<code>mount</code>就会赋值<code>HooksDispatcherOnMount</code>，而如果是<code>update</code>就赋值<code>HooksDispatcherOnUpdate</code>。目的是在不同的阶段可以执行正确阶段的方法。</p> <p>我们先看下<code>useState Hook</code>的实现：</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">const</span> HooksDispatcherOnMount<span class="token operator">:</span> Dispatcher <span class="token operator">=</span> <span class="token punctuation">{</span>
+  useState<span class="token operator">:</span> mountState<span class="token punctuation">,</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+<span class="token keyword">const</span> HooksDispatcherOnUpdate<span class="token operator">:</span> Dispatcher <span class="token operator">=</span> <span class="token punctuation">{</span>
+  useState<span class="token operator">:</span> updateState<span class="token punctuation">,</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+<span class="token keyword">function</span> mountState<span class="token operator">&lt;</span><span class="token constant">S</span><span class="token operator">&gt;</span><span class="token punctuation">(</span>
+  initialState<span class="token operator">:</span> <span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token constant">S</span><span class="token punctuation">)</span> <span class="token operator">|</span> <span class="token constant">S</span><span class="token punctuation">,</span>
+<span class="token punctuation">)</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token constant">S</span><span class="token punctuation">,</span> Dispatch<span class="token operator">&lt;</span>BasicStateAction<span class="token operator">&lt;</span><span class="token constant">S</span><span class="token operator">&gt;&gt;</span><span class="token punctuation">]</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 创建一个hook</span>
+    <span class="token keyword">const</span> hook <span class="token operator">=</span> <span class="token function">mountWorkInProgressHook</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">typeof</span> initialState <span class="token operator">===</span> <span class="token string">'function'</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment">// $FlowFixMe: Flow doesn't like mixed types</span>
+        initialState <span class="token operator">=</span> <span class="token function">initialState</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token comment">// 赋值memoizedState</span>
+    hook<span class="token punctuation">.</span>memoizedState <span class="token operator">=</span> hook<span class="token punctuation">.</span>baseState <span class="token operator">=</span> initialState<span class="token punctuation">;</span>
+    <span class="token comment">// 初始化queue</span>
+    <span class="token keyword">const</span> queue <span class="token operator">=</span> <span class="token punctuation">(</span>hook<span class="token punctuation">.</span>queue <span class="token operator">=</span> <span class="token punctuation">{</span>
+        pending<span class="token operator">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
+        interleaved<span class="token operator">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
+        lanes<span class="token operator">:</span> NoLanes<span class="token punctuation">,</span>
+        dispatch<span class="token operator">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
+        lastRenderedReducer<span class="token operator">:</span> basicStateReducer<span class="token punctuation">,</span>
+        lastRenderedState<span class="token operator">:</span> <span class="token punctuation">(</span>initialState<span class="token operator">:</span> any<span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">// 赋值dispatch</span>
+    <span class="token keyword">const</span> dispatch<span class="token operator">:</span> Dispatch<span class="token operator">&lt;</span>
+        BasicStateAction<span class="token operator">&lt;</span><span class="token constant">S</span><span class="token operator">&gt;</span><span class="token punctuation">,</span>
+    <span class="token operator">&gt;</span> <span class="token operator">=</span> <span class="token punctuation">(</span>queue<span class="token punctuation">.</span>dispatch <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token function">dispatchAction</span><span class="token punctuation">.</span><span class="token function">bind</span><span class="token punctuation">(</span>
+        <span class="token keyword">null</span><span class="token punctuation">,</span>
+        currentlyRenderingFiber<span class="token punctuation">,</span>
+        queue<span class="token punctuation">,</span>
+    <span class="token punctuation">)</span><span class="token operator">:</span> any<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">// 返回state值和dispatch方法</span>
+    <span class="token keyword">return</span> <span class="token punctuation">[</span>hook<span class="token punctuation">.</span>memoizedState<span class="token punctuation">,</span> dispatch<span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">function</span> updateState<span class="token operator">&lt;</span><span class="token constant">S</span><span class="token operator">&gt;</span><span class="token punctuation">(</span>
+  initialState<span class="token operator">:</span> <span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token constant">S</span><span class="token punctuation">)</span> <span class="token operator">|</span> <span class="token constant">S</span><span class="token punctuation">,</span>
+<span class="token punctuation">)</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token constant">S</span><span class="token punctuation">,</span> Dispatch<span class="token operator">&lt;</span>BasicStateAction<span class="token operator">&lt;</span><span class="token constant">S</span><span class="token operator">&gt;&gt;</span><span class="token punctuation">]</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 执行updateReducer方法，并返回调用结果</span>
+    <span class="token keyword">return</span> <span class="token function">updateReducer</span><span class="token punctuation">(</span>basicStateReducer<span class="token punctuation">,</span> <span class="token punctuation">(</span>initialState<span class="token operator">:</span> any<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>从这段代码可以看出，<code>FunctionComponent</code>中使用的<code>useState</code>在<code>mount</code>和<code>upadte</code>分别对应着不同的函数。</p> <p>我们先看下<code>mountState</code>的代码。</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">function</span> mountState<span class="token operator">&lt;</span><span class="token constant">S</span><span class="token operator">&gt;</span><span class="token punctuation">(</span>
+  initialState<span class="token operator">:</span> <span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token constant">S</span><span class="token punctuation">)</span> <span class="token operator">|</span> <span class="token constant">S</span><span class="token punctuation">,</span>
+<span class="token punctuation">)</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token constant">S</span><span class="token punctuation">,</span> Dispatch<span class="token operator">&lt;</span>BasicStateAction<span class="token operator">&lt;</span><span class="token constant">S</span><span class="token operator">&gt;&gt;</span><span class="token punctuation">]</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 创建一个hook</span>
+    <span class="token keyword">const</span> hook <span class="token operator">=</span> <span class="token function">mountWorkInProgressHook</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">typeof</span> initialState <span class="token operator">===</span> <span class="token string">'function'</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment">// $FlowFixMe: Flow doesn't like mixed types</span>
+        initialState <span class="token operator">=</span> <span class="token function">initialState</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token comment">// 赋值memoizedState</span>
+    hook<span class="token punctuation">.</span>memoizedState <span class="token operator">=</span> hook<span class="token punctuation">.</span>baseState <span class="token operator">=</span> initialState<span class="token punctuation">;</span>
+    <span class="token comment">// 创建queue，通过dispatchAction触发的状态更新update连接到queue.pending上，并通过环状链表的结构保存</span>
+    <span class="token keyword">const</span> queue <span class="token operator">=</span> <span class="token punctuation">(</span>hook<span class="token punctuation">.</span>queue <span class="token operator">=</span> <span class="token punctuation">{</span>
+        pending<span class="token operator">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
+        interleaved<span class="token operator">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
+        lanes<span class="token operator">:</span> NoLanes<span class="token punctuation">,</span>
+        dispatch<span class="token operator">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
+        lastRenderedReducer<span class="token operator">:</span> basicStateReducer<span class="token punctuation">,</span>
+        lastRenderedState<span class="token operator">:</span> <span class="token punctuation">(</span>initialState<span class="token operator">:</span> any<span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">// dispatchAction，暴露出去通过setState使用的就是这个dispatchAction方法</span>
+    <span class="token keyword">const</span> dispatch<span class="token operator">:</span> Dispatch<span class="token operator">&lt;</span>
+        BasicStateAction<span class="token operator">&lt;</span><span class="token constant">S</span><span class="token operator">&gt;</span><span class="token punctuation">,</span>
+    <span class="token operator">&gt;</span> <span class="token operator">=</span> <span class="token punctuation">(</span>queue<span class="token punctuation">.</span>dispatch <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token function">dispatchAction</span><span class="token punctuation">.</span><span class="token function">bind</span><span class="token punctuation">(</span>
+        <span class="token keyword">null</span><span class="token punctuation">,</span>
+        currentlyRenderingFiber<span class="token punctuation">,</span>
+        queue<span class="token punctuation">,</span>
+    <span class="token punctuation">)</span><span class="token operator">:</span> any<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">// 返回state值和dispatch方法</span>
+    <span class="token keyword">return</span> <span class="token punctuation">[</span>hook<span class="token punctuation">.</span>memoizedState<span class="token punctuation">,</span> dispatch<span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">function</span> <span class="token function">mountWorkInProgressHook</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">:</span> Hook <span class="token punctuation">{</span>
+    <span class="token comment">// 创建hook</span>
+    <span class="token keyword">const</span> hook<span class="token operator">:</span> Hook <span class="token operator">=</span> <span class="token punctuation">{</span>
+        <span class="token comment">// 本次更新后最新的state</span>
+        memoizedState<span class="token operator">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
+        <span class="token comment">// 基础的state，作为一个中间值用来保存计算过程中的state和update链表</span>
+        baseState<span class="token operator">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
+        baseQueue<span class="token operator">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
+        <span class="token comment">// 保存本次更新中触发的update链表</span>
+        queue<span class="token operator">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
+        <span class="token comment">// 多个hook会通过next指针连接，形成单项链表</span>
+        next<span class="token operator">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
+    <span class="token punctuation">}</span><span class="token punctuation">;</span>
+    <span class="token comment">// 当前还没有正在执行的hook</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>workInProgressHook <span class="token operator">===</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment">// workInProgressHook变量代表当前正在执行的hook</span>
+        <span class="token comment">// currentlyRenderingFiber变量代表当前执行的Fiber</span>
+        <span class="token comment">// currentlyRenderingFiber.memoizedState保存的是组件中的第一个hook，多个hook会通过next指针形成单线链表</span>
+        currentlyRenderingFiber<span class="token punctuation">.</span>memoizedState <span class="token operator">=</span> workInProgressHook <span class="token operator">=</span> hook<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+        <span class="token comment">// 当前已经有正在执行的hook，就需要赋值给workInProgressHook.next，作为下一个hook使用</span>
+        workInProgressHook <span class="token operator">=</span> workInProgressHook<span class="token punctuation">.</span>next <span class="token operator">=</span> hook<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token comment">// 返回当前正在执行的hook</span>
+    <span class="token keyword">return</span> workInProgressHook<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">function</span> dispatchAction<span class="token operator">&lt;</span><span class="token constant">S</span><span class="token punctuation">,</span> <span class="token constant">A</span><span class="token operator">&gt;</span><span class="token punctuation">(</span>
+  fiber<span class="token operator">:</span> Fiber<span class="token punctuation">,</span>
+  queue<span class="token operator">:</span> UpdateQueue<span class="token operator">&lt;</span><span class="token constant">S</span><span class="token punctuation">,</span> <span class="token constant">A</span><span class="token operator">&gt;</span><span class="token punctuation">,</span>
+  action<span class="token operator">:</span> <span class="token constant">A</span><span class="token punctuation">,</span>
+<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 获取优先级</span>
+    <span class="token keyword">const</span> eventTime <span class="token operator">=</span> <span class="token function">requestEventTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> lane <span class="token operator">=</span> <span class="token function">requestUpdateLane</span><span class="token punctuation">(</span>fiber<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">// 创建update，保存了本次状态更新的相关内容</span>
+    <span class="token keyword">const</span> update<span class="token operator">:</span> Update<span class="token operator">&lt;</span><span class="token constant">S</span><span class="token punctuation">,</span> <span class="token constant">A</span><span class="token operator">&gt;</span> <span class="token operator">=</span> <span class="token punctuation">{</span>
+        lane<span class="token punctuation">,</span> <span class="token comment">// 优先级</span>
+        action<span class="token punctuation">,</span> <span class="token comment">// 调用setState传入的第一个参数，可能是一个值，也可能是一个函数</span>
+        eagerReducer<span class="token operator">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span> <span class="token comment">// 特定情况下，用来做优化使用的值</span>
+        eagerState<span class="token operator">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span>   <span class="token comment">// 特定情况下，用来做优化使用的值</span>
+        next<span class="token operator">:</span> <span class="token punctuation">(</span><span class="token keyword">null</span><span class="token operator">:</span> any<span class="token punctuation">)</span><span class="token punctuation">,</span>  <span class="token comment">// 指针，用来与其他update连接，形成环状链表</span>
+    <span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">const</span> alternate <span class="token operator">=</span> fiber<span class="token punctuation">.</span>alternate<span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>
+        fiber <span class="token operator">===</span> currentlyRenderingFiber <span class="token operator">||</span>
+        <span class="token punctuation">(</span>alternate <span class="token operator">!==</span> <span class="token keyword">null</span> <span class="token operator">&amp;&amp;</span> alternate <span class="token operator">===</span> currentlyRenderingFiber<span class="token punctuation">)</span>
+    <span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment">// some code...</span>
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">isInterleavedUpdate</span><span class="token punctuation">(</span>fiber<span class="token punctuation">,</span> lane<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token comment">// some code...</span>
+        <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+            <span class="token comment">// 取到hook.queue.pending</span>
+            <span class="token keyword">const</span> pending <span class="token operator">=</span> queue<span class="token punctuation">.</span>pending<span class="token punctuation">;</span>
+            <span class="token comment">// 此时，pending上还没有update</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>pending <span class="token operator">===</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                <span class="token comment">// 将update的指针指向自己，自己与自己形成环状链表</span>
+                update<span class="token punctuation">.</span>next <span class="token operator">=</span> update<span class="token punctuation">;</span>
+            <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+            <span class="token comment">// pending上存在多个update</span>
+                <span class="token comment">// 因为queue.pending始终指向最后一个update，那么环状链表的最后一个update.next指针就指向第一个update</span>
+                <span class="token comment">// 所以将当前update.next指向第一个update</span>
+                update<span class="token punctuation">.</span>next <span class="token operator">=</span> pending<span class="token punctuation">.</span>next<span class="token punctuation">;</span>
+                <span class="token comment">// 再将前一个update.next指向当前update</span>
+                pending<span class="token punctuation">.</span>next <span class="token operator">=</span> update<span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+            <span class="token comment">// queue.penging始终指向最后一个插入的update</span>
+            queue<span class="token punctuation">.</span>pending <span class="token operator">=</span> update<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        <span class="token comment">// 当前是mount阶段之后的第一个update阶段，并且当前触发的update是该组件中的第一个hook的第一个update</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>
+            fiber<span class="token punctuation">.</span>lanes <span class="token operator">===</span> NoLanes <span class="token operator">&amp;&amp;</span>
+            <span class="token punctuation">(</span>alternate <span class="token operator">===</span> <span class="token keyword">null</span> <span class="token operator">||</span> alternate<span class="token punctuation">.</span>lanes <span class="token operator">===</span> NoLanes<span class="token punctuation">)</span>
+        <span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment">// 当满足如上情况的时候，setState会立刻执行</span>
+        <span class="token comment">// 这也说明在这种情况下，setState会变成同步的</span>
+        <span class="token keyword">const</span> lastRenderedReducer <span class="token operator">=</span> queue<span class="token punctuation">.</span>lastRenderedReducer<span class="token punctuation">;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>lastRenderedReducer <span class="token operator">!==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">try</span> <span class="token punctuation">{</span>
+                <span class="token keyword">const</span> currentState<span class="token operator">:</span> <span class="token constant">S</span> <span class="token operator">=</span> <span class="token punctuation">(</span>queue<span class="token punctuation">.</span>lastRenderedState<span class="token operator">:</span> any<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token comment">// 立即计算通过setState传入的reducer</span>
+                <span class="token comment">// lastRenderedReducer就是basicStateReducer</span>
+                <span class="token keyword">const</span> eagerState <span class="token operator">=</span> <span class="token function">lastRenderedReducer</span><span class="token punctuation">(</span>currentState<span class="token punctuation">,</span> action<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                
+                update<span class="token punctuation">.</span>eagerReducer <span class="token operator">=</span> lastRenderedReducer<span class="token punctuation">;</span>
+                update<span class="token punctuation">.</span>eagerState <span class="token operator">=</span> eagerState<span class="token punctuation">;</span>
+                <span class="token comment">// 当新的state和旧的state值相等时会直接return掉，不用开启一次状态更新，用来做性能优化</span>
+                <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">is</span><span class="token punctuation">(</span>eagerState<span class="token punctuation">,</span> currentState<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                    <span class="token keyword">return</span><span class="token punctuation">;</span>
+                <span class="token punctuation">}</span>
+            <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span>error<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                <span class="token comment">// ...</span>
+            <span class="token punctuation">}</span> <span class="token keyword">finally</span> <span class="token punctuation">{</span>
+                <span class="token comment">// ...</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span>
+        <span class="token comment">// 开启状态更新</span>
+        <span class="token keyword">const</span> root <span class="token operator">=</span> <span class="token function">scheduleUpdateOnFiber</span><span class="token punctuation">(</span>fiber<span class="token punctuation">,</span> lane<span class="token punctuation">,</span> eventTime<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token comment">// some code...</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">function</span> basicStateReducer<span class="token operator">&lt;</span><span class="token constant">S</span><span class="token operator">&gt;</span><span class="token punctuation">(</span>state<span class="token operator">:</span> <span class="token constant">S</span><span class="token punctuation">,</span> action<span class="token operator">:</span> BasicStateAction<span class="token operator">&lt;</span><span class="token constant">S</span><span class="token operator">&gt;</span><span class="token punctuation">)</span><span class="token operator">:</span> <span class="token constant">S</span> <span class="token punctuation">{</span>
+  <span class="token comment">// 通过什么方式计算state，如果参数是一个函数则执行它</span>
+  <span class="token comment">// 如果不是函数则说明是一个具体的值，直接返回这个值</span>
+  <span class="token keyword">return</span> <span class="token keyword">typeof</span> action <span class="token operator">===</span> <span class="token string">'function'</span> <span class="token operator">?</span> <span class="token function">action</span><span class="token punctuation">(</span>state<span class="token punctuation">)</span> <span class="token operator">:</span> action<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p><code>mountState</code>只负责创建并初始化<code>Hook</code>，所以实现还是比较简单的。</p> <p>那我们再看下<code>updateState</code>即<code>updateReducer</code>又做了哪些事情：</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">function</span> updateReducer<span class="token operator">&lt;</span><span class="token constant">S</span><span class="token punctuation">,</span> <span class="token constant">I</span><span class="token punctuation">,</span> <span class="token constant">A</span><span class="token operator">&gt;</span><span class="token punctuation">(</span>
+  <span class="token function-variable function">reducer</span><span class="token operator">:</span> <span class="token punctuation">(</span><span class="token parameter"><span class="token constant">S</span><span class="token punctuation">,</span> <span class="token constant">A</span></span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token constant">S</span><span class="token punctuation">,</span>
+  initialArg<span class="token operator">:</span> <span class="token constant">I</span><span class="token punctuation">,</span>
+  init<span class="token operator">?</span><span class="token operator">:</span> <span class="token parameter"><span class="token constant">I</span></span> <span class="token operator">=&gt;</span> <span class="token constant">S</span><span class="token punctuation">,</span>
+<span class="token punctuation">)</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token constant">S</span><span class="token punctuation">,</span> Dispatch<span class="token operator">&lt;</span><span class="token constant">A</span><span class="token operator">&gt;</span><span class="token punctuation">]</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 获取当前的hook</span>
+    <span class="token keyword">const</span> hook <span class="token operator">=</span> <span class="token function">updateWorkInProgressHook</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">// 获取queue</span>
+    <span class="token keyword">const</span> queue <span class="token operator">=</span> hook<span class="token punctuation">.</span>queue<span class="token punctuation">;</span>
+
+    queue<span class="token punctuation">.</span>lastRenderedReducer <span class="token operator">=</span> reducer<span class="token punctuation">;</span>
+    <span class="token comment">// currentHook是current Fiber上memoizedState保存的hook链表</span>
+    <span class="token comment">// 通过updateWorkInProgressHook取到的hook是workInProgress Fiber上memoizedState保存的hook链表</span>
+    <span class="token keyword">const</span> current<span class="token operator">:</span> Hook <span class="token operator">=</span> <span class="token punctuation">(</span>currentHook<span class="token operator">:</span> any<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+
+    <span class="token keyword">let</span> baseQueue <span class="token operator">=</span> current<span class="token punctuation">.</span>baseQueue<span class="token punctuation">;</span>
+
+    <span class="token comment">// workInProgress hook上的queue.pending存在update</span>
+    <span class="token keyword">const</span> pendingQueue <span class="token operator">=</span> queue<span class="token punctuation">.</span>pending<span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>pendingQueue <span class="token operator">!==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment">// We have new updates that haven't been processed yet.</span>
+        <span class="token comment">// We'll add them to the base queue.</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>baseQueue <span class="token operator">!==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token comment">// 合并baseQueue和pendingQueue</span>
+            <span class="token keyword">const</span> baseFirst <span class="token operator">=</span> baseQueue<span class="token punctuation">.</span>next<span class="token punctuation">;</span>
+            <span class="token keyword">const</span> pendingFirst <span class="token operator">=</span> pendingQueue<span class="token punctuation">.</span>next<span class="token punctuation">;</span>
+            <span class="token comment">// 将baseQueue.next指向pendingQueue的第一个update，即baseQueue的尾部连接到pendingQueue的首部</span>
+            baseQueue<span class="token punctuation">.</span>next <span class="token operator">=</span> pendingFirst<span class="token punctuation">;</span>
+            <span class="token comment">// 将pendingQueue.next指向baseQueue的第一个update，即pendingQueue的尾部连接到baseQueue的首部</span>
+            pendingQueue<span class="token punctuation">.</span>next <span class="token operator">=</span> baseFirst<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        <span class="token comment">// 再将pendingQueue上需要计算的update保存到baseQueue中，等待计算</span>
+        current<span class="token punctuation">.</span>baseQueue <span class="token operator">=</span> baseQueue <span class="token operator">=</span> pendingQueue<span class="token punctuation">;</span>
+        <span class="token comment">// 清空</span>
+        queue<span class="token punctuation">.</span>pending <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>baseQueue <span class="token operator">!==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment">// 取到第一个update</span>
+        <span class="token keyword">const</span> first <span class="token operator">=</span> baseQueue<span class="token punctuation">.</span>next<span class="token punctuation">;</span>
+        <span class="token comment">// 取到基础的state，存在的update都会以baseState作为基础值计算</span>
+        <span class="token keyword">let</span> newState <span class="token operator">=</span> current<span class="token punctuation">.</span>baseState<span class="token punctuation">;</span>
+
+        <span class="token keyword">let</span> newBaseState <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+        <span class="token keyword">let</span> newBaseQueueFirst <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+        <span class="token keyword">let</span> newBaseQueueLast <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+        <span class="token keyword">let</span> update <span class="token operator">=</span> first<span class="token punctuation">;</span>
+        <span class="token comment">// 计算baseQueue上存在的update</span>
+        <span class="token keyword">do</span> <span class="token punctuation">{</span>
+            <span class="token keyword">const</span> updateLane <span class="token operator">=</span> update<span class="token punctuation">.</span>lane<span class="token punctuation">;</span>
+            <span class="token comment">// 处理在更新时又触发的更新，属于特殊情况</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">isSubsetOfLanes</span><span class="token punctuation">(</span>renderLanes<span class="token punctuation">,</span> updateLane<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                
+                <span class="token keyword">const</span> clone<span class="token operator">:</span> Update<span class="token operator">&lt;</span><span class="token constant">S</span><span class="token punctuation">,</span> <span class="token constant">A</span><span class="token operator">&gt;</span> <span class="token operator">=</span> <span class="token punctuation">{</span>
+                    lane<span class="token operator">:</span> updateLane<span class="token punctuation">,</span>
+                    action<span class="token operator">:</span> update<span class="token punctuation">.</span>action<span class="token punctuation">,</span>
+                    eagerReducer<span class="token operator">:</span> update<span class="token punctuation">.</span>eagerReducer<span class="token punctuation">,</span>
+                    eagerState<span class="token operator">:</span> update<span class="token punctuation">.</span>eagerState<span class="token punctuation">,</span>
+                    next<span class="token operator">:</span> <span class="token punctuation">(</span><span class="token keyword">null</span><span class="token operator">:</span> any<span class="token punctuation">)</span><span class="token punctuation">,</span>
+                <span class="token punctuation">}</span><span class="token punctuation">;</span>
+                <span class="token keyword">if</span> <span class="token punctuation">(</span>newBaseQueueLast <span class="token operator">===</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                    newBaseQueueFirst <span class="token operator">=</span> newBaseQueueLast <span class="token operator">=</span> clone<span class="token punctuation">;</span>
+                    newBaseState <span class="token operator">=</span> newState<span class="token punctuation">;</span>
+                <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+                    newBaseQueueLast <span class="token operator">=</span> newBaseQueueLast<span class="token punctuation">.</span>next <span class="token operator">=</span> clone<span class="token punctuation">;</span>
+                <span class="token punctuation">}</span>
+
+                currentlyRenderingFiber<span class="token punctuation">.</span>lanes <span class="token operator">=</span> <span class="token function">mergeLanes</span><span class="token punctuation">(</span>
+                    currentlyRenderingFiber<span class="token punctuation">.</span>lanes<span class="token punctuation">,</span>
+                    updateLane<span class="token punctuation">,</span>
+                <span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token function">markSkippedUpdateLanes</span><span class="token punctuation">(</span>updateLane<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+                <span class="token comment">// 当前update有足够的优先级</span>
+
+                <span class="token comment">// 在这个update之前存在因为优先级较低而跳过的update，那么需要将当前的update克隆一份并连接到跳过的update之后</span>
+                <span class="token comment">// 这是因为多个update可能存在依赖性，后一个update需要依赖前一个update计算后的state作为基础</span>
+                <span class="token comment">// 所以，当存在优先级较低而被跳过的update，当下次计算这个update时，需要一起计算这个update及之后连续的多个update</span>
+                <span class="token comment">// 这是基于优先级的一种特性</span>
+                <span class="token keyword">if</span> <span class="token punctuation">(</span>newBaseQueueLast <span class="token operator">!==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                    <span class="token keyword">const</span> clone<span class="token operator">:</span> Update<span class="token operator">&lt;</span><span class="token constant">S</span><span class="token punctuation">,</span> <span class="token constant">A</span><span class="token operator">&gt;</span> <span class="token operator">=</span> <span class="token punctuation">{</span>
+                        lane<span class="token operator">:</span> NoLane<span class="token punctuation">,</span>
+                        action<span class="token operator">:</span> update<span class="token punctuation">.</span>action<span class="token punctuation">,</span>
+                        eagerReducer<span class="token operator">:</span> update<span class="token punctuation">.</span>eagerReducer<span class="token punctuation">,</span>
+                        eagerState<span class="token operator">:</span> update<span class="token punctuation">.</span>eagerState<span class="token punctuation">,</span>
+                        next<span class="token operator">:</span> <span class="token punctuation">(</span><span class="token keyword">null</span><span class="token operator">:</span> any<span class="token punctuation">)</span><span class="token punctuation">,</span>
+                    <span class="token punctuation">}</span><span class="token punctuation">;</span>
+                    <span class="token comment">// 保存跳过update的链表</span>
+                    newBaseQueueLast <span class="token operator">=</span> newBaseQueueLast<span class="token punctuation">.</span>next <span class="token operator">=</span> clone<span class="token punctuation">;</span>
+                <span class="token punctuation">}</span>
+
+                <span class="token comment">// 计算update</span>
+                <span class="token keyword">if</span> <span class="token punctuation">(</span>update<span class="token punctuation">.</span>eagerReducer <span class="token operator">===</span> reducer<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                    <span class="token comment">// 在dispatchAction中已经计算过了，就直接取计算过的值</span>
+                    newState <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>update<span class="token punctuation">.</span>eagerState<span class="token operator">:</span> any<span class="token punctuation">)</span><span class="token operator">:</span> <span class="token constant">S</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+                    <span class="token comment">// 通过reducer计算新的state</span>
+                    <span class="token comment">// reducer就是basicStateReducer</span>
+                    <span class="token comment">// 如果action是一个值就返回这个值，如果是一个函数就将旧的state作为参数传入并执行这个函数</span>
+                    <span class="token keyword">const</span> action <span class="token operator">=</span> update<span class="token punctuation">.</span>action<span class="token punctuation">;</span>
+                    newState <span class="token operator">=</span> <span class="token function">reducer</span><span class="token punctuation">(</span>newState<span class="token punctuation">,</span> action<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token punctuation">}</span>
+            <span class="token punctuation">}</span>
+            <span class="token comment">// 因为update用链表连接的，通过移动next指针就能取到下一个update</span>
+            update <span class="token operator">=</span> update<span class="token punctuation">.</span>next<span class="token punctuation">;</span>
+            <span class="token comment">// 当update计算完了</span>
+        <span class="token punctuation">}</span> <span class="token keyword">while</span> <span class="token punctuation">(</span>update <span class="token operator">!==</span> <span class="token keyword">null</span> <span class="token operator">&amp;&amp;</span> update <span class="token operator">!==</span> first<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token comment">// 当新产生的update或者被跳过的update，newBaseQueueLast就为null，说明update都计算完了</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>newBaseQueueLast <span class="token operator">===</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            newBaseState <span class="token operator">=</span> newState<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+        <span class="token comment">// 说明有新产生的update或者被跳过的update，就将剩下的update作为下次的baseQueue等待计算</span>
+            newBaseQueueLast<span class="token punctuation">.</span>next <span class="token operator">=</span> <span class="token punctuation">(</span>newBaseQueueFirst<span class="token operator">:</span> any<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+
+        <span class="token comment">// Mark that the fiber performed work, but only if the new state is</span>
+        <span class="token comment">// different from the current state.</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">is</span><span class="token punctuation">(</span>newState<span class="token punctuation">,</span> hook<span class="token punctuation">.</span>memoizedState<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token function">markWorkInProgressReceivedUpdate</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        <span class="token comment">// 赋值memoizedState</span>
+        hook<span class="token punctuation">.</span>memoizedState <span class="token operator">=</span> newState<span class="token punctuation">;</span>
+        <span class="token comment">// 赋值baseState</span>
+        hook<span class="token punctuation">.</span>baseState <span class="token operator">=</span> newBaseState<span class="token punctuation">;</span>
+        <span class="token comment">// 赋值baseQueue</span>
+        hook<span class="token punctuation">.</span>baseQueue <span class="token operator">=</span> newBaseQueueLast<span class="token punctuation">;</span>
+
+        queue<span class="token punctuation">.</span>lastRenderedState <span class="token operator">=</span> newState<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token comment">// 取到queue中保存的dispatch</span>
+    <span class="token keyword">const</span> dispatch<span class="token operator">:</span> Dispatch<span class="token operator">&lt;</span><span class="token constant">A</span><span class="token operator">&gt;</span> <span class="token operator">=</span> <span class="token punctuation">(</span>queue<span class="token punctuation">.</span>dispatch<span class="token operator">:</span> any<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">// 返回新的state和dispatch</span>
+    <span class="token keyword">return</span> <span class="token punctuation">[</span>hook<span class="token punctuation">.</span>memoizedState<span class="token punctuation">,</span> dispatch<span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p><code>updateReducer</code>方法主要的工作就是基于<code>baseState</code>和<code>baseQueue</code>计算<code>queue</code>中有足够优先级的<code>update</code>，最后将计算的结果<code>state</code>值返回给组件。</p> <p>虽然工作流程比较简单，但是因为需要考虑一些特殊情况，如果本轮更新中又触发了更新，就需要特殊处理这种情况。再就是当有低优先级的<code>update</code>被跳过后，在下次计算时，会计算这个被跳过的<code>update</code>之后所有的<code>update</code>。这样做的目的是考虑到连续的<code>update</code>之间存在依赖关系。如果使用函数形式的传参，后一个<code>useState</code>传入的参数就需要依赖前一个<code>useState</code>的计算结果。</p> <p>以上这部分只是介绍了<code>useState</code>在<code>mount</code>和<code>update</code>时都做了哪些工作，那么这与<code>setState</code>的执行方式又有什么关联呢？这个时候就需要了解<code>setState</code>会在什么时候执行。</p> <p><code>useState</code>或者说所有的<code>Hooks</code>都会在<code>renderWithHooks</code>这个函数里面执行，而<code>renderWithHooks</code>函数最主要的工作是执行<code>FunctionComponent</code>对应的函数，来实现组件的渲染。</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">function</span> renderWithHooks<span class="token operator">&lt;</span>Props<span class="token punctuation">,</span> SecondArg<span class="token operator">&gt;</span><span class="token punctuation">(</span>
+  current<span class="token operator">:</span> Fiber <span class="token operator">|</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
+  workInProgress<span class="token operator">:</span> Fiber<span class="token punctuation">,</span>
+  <span class="token function-variable function">Component</span><span class="token operator">:</span> <span class="token punctuation">(</span><span class="token parameter">p<span class="token operator">:</span> Props<span class="token punctuation">,</span> arg<span class="token operator">:</span> SecondArg</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> any<span class="token punctuation">,</span>
+  props<span class="token operator">:</span> Props<span class="token punctuation">,</span>
+  secondArg<span class="token operator">:</span> SecondArg<span class="token punctuation">,</span>
+  nextRenderLanes<span class="token operator">:</span> Lanes<span class="token punctuation">,</span>
+<span class="token punctuation">)</span><span class="token operator">:</span> any <span class="token punctuation">{</span>
+    renderLanes <span class="token operator">=</span> nextRenderLanes<span class="token punctuation">;</span>
+    <span class="token comment">// 赋值当前执行渲染的fiber</span>
+    currentlyRenderingFiber <span class="token operator">=</span> workInProgress<span class="token punctuation">;</span>
+    <span class="token comment">// 初始化</span>
+    workInProgress<span class="token punctuation">.</span>memoizedState <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+    workInProgress<span class="token punctuation">.</span>updateQueue <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+    workInProgress<span class="token punctuation">.</span>lanes <span class="token operator">=</span> NoLanes<span class="token punctuation">;</span>
+    <span class="token comment">// 赋值dispatcher，是mount阶段还是update阶段</span>
+    ReactCurrentDispatcher<span class="token punctuation">.</span>current <span class="token operator">=</span>
+        current <span class="token operator">===</span> <span class="token keyword">null</span> <span class="token operator">||</span> current<span class="token punctuation">.</span>memoizedState <span class="token operator">===</span> <span class="token keyword">null</span>
+            <span class="token operator">?</span> HooksDispatcherOnMount
+            <span class="token operator">:</span> HooksDispatcherOnUpdate<span class="token punctuation">;</span>
+    <span class="token comment">// 执行组件，完成渲染</span>
+    <span class="token keyword">let</span> children <span class="token operator">=</span> <span class="token function">Component</span><span class="token punctuation">(</span>props<span class="token punctuation">,</span> secondArg<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">// 重置全局变量</span>
+    ReactCurrentDispatcher<span class="token punctuation">.</span>current <span class="token operator">=</span> ContextOnlyDispatcher<span class="token punctuation">;</span>
+
+    renderLanes <span class="token operator">=</span> NoLanes<span class="token punctuation">;</span>
+    currentlyRenderingFiber <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token keyword">null</span><span class="token operator">:</span> any<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    currentHook <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+    workInProgressHook <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+
+    didScheduleRenderPhaseUpdate <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+
+    <span class="token comment">// some code...</span>
+
+    <span class="token comment">// 返回children</span>
+    <span class="token keyword">return</span> children<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>在<code>renderWithHooks</code>方法中通过<code>Component</code>这个变量来执行<code>FunctionComponent</code>组件本身时，在<code>FunctionComponent</code>内部使用的<code>useState</code>会被赋值为<code>updateReducer</code>，所以<code>updateReducer</code>函数就会在<code>Component</code>执行时被间接执行。而<code>updateReducer</code>的工作就是根据<code>setState</code>传入的参数<code>action</code>而计算<code>update</code>，那么<code>action</code>也就会在这时被<strong>执行</strong>。</p> <p>现在我们终于理清了<code>useState</code>在<code>update</code>时的整个工作流程。那么看了如此繁多又复杂的代码和本文的题目有什么关系呢？只有弄清楚了<code>useState</code>暴露给外部的<code>dispatch</code>方法和作为参数的<code>action</code>在什么时候执行，才能彻底理解<code>useState</code>的执行机制。</p> <p>在事件系统一文中我们了解了通过<code>React</code>合成事件注册的回调函数会调用<code>dispatchEvent</code>这个函数通过先收集监听器再以<em>批量更新</em>的方式来执行回调函数。所以在回调函数中的<strong>同步代码</strong>都会在这时执行，其中也包括<code>dispatch</code>这个函数。没错，<code>dispatch</code>函数即<code>useState</code>的第二个参数会在这时<strong>同步执行</strong>。但是，虽然<code>dispatch</code>函数会在这时执行，但是它只负责创建<code>update</code>对象并插入到当前<code>hook</code>的<code>queue.pending</code>上，并没有进行计算<code>update</code>和执行<code>action</code>。在函数的最后会调用<code>scheduleUpdateOnFiber</code>开启调度更新。</p> <p>当通过<code>scheduleUpdateOnFiber</code>开启调度更新之后会进入一次<code>React</code>完整的状态更新流程。在<code>render</code>阶段，<code>beginWork</code>中处理<code>FunctionComponent</code>就会调用<code>renderWithHooks</code>函数来完成组件的渲染，然后根据渲染的结果<code>children</code>创建子<code>Fiber</code>节点。只有在<code>renderWithHooks</code>内部执行<code>Component</code>的时候，接着调用<code>updateReducer</code>来计算当前<code>hook</code>上保存的<code>update</code>时，才会真正执行<code>action</code>。</p> <p>单纯通过文字描述比较晦涩，可以结合下面的代码理解：</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">function</span> <span class="token function">App</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> <span class="token punctuation">[</span>num<span class="token punctuation">,</span> setNum<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token function">useState</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">const</span> <span class="token function-variable function">handleClick</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+        console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'before...'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token function">setNum</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">num</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+            console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'among...'</span><span class="token punctuation">)</span>
+            <span class="token keyword">return</span> num <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">;</span> 
+        <span class="token punctuation">}</span><span class="token punctuation">)</span>
+        console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'after...'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">return</span> <span class="token punctuation">(</span><span class="token operator">&lt;</span>div onClick<span class="token operator">=</span><span class="token punctuation">{</span>handleClick<span class="token punctuation">}</span><span class="token operator">&gt;</span><span class="token punctuation">{</span>num<span class="token punctuation">}</span><span class="token operator">&lt;</span><span class="token operator">/</span>div<span class="token operator">&gt;</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">// 触发点击事件，输出</span>
+before<span class="token operator">...</span>
+after<span class="token operator">...</span>
+among<span class="token operator">...</span>
+</code></pre></div><p>触发点击事件后，会在事件系统中同步执行注册的回调函数<code>handleClick</code>，所以会在此时输出<em>before...<em>和</em>after...</em>。然后<code>setNum</code>触发状态更新，通过<code>dispatchAction</code>开启调度更新。之后在<code>render</code>阶段的<code>beginWork</code>中，根据<code>FunctionComponent</code>调用<code>updateFunctionComponent</code>方法，在这个方法内部又调用<code>renderWithHooks</code>执行组件的渲染。在组件渲染时，会执行<code>updateReducer</code>方法。这个方法会计算<code>update</code>，计算方式是通过执行<code>action</code>（setNum中的回调函数）获得返回结果，所以会在此时输出<em>among...</em>。</p> <p>虽然，我们都知道<code>setState</code>是<strong>异步执行</strong>的，但是也有特殊情况。只有第一次更新的第一个<code>action</code>是<strong>同步执行</strong>的，其余的<code>action</code>都是<strong>异步执行</strong>的。</p> <p>但是这种<strong>异步</strong>并不是广义上的<strong>异步</strong>，因为它和同步代码只是执行上存在<strong>先后顺序</strong>，并没有利用到<strong>回调函数</strong>这种执行方式。而且这种<strong>先后顺序</strong>也是<code>React</code>有意而为之的，目的是在一次更新中如果触发了多个状态更新，那么通过这种更新<strong>延迟执行</strong>的特性和<strong>批量更新</strong>的共同作用，<strong>多个状态更新</strong>会被<strong>合并</strong>到一次状态更新流程中，从而避免了每个状态更新都会触发各自的状态更新流程。这样做的结果就是组件只会渲染一次，达到<strong>性能优化</strong>的目的。</p> <h2 id="总结"><a href="#总结" class="header-anchor">#</a> 总结</h2> <p>通常来讲，当<code>FunctionComponent</code>在<code>update</code>时，根据<code>React</code>合成事件的回调函数<strong>同步执行</strong>作为判断标准，<code>useState</code>的<code>dispatch</code>会<strong>同步执行</strong>，但是<code>action</code>会<strong>异步（准确的说是伪异步）执行</strong>。</p></div> <footer class="page-edit"><!----> <!----></footer> <div class="page-nav"><p class="inner"><span class="prev">
+      ←
+      <a href="/react-blog/docs/find/differentBetweenSetStateAndUseState.html" class="prev">
+        setState和useState的区别
+      </a></span> <span class="next"><a href="/react-blog/docs/find/performanceOptimize.html">
+        React中的性能优化
+      </a>
+      →
+    </span></p></div> </main></div><div class="global-ui"><!----></div></div>
+    <script src="/react-blog/assets/js/app.1296abc1.js" defer></script><script src="/react-blog/assets/js/2.2aa2ea89.js" defer></script><script src="/react-blog/assets/js/28.71dcfa28.js" defer></script>
+  </body>
+</html>

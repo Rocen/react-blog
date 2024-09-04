@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>状态更新 | React笔记</title>
+    <meta name="generator" content="VuePress 1.9.5">
+    <link rel="icon" href="/react-blog/logo.svg">
+    <meta name="description" content="React">
+    
+    <link rel="preload" href="/react-blog/assets/css/0.styles.7c9b7da0.css" as="style"><link rel="preload" href="/react-blog/assets/js/app.1296abc1.js" as="script"><link rel="preload" href="/react-blog/assets/js/2.2aa2ea89.js" as="script"><link rel="preload" href="/react-blog/assets/js/40.13eceae9.js" as="script"><link rel="prefetch" href="/react-blog/assets/js/10.eec084d2.js"><link rel="prefetch" href="/react-blog/assets/js/11.90e7ad9c.js"><link rel="prefetch" href="/react-blog/assets/js/12.ec712917.js"><link rel="prefetch" href="/react-blog/assets/js/13.5fd1705f.js"><link rel="prefetch" href="/react-blog/assets/js/14.33d6319e.js"><link rel="prefetch" href="/react-blog/assets/js/15.b49ac970.js"><link rel="prefetch" href="/react-blog/assets/js/16.915d1a33.js"><link rel="prefetch" href="/react-blog/assets/js/17.0d48f94a.js"><link rel="prefetch" href="/react-blog/assets/js/18.162dd664.js"><link rel="prefetch" href="/react-blog/assets/js/19.897cc694.js"><link rel="prefetch" href="/react-blog/assets/js/20.c0d68b54.js"><link rel="prefetch" href="/react-blog/assets/js/21.23f5c8b7.js"><link rel="prefetch" href="/react-blog/assets/js/22.17cddd5f.js"><link rel="prefetch" href="/react-blog/assets/js/23.3e2c069f.js"><link rel="prefetch" href="/react-blog/assets/js/24.16287cbc.js"><link rel="prefetch" href="/react-blog/assets/js/25.c9819b86.js"><link rel="prefetch" href="/react-blog/assets/js/26.03bcf156.js"><link rel="prefetch" href="/react-blog/assets/js/27.2e75196a.js"><link rel="prefetch" href="/react-blog/assets/js/28.71dcfa28.js"><link rel="prefetch" href="/react-blog/assets/js/29.0534c7d4.js"><link rel="prefetch" href="/react-blog/assets/js/3.1f92403b.js"><link rel="prefetch" href="/react-blog/assets/js/30.70a1b1a5.js"><link rel="prefetch" href="/react-blog/assets/js/31.8d8007c6.js"><link rel="prefetch" href="/react-blog/assets/js/32.f55b2b21.js"><link rel="prefetch" href="/react-blog/assets/js/33.dea713d0.js"><link rel="prefetch" href="/react-blog/assets/js/34.16302cd1.js"><link rel="prefetch" href="/react-blog/assets/js/35.58ce8424.js"><link rel="prefetch" href="/react-blog/assets/js/36.21c87dbf.js"><link rel="prefetch" href="/react-blog/assets/js/37.e9ccbb00.js"><link rel="prefetch" href="/react-blog/assets/js/38.eda7b7d3.js"><link rel="prefetch" href="/react-blog/assets/js/39.28c4eb15.js"><link rel="prefetch" href="/react-blog/assets/js/4.ace4b147.js"><link rel="prefetch" href="/react-blog/assets/js/41.e5e3f4ba.js"><link rel="prefetch" href="/react-blog/assets/js/42.1ab022fc.js"><link rel="prefetch" href="/react-blog/assets/js/43.eca03ba8.js"><link rel="prefetch" href="/react-blog/assets/js/44.be104c53.js"><link rel="prefetch" href="/react-blog/assets/js/5.68075c63.js"><link rel="prefetch" href="/react-blog/assets/js/6.01147cc3.js"><link rel="prefetch" href="/react-blog/assets/js/7.630cc1a8.js"><link rel="prefetch" href="/react-blog/assets/js/8.80d0f023.js"><link rel="prefetch" href="/react-blog/assets/js/9.f8d3ba3a.js">
+    <link rel="stylesheet" href="/react-blog/assets/css/0.styles.7c9b7da0.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/react-blog/" class="home-link router-link-active"><!----> <span class="site-name">React笔记</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><a href="https://next-blog.irocen.top" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  nextjs笔记
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div><div class="nav-item"><a href="https://github.com/Rocen" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  github
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <!----></nav></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><nav class="nav-links"><div class="nav-item"><a href="https://next-blog.irocen.top" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  nextjs笔记
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div><div class="nav-item"><a href="https://github.com/Rocen" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  github
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <!----></nav>  <ul class="sidebar-links"><li><section class="sidebar-group depth-0"><a href="/react-blog/" class="sidebar-heading clickable router-link-active"><span>开始</span> <!----></a> <ul class="sidebar-links sidebar-group-items"><li><a href="/react-blog/docs/start/directory.html" class="sidebar-link">目录</a></li></ul></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>理念</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>架构</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading open"><span>原理</span> <span class="arrow down"></span></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/react-blog/docs/principle/diff.html" class="sidebar-link">diff算法</a></li><li><a href="/react-blog/docs/principle/updateState.html" aria-current="page" class="active sidebar-link">状态更新</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/react-blog/docs/principle/updateState.html#状态更新" class="sidebar-link">状态更新</a></li><li class="sidebar-sub-header"><a href="/react-blog/docs/principle/updateState.html#update" class="sidebar-link">Update</a></li><li class="sidebar-sub-header"><a href="/react-blog/docs/principle/updateState.html#优先级" class="sidebar-link">优先级</a></li><li class="sidebar-sub-header"><a href="/react-blog/docs/principle/updateState.html#插入update" class="sidebar-link">插入Update</a></li><li class="sidebar-sub-header"><a href="/react-blog/docs/principle/updateState.html#计算update" class="sidebar-link">计算Update</a></li><li class="sidebar-sub-header"><a href="/react-blog/docs/principle/updateState.html#状态更新相关源码" class="sidebar-link">状态更新相关源码</a></li><li class="sidebar-sub-header"><a href="/react-blog/docs/principle/updateState.html#保证update不丢失" class="sidebar-link">保证Update不丢失</a></li><li class="sidebar-sub-header"><a href="/react-blog/docs/principle/updateState.html#保证状态依赖的连续性" class="sidebar-link">保证状态依赖的连续性</a></li><li class="sidebar-sub-header"><a href="/react-blog/docs/principle/updateState.html#总结" class="sidebar-link">总结</a></li></ul></li></ul></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>概念</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>Hooks</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>Concurrent Mode</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>实现</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>发现</span> <span class="arrow right"></span></p> <!----></section></li></ul> </aside> <main class="page"> <div class="theme-default-content content__default"><h2 id="状态更新"><a href="#状态更新" class="header-anchor">#</a> 状态更新</h2> <p><em>状态更新</em>通常是指状态的变化，例如当使用了<code>this.setState</code>或<code>useState</code>等方法，最后导致<code>state</code>的改变。这一过程被称为<em>状态更新</em>。</p> <p>我们知道状态更新流程开始后首先会创建<code>Update</code>对象。这个<code>Update</code>对象就是记录该次状态更新的数据结构。</p> <h2 id="update"><a href="#update" class="header-anchor">#</a> Update</h2> <h3 id="update的分类"><a href="#update的分类" class="header-anchor">#</a> Update的分类</h3> <p>我们先来了解<code>Update</code>的结构。</p> <p>首先，将可以触发状态更新的方法所隶属的组件分类：</p> <ul><li>ReactDOM.render -- HostRoot</li> <li>this.setState -- ClassComponent</li> <li>this.foreceUpdate -- ClassComponent</li> <li>useState -- FunctionComponent</li> <li>useReducer -- FunctionComponent</li></ul> <p>可以看到，一共有三种组件：<code>HostRoot</code>、<code>ClassComponent</code>、<code>FunctionComponent</code>，可以触发状态更新。</p> <p>由于不同类型的组件工作的方式不同，所以存在两种不同结构的<code>Update</code>。其中<code>ClassComponent</code>和<code>HostRoot</code>共用一套<code>Update</code>结构，<code>FunctionComponent</code>单独使用一种<code>Update</code>结构。</p> <p>虽然，存在两种结构的<code>Update</code>，但是它们的工作机制与工作流程大致是相同的。本节先介绍前一种<code>Update</code>，<code>FunctionComponent</code>对应的<code>Update</code>在<a href="/react-blog/docs/hooks/useStateAnduseReducer.html#调用阶段">这篇</a>介绍。</p> <h3 id="update的结构"><a href="#update的结构" class="header-anchor">#</a> Update的结构</h3> <p><code>ClassComponent</code>和<code>HostRoot</code>共用同一种<code>Update</code>结构。</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">const</span> update<span class="token operator">:</span> Update<span class="token operator">&lt;</span><span class="token operator">*</span><span class="token operator">&gt;</span> <span class="token operator">=</span> <span class="token punctuation">{</span>
+  eventTime<span class="token punctuation">,</span> <span class="token comment">// 任务时间,通过performance.now()获取的毫秒数,但在未来会重构掉</span>
+  lane<span class="token punctuation">,</span> <span class="token comment">// 优先级,意味着存在多个Update时，高优先级的Update会先被计算</span>
+  suspenseConfig<span class="token punctuation">,</span> <span class="token comment">// Suspense相关，暂不关注</span>
+  tag<span class="token operator">:</span> UpdateState<span class="token punctuation">,</span> <span class="token comment">// 更新的类型，包括UpdateState | ReplaceState | ForceUpdate | CaptureUpdate</span>
+  payload<span class="token operator">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span> <span class="token comment">// 更新挂载的数据。不同类型组件挂载的数据不同。</span>
+                 <span class="token comment">// 对于ClassComponent，payload为this.setState的第一个传参。对于HostRoot，payload为ReactDOM.render的第一个传参。</span>
+  callback<span class="token operator">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span> <span class="token comment">// 更新的回调函数</span>
+                  <span class="token comment">// 对于ClassComponent，payload为this.setState的第二个传参。对于HostRoot，payload为ReactDOM.render的第三个传参。</span>
+  next<span class="token operator">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span> <span class="token comment">// 指向它的下一个Update，与其他Update连接形成链表</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+</code></pre></div><h3 id="update与fiber的联系"><a href="#update与fiber的联系" class="header-anchor">#</a> Update与Fiber的联系</h3> <p>我们知道<code>Fiber</code>节点会组成<code>Fiber</code>树，而<code>Fiber</code>节点上的多个<code>Update</code>会组成链表，并被包含在<code>fiber.updateQueue</code>中。</p> <p>需要说明的是，每次调用触发状态更新的方法时，都会创建一个<code>Update</code>。所以当在组件中多次使用了触发状态更新的方法，当然会创建多个<code>Update</code>。</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token function">onClick</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">setState</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+    a<span class="token operator">:</span> <span class="token number">1</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+  <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">setState</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+    b<span class="token operator">:</span> <span class="token number">2</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>当在一个<code>ClassComponent</code>中触发<code>onClick</code>方法，在改方法内部调用了两次<code>this.setState</code>方法，这就会在这个组件对应的<code>Fiber</code>中创建两个<code>Update</code>对象，并连接成<em>单向环状链表</em>。<br>
+因为从双缓存我们知道，<code>React</code>中最多同时存在两颗<code>Fiber</code>树：</p> <ul><li>显示在当前页面中的<code>current Fiber</code>树</li> <li>在内存中正在构建的<code>workInProgress Fibe</code>树</li></ul> <p>所以，在一个工作阶段中最多同时存在两个<code>updateQueue</code>：</p> <ul><li><code>current Fiber</code>节点保存的<code>updateQueue</code>，即<code>current updateQueue</code></li> <li><code>workInProgress Fiber</code>节点保存的<code>updateQueue</code>，即<code>workInProgress updateQueue</code></li></ul> <p>在<code>commit</code>阶段完成页面渲染后，<code>workInProgress Fiber</code>树会替换<code>current Fiber</code>树，而<code>workInProgress Fiber</code>树中的<code>Fiber</code>节点的<code>updateQueue</code>就会变成<code>current updateQueue</code>。</p> <h3 id="updatequeue"><a href="#updatequeue" class="header-anchor">#</a> updateQueue</h3> <p><code>ClassComponent</code>和<code>HostRoot</code>使用的<code>UpateQueue</code>结构如下：</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">const</span> queue<span class="token operator">:</span> UpdateQueue<span class="token operator">&lt;</span>State<span class="token operator">&gt;</span> <span class="token operator">=</span> <span class="token punctuation">{</span>
+    baseState<span class="token operator">:</span> fiber<span class="token punctuation">.</span>memoizedState<span class="token punctuation">,</span>
+    firstBaseUpdate<span class="token operator">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
+    lastBaseUpdate<span class="token operator">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
+    shared<span class="token operator">:</span> <span class="token punctuation">{</span>
+      pending<span class="token operator">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    effects<span class="token operator">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
+  <span class="token punctuation">}</span><span class="token punctuation">;</span>
+</code></pre></div><p>字段说明：</p> <ul><li><code>baseState</code>：本次更新前该<code>Fiber</code>节点的<code>state</code>，<code>Update</code>会基于该<code>state</code>计算更新后的<code>state</code></li> <li><code>firstBaseUpdate</code>与<code>lastBaseUpdate</code>：本次更新前该<code>Fiber</code>节点已保存的<code>Update</code>。以链表形式存在，链表头是<code>firstBaseUpdate</code>，链表尾是<code>lastBaseUpdate</code>。之所以在更新产生前该<code>Fiber</code>节点内就存在<code>Update</code>，是由于某些<em>优先级较低</em>的<code>Update</code>在上次<code>render</code>阶段由<code>Update</code>计算<code>state</code>时被跳过了</li> <li><code>shared.pending</code>：触发更新时，产生的<code>Update</code>会保存在<code>shared.pending</code>中形成<em>单向环状链表</em>。当计算<code>Update</code>时，这个环状链表会被剪开并连接在<code>lastBaseUpdate</code>后面</li> <li><code>effects</code>：数组，用来保存<code>update.callback !== null</code>的<code>Update</code></li></ul> <h2 id="优先级"><a href="#优先级" class="header-anchor">#</a> 优先级</h2> <p>通常，状态更新时由用户交互产生的，用户心里对交互顺序有个预期。<code>React</code>根据<em>人机交互研究的结果</em>中用户对交互的预期顺序为交互产生的状态更新赋予不同的<em>优先级</em>。<br>
+具体如下：</p> <ul><li>生命周期方法：同步执行</li> <li>受控的用户输入：如在输入框中输入文字，同步执行</li> <li>交互事件：如动画，高优先级执行</li> <li>其他：如请求数据，低优先及执行</li></ul> <p>优先级最终会反映到<code>update.lane</code>变量上，所以我们只需要根据这个变量就可以区分优先级。</p> <p>而优先级则决定了<code>update</code>执行的顺序。当存在多<code>个update</code>时，优先级越高的<code>update</code>就会优先执行，而优先级较低的<code>update</code>就会稍后执行。</p> <p>在创建<code>update</code>的方法<code>createUpdate</code>中会调用<code>requestUpdateLane</code>方法，这个方法的是作用决定即将创建的<code>update</code>的优先级。</p> <p>具体看下lane的定义：</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">export</span> <span class="token keyword">const</span> NoLane<span class="token operator">:</span> Lane <span class="token operator">=</span> <span class="token comment">/*                          */</span> <span class="token number">0b0000000000000000000000000000000</span><span class="token punctuation">;</span>
+<span class="token keyword">export</span> <span class="token keyword">const</span> SyncLane<span class="token operator">:</span> Lane <span class="token operator">=</span> <span class="token comment">/*                        */</span> <span class="token number">0b0000000000000000000000000000001</span><span class="token punctuation">;</span>
+<span class="token keyword">export</span> <span class="token keyword">const</span> InputContinuousLane<span class="token operator">:</span> Lanes <span class="token operator">=</span> <span class="token comment">/*            */</span> <span class="token number">0b0000000000000000000000000000100</span><span class="token punctuation">;</span>
+<span class="token keyword">export</span> <span class="token keyword">const</span> DefaultLane<span class="token operator">:</span> Lanes <span class="token operator">=</span> <span class="token comment">/*                    */</span> <span class="token number">0b0000000000000000000000000010000</span><span class="token punctuation">;</span>
+</code></pre></div><p>由32位二进制位组成，<code>lane</code>的值越小对应的优先级越高，相反，<code>lane</code>的值越大对应的优先级越低。所以可以看到<code>SyncLane</code>的值最小，也就表示它的优先级最高。</p> <p>设置<code>lane</code>优先级的具体方法：</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">function</span> <span class="token function">requestUpdateLane</span><span class="token punctuation">(</span><span class="token parameter">fiber<span class="token operator">:</span> Fiber</span><span class="token punctuation">)</span><span class="token operator">:</span> Lane <span class="token punctuation">{</span>
+  <span class="token comment">// order code...</span>
+
+  <span class="token comment">// 通过getCurrentUpdatePriority方法会获取当前触发状态更新的所在事件对应的lane优先级</span>
+  <span class="token comment">// 因为通过事件系统在调用合成事件对应注册的回调函数时，会设置该合成事件对应的lane优先级</span>
+  <span class="token comment">// 例如 此时通过click事件触发了一次状态更新，那么在收集事件监听器时会设置对应的合成事件触发事件dispatchDiscreteEvent</span>
+  <span class="token comment">// 之后在执行监听器队列时，就会执行这个dispatchDiscreteEvent方法</span>
+  <span class="token comment">// 在dispatchDiscreteEvent方法内部就会设置全局变量currentUpdatePriority，来记录当前正在执行的事件对应的lane优先级</span>
+  <span class="token comment">// 而getCurrentUpdatePriority返回的就是变量currentUpdatePriority的值</span>
+  <span class="token comment">// 所以，click事件触发的状态更新，获取的currentUpdatePriority值是DiscreteEventPriority，对应的lane优先级是SyncLane</span>
+  <span class="token comment">// 注：在react事件系统中，合成事件对应的事件优先级是预设好的，可以通过搜索getEventPriority函数查看</span>
+  <span class="token keyword">const</span> updateLane<span class="token operator">:</span> Lane <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token function">getCurrentUpdatePriority</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">:</span> any<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// 如果这次状态更新是通过合成事件触发的，因为合成事件一定存在对应的事件优先级及lane优先级，所以获取到的updateLane是一定不为NoLane的（NoLane的值是0）</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>updateLane <span class="token operator">!==</span> NoLane<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 返回合成事件对应的lane优先级</span>
+    <span class="token keyword">return</span> updateLane<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  
+  <span class="token comment">// 如果updateLane为NoLane，即值为0</span>
+  <span class="token comment">// 说明此次触发状态更新的方法不属于合成事件注册的回调函数</span>
+  <span class="token comment">// 例如：setTimeout(() =&gt; setNum(1), 1000)</span>
+  <span class="token comment">// 通过setTimeout设置一个回调函数，在回调函数中触发状态更新，这个回调函数并不属于合成事件，所以currentUpdatePriority就是默认值NoLane</span>
+  <span class="token comment">// 所以当通过getCurrentEventPriority方法获取这个回调函数的合成事件类型为undefined，那么会被赋值为DefaultEventPriority，即DefaultLane</span>
+  <span class="token keyword">const</span> eventLane<span class="token operator">:</span> Lane <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token function">getCurrentEventPriority</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">:</span> any<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">return</span> eventLane<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>从这段代码可以看到，在不同方法中触发的状态更新，通过<code>requestUpdateLane</code>方法获取<code>lane</code>的值是不相同的，这也就决定了即将创建的<code>update</code>的优先级。</p> <h2 id="插入update"><a href="#插入update" class="header-anchor">#</a> 插入Update</h2> <p><code>updateQueue</code>相关的代码逻辑都涉及到大量的链表操作。所以，通过具体的例子详细看下在源码中是如何操作<code>Update</code>的。</p> <p>假设有一个<code>fiber</code>在<code>commit</code>阶段完成了渲染。该<code>fiber</code>上有两个由于优先级较低，所以在上次<code>render</code>阶段被跳过而没有处理的<code>Update</code>。他们会成为下次更新的<code>baseUpdate</code>。</p> <p>我们称其为<em>u1</em>和<em>u2</em>，其中<code>u1.next === u2</code>。</p> <div class="language-js extra-class"><pre class="language-js"><code>fiber<span class="token punctuation">.</span>updateQueue<span class="token punctuation">.</span>firstBaseUpdate <span class="token operator">===</span> u1<span class="token punctuation">;</span>
+fiber<span class="token punctuation">.</span>updateQueue<span class="token punctuation">.</span>lastBaseUpdate <span class="token operator">===</span> u2<span class="token punctuation">;</span>
+u1<span class="token punctuation">.</span>next <span class="token operator">===</span> u2<span class="token punctuation">;</span>
+</code></pre></div><p>如果用<code>--&gt;</code>表示链表的指向：</p> <div class="language-js extra-class"><pre class="language-js"><code>fiber<span class="token punctuation">.</span>updateQueue<span class="token punctuation">.</span>baseUpdate<span class="token operator">:</span> u1 <span class="token operator">--</span><span class="token operator">&gt;</span> u2<span class="token punctuation">;</span>
+</code></pre></div><p>当我们在这个<code>fiber</code>上又触发两次状态更新，所以先后产生了两个新的<code>Update</code>，我们称为<em>u3</em>和<em>u4</em>。<br>
+每个<code>Update</code>都会通过<code>enqueueUpdate</code>方法插入到<code>updateQueue</code>队列上。
+当插入<em>u3</em>后：</p> <div class="language-js extra-class"><pre class="language-js"><code>fiber<span class="token punctuation">.</span>updateQueue<span class="token punctuation">.</span>shared<span class="token punctuation">.</span>pending <span class="token operator">===</span> u3<span class="token punctuation">;</span>
+u3<span class="token punctuation">.</span>next <span class="token operator">===</span> u3<span class="token punctuation">;</span>
+</code></pre></div><p>如果当只存在一个新产生的<code>update</code>时，这个<code>update</code>会与自己形成一条<em>单项环状链表</em>。</p> <div class="language-js extra-class"><pre class="language-js"><code>fiber<span class="token punctuation">.</span>updateQueue<span class="token punctuation">.</span>shared<span class="token punctuation">.</span>pending<span class="token operator">:</span> u3 
+                                 ◥  \
+                                <span class="token operator">/</span> __ \
+</code></pre></div><p>接着插入<em>u4</em>后：</p> <div class="language-js extra-class"><pre class="language-js"><code>fiber<span class="token punctuation">.</span>updateQueue<span class="token punctuation">.</span>shared<span class="token punctuation">.</span>pending <span class="token operator">===</span> u4<span class="token punctuation">;</span>
+u4<span class="token punctuation">.</span>next <span class="token operator">===</span> u3<span class="token punctuation">;</span>
+u3<span class="token punctuation">.</span>next <span class="token operator">===</span> u4<span class="token punctuation">;</span>
+</code></pre></div><p>环状链表的最后一项要指向第一项，以此来形成环。</p> <div class="language-js extra-class"><pre class="language-js"><code>fiber<span class="token punctuation">.</span>updateQueue<span class="token punctuation">.</span>shared<span class="token punctuation">.</span>pending<span class="token operator">:</span> u4 <span class="token operator">--</span><span class="token operator">&gt;</span> u3
+                                   ▲     <span class="token operator">|</span>
+                                   └ <span class="token operator">--</span><span class="token operator">-</span> ┘
+</code></pre></div><p><code>shared.pending</code>会保证始终指向最后一个插入的<code>update</code>。
+更新调度完成之后会进入<code>render</code>阶段。
+此时<code>shared.pending</code>的环会被剪开并连接在<code>updateQueue.lastBaseUpdate</code>后面：</p> <div class="language-js extra-class"><pre class="language-js"><code>fiber<span class="token punctuation">.</span>updateQueue<span class="token punctuation">.</span>baseUpdate<span class="token operator">:</span> u1 <span class="token operator">-</span><span class="token operator">&gt;</span> u2 <span class="token operator">-</span><span class="token operator">&gt;</span> u3 <span class="token operator">-</span><span class="token operator">&gt;</span> u4
+</code></pre></div><p>接下来遍历<code>updateQueue.baseQueue</code>链表，以<code>fiber.updateQueue.baseState</code>为初始的<code>state</code>，然后依次与遍历到的每个<code>Update</code>计算并产生新的<code>state</code>。
+在遍历时如果有优先级较低的<code>Update</code>会被<strong>跳过</strong>。</p> <p>当对足够优先级的update完成遍历后得到的<code>state</code>，就是该<code>Fiber</code>节点在本次更新的<code>state</code>，被称为<code>memoizedState</code>。</p> <p><code>state</code>的变化在<code>render</code>阶段产生与上次更新不同的<code>JSX</code>对象，通过<code>diff算法</code>会产生<code>flags</code>，表示该<code>Fiber</code>节点需要进行更新，最终通过<code>commit</code>阶段渲染到页面上。</p> <p>在<code>layout</code>阶段之后，完成<code>current</code>指针的切换，<code>workInProgress Fiber</code>树就会变为<code>current Fiber</code>树，整个更新流程结束。</p> <h2 id="计算update"><a href="#计算update" class="header-anchor">#</a> 计算Update</h2> <p>如果在一个组件中存在两种触发状态更新的方式，一个状态更新负责修改主题的颜色，一个状态更新负责修改输入框的内容。</p> <p>其中修改主体颜色更新先触发，随后又触发了一个修改输入框内容的更新。我们将修改颜色的<code>Update</code>称为<em>u1</em>，修改输入框的<code>Update</code>称为<em>u2</em>。</p> <p>其中<em>u1</em>先触发，就会先进入<code>render</code>阶段，但本身类似于定时器触发的更新，所以优先级比较低。此时：</p> <div class="language-js extra-class"><pre class="language-js"><code>updateQueue <span class="token operator">=</span> <span class="token punctuation">{</span>
+    baseState<span class="token operator">:</span> <span class="token punctuation">{</span>
+        darkTheme<span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+        text<span class="token operator">:</span> <span class="token string">'a'</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    firstBaseUpdate<span class="token operator">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
+    lastBaseUpdate<span class="token operator">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
+    shared<span class="token operator">:</span> <span class="token punctuation">{</span>
+        pending<span class="token operator">:</span> u1
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    effects<span class="token operator">:</span> <span class="token keyword">null</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>在<em>u1</em>完成<code>render</code>阶段前用户通过键盘输入了字母<em>b</em>，所以就产生了<em>u2</em>。因为这种操作属于受控的用户输入，所以优先级较高，于是<em>u2</em>会中断<em>u1</em>进行的<code>render</code>阶段。此时：</p> <div class="language-js extra-class"><pre class="language-js"><code>updateQueue <span class="token operator">=</span> <span class="token punctuation">{</span>
+    baseState<span class="token operator">:</span> <span class="token punctuation">{</span>
+        darkTheme<span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+        text<span class="token operator">:</span> <span class="token string">'a'</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    fristBaseUpdate<span class="token operator">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
+    lastBaseUpdate<span class="token operator">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
+    shared<span class="token operator">:</span> <span class="token punctuation">{</span>
+        pending<span class="token operator">:</span> u2 <span class="token operator">-</span><span class="token operator">&gt;</span> u1
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    effects<span class="token operator">:</span> <span class="token keyword">null</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>接下来将进入计算<code>update</code>的流程，首先会将<code>shared.pending</code>上的环状链表会被<strong>剪开</strong>并连接到<code>baseUpdate</code>上。此时：</p> <div class="language-js extra-class"><pre class="language-js"><code>updateQueue <span class="token operator">=</span> <span class="token punctuation">{</span>
+    baseState<span class="token operator">:</span> <span class="token punctuation">{</span>
+        darkTheme<span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+        text<span class="token operator">:</span> <span class="token string">'a'</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    fristBaseUpdate<span class="token operator">:</span> u1<span class="token punctuation">,</span>
+    lastBaseUpdate<span class="token operator">:</span> u2<span class="token punctuation">,</span>
+    shared<span class="token operator">:</span> <span class="token punctuation">{</span>
+        pending<span class="token operator">:</span> <span class="token keyword">null</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    effects<span class="token operator">:</span> <span class="token keyword">null</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>随后会从<code>baseUpdate</code>开始遍历和计算<code>update</code>。当遍历到<em>u1</em>时，由于其优先级不足，所以会被跳过，然后遍历到<em>u2</em>。</p> <p>但由于<code>update</code>之间可能存在<strong>依赖关系</strong>，所以被跳过的<code>update</code>及其之后<strong>所有</strong>的<code>update</code>都会成为下次更新的<code>baseUpdate</code>（即u1 -- u2）。</p> <p>当u2完成<code>render - commit</code>阶段，此时：</p> <div class="language-js extra-class"><pre class="language-js"><code>updateQueue <span class="token operator">=</span> <span class="token punctuation">{</span>
+    baseState<span class="token operator">:</span> <span class="token punctuation">{</span>
+        darkTheme<span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+        text<span class="token operator">:</span> <span class="token string">'ab'</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    fristBaseUpdate<span class="token operator">:</span> u1<span class="token punctuation">,</span>
+    lastBaseUpdate<span class="token operator">:</span> u2<span class="token punctuation">,</span>
+    shared<span class="token operator">:</span> <span class="token punctuation">{</span>
+        pending<span class="token operator">:</span> <span class="token keyword">null</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    effects<span class="token operator">:</span> <span class="token keyword">null</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>在<code>commit</code>阶段的末尾会再调度一次更新，在该次更新中会基于<code>baseState</code>中<code>firstBaseUpdate</code>保存的<em>u1开</em>启一次新的<code>render</code>阶段。</p> <p>在经过两次计算<code>update</code>之后得到的结果如下：</p> <div class="language-js extra-class"><pre class="language-js"><code>updateQueue <span class="token operator">=</span> <span class="token punctuation">{</span>
+    baseState<span class="token operator">:</span> <span class="token punctuation">{</span>
+        darkTheme<span class="token operator">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+        text<span class="token operator">:</span> <span class="token string">'ab'</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    fristBaseUpdate<span class="token operator">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
+    lastBaseUpdate<span class="token operator">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
+    shared<span class="token operator">:</span> <span class="token punctuation">{</span>
+        pending<span class="token operator">:</span> <span class="token keyword">null</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    effects<span class="token operator">:</span> <span class="token keyword">null</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h2 id="状态更新相关源码"><a href="#状态更新相关源码" class="header-anchor">#</a> 状态更新相关源码</h2> <p>以上是通过具体的例子演示创建<code>update</code>和计算<code>update</code>的过程，那么接下来从源码的角度看代码是如何操作<code>update</code>的。</p> <p>首先，会通过<code>createUpdate</code>方法创建<code>update</code>对象。</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">function</span> <span class="token function">createUpdate</span><span class="token punctuation">(</span><span class="token parameter">eventTime<span class="token operator">:</span> number<span class="token punctuation">,</span> lane<span class="token operator">:</span> Lane</span><span class="token punctuation">)</span><span class="token operator">:</span> Update<span class="token operator">&lt;</span><span class="token operator">*</span><span class="token operator">&gt;</span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> update<span class="token operator">:</span> Update<span class="token operator">&lt;</span><span class="token operator">*</span><span class="token operator">&gt;</span> <span class="token operator">=</span> <span class="token punctuation">{</span>
+    eventTime<span class="token punctuation">,</span>
+    lane<span class="token punctuation">,</span>
+
+    tag<span class="token operator">:</span> UpdateState<span class="token punctuation">,</span>
+    payload<span class="token operator">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
+    callback<span class="token operator">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
+
+    next<span class="token operator">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
+  <span class="token punctuation">}</span><span class="token punctuation">;</span>
+  <span class="token keyword">return</span> update<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>然后通过<code>enqueueUpdate</code>方法，将创建的<code>update</code>插入到<code>updateQueue</code>中。</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">function</span> enqueueUpdate<span class="token operator">&lt;</span>State<span class="token operator">&gt;</span><span class="token punctuation">(</span>
+  fiber<span class="token operator">:</span> Fiber<span class="token punctuation">,</span>
+  update<span class="token operator">:</span> Update<span class="token operator">&lt;</span>State<span class="token operator">&gt;</span><span class="token punctuation">,</span>
+  lane<span class="token operator">:</span> Lane<span class="token punctuation">,</span>
+<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// 取到updateQueue队列</span>
+  <span class="token keyword">const</span> updateQueue <span class="token operator">=</span> fiber<span class="token punctuation">.</span>updateQueue<span class="token punctuation">;</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>updateQueue <span class="token operator">===</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 当前Fiber被卸载时，会提前退出函数.</span>
+    <span class="token keyword">return</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  <span class="token comment">// 取到sharedQueue</span>
+  <span class="token keyword">const</span> sharedQueue<span class="token operator">:</span> SharedQueue<span class="token operator">&lt;</span>State<span class="token operator">&gt;</span> <span class="token operator">=</span> <span class="token punctuation">(</span>updateQueue<span class="token operator">:</span> any<span class="token punctuation">)</span><span class="token punctuation">.</span>shared<span class="token punctuation">;</span>
+
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">isInterleavedUpdate</span><span class="token punctuation">(</span>fiber<span class="token punctuation">,</span> lane<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// order code...</span>
+  <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 取到pending</span>
+    <span class="token keyword">const</span> pending <span class="token operator">=</span> sharedQueue<span class="token punctuation">.</span>pending<span class="token punctuation">;</span>
+    <span class="token comment">// 当pending为null时，说明当前update是该Fiber节点上的第一个update</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>pending <span class="token operator">===</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token comment">// 所以它需要与自己连接形成环状链表，即next指针指向自己</span>
+      update<span class="token punctuation">.</span>next <span class="token operator">=</span> update<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+      <span class="token comment">// 当存在多个update时，该update是最后一个update，所以需要连接在当前链表的末尾</span>
+      <span class="token comment">// shared.pending始终指向该链表最后一个update，那么shared.pending.next就是指向该链表第一个update</span>
+      <span class="token comment">// 因为当前这个update即将成为该链表的最后一个update，所以它的指针需要指向该链表的第一个update</span>
+      update<span class="token punctuation">.</span>next <span class="token operator">=</span> pending<span class="token punctuation">.</span>next<span class="token punctuation">;</span>
+      <span class="token comment">// 当插入一个updat时，就需要将它连接到最后一个update后面，即pending.next = update。让这个update成为该链表最后一个update</span>
+      pending<span class="token punctuation">.</span>next <span class="token operator">=</span> update<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token comment">// shared.pending始终指向该链表最后一个update，也就是当前插入的update</span>
+    sharedQueue<span class="token punctuation">.</span>pending <span class="token operator">=</span> update<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p><code>enqueueUpdate</code>主要是负责执行<code>update</code>的插入操作，其中就涉及到了链表的操作，单凭文字可能比较难理解，结合一个具体的例子再加深下理解。</p> <div class="language- extra-class"><pre class="language-text"><code>// 当前updateQueue上存在4个update，模拟环状链表的结构
+sharedQueue: 4 -&gt; 1 -&gt; 2 -&gt; 3 -&gt; 4
+
+// 此时新创建了一个update 5，就需要将这个update插入到这个环状链表里面
+
+// 首先需要将5的next指针指向第一个update
+5.next = 1; // 5 -&gt; 1
+// 再将该环状链表的最后一个update的next指针指向这个新的update
+4.next = 5; // 4 -&gt; 5
+// 这样就完成了update的插入操作
+sharedQueue: 1 -&gt; 2 -&gt; 3 -&gt; 4 -&gt; 5 -&gt; 1
+// 最后再将share.pending指向该链表的最后一个update
+shared.pending: 5 -&gt; 1 -&gt; 2 -&gt; 3 -&gt; 4 -&gt; 5
+</code></pre></div><p>我们再看一下this.setState这个方法具体这个哪些工作。</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token comment">// 我们通常使用的this.setState</span>
+<span class="token class-name">Component</span><span class="token punctuation">.</span>prototype<span class="token punctuation">.</span><span class="token function-variable function">setState</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">partialState<span class="token punctuation">,</span> callback</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token function">invariant</span><span class="token punctuation">(</span>
+    <span class="token keyword">typeof</span> partialState <span class="token operator">===</span> <span class="token string">'object'</span> <span class="token operator">||</span>
+      <span class="token keyword">typeof</span> partialState <span class="token operator">===</span> <span class="token string">'function'</span> <span class="token operator">||</span>
+      partialState <span class="token operator">==</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
+    <span class="token string">'setState(...): takes an object of state variables to update or a '</span> <span class="token operator">+</span>
+      <span class="token string">'function which returns an object of state variables.'</span><span class="token punctuation">,</span>
+  <span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// 实际调用的方法</span>
+  <span class="token keyword">this</span><span class="token punctuation">.</span>updater<span class="token punctuation">.</span><span class="token function">enqueueSetState</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">,</span> partialState<span class="token punctuation">,</span> callback<span class="token punctuation">,</span> <span class="token string">'setState'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+<span class="token comment">// 实际执行工作的方法</span>
+<span class="token function">enqueueSetState</span><span class="token punctuation">(</span><span class="token parameter">inst<span class="token punctuation">,</span> payload<span class="token punctuation">,</span> callback</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 获取fiber节点</span>
+    <span class="token keyword">const</span> fiber <span class="token operator">=</span> <span class="token function">getInstance</span><span class="token punctuation">(</span>inst<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">// 获取触发事件的时间</span>
+    <span class="token keyword">const</span> eventTime <span class="token operator">=</span> <span class="token function">requestEventTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">// 获取优先级</span>
+    <span class="token keyword">const</span> lane <span class="token operator">=</span> <span class="token function">requestUpdateLane</span><span class="token punctuation">(</span>fiber<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">// 创建upadte</span>
+    <span class="token keyword">const</span> update <span class="token operator">=</span> <span class="token function">createUpdate</span><span class="token punctuation">(</span>eventTime<span class="token punctuation">,</span> lane<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">// 赋值payload属性，即this.setState的第一个参数</span>
+    update<span class="token punctuation">.</span>payload <span class="token operator">=</span> payload<span class="token punctuation">;</span>
+    <span class="token comment">// 当我们通过this.setState传递第二个参数时，会被赋值为callback属性</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>callback <span class="token operator">!==</span> <span class="token keyword">undefined</span> <span class="token operator">&amp;&amp;</span> callback <span class="token operator">!==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token comment">// 赋值callback</span>
+      update<span class="token punctuation">.</span>callback <span class="token operator">=</span> callback<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token comment">// 将update插入到updateQueue中</span>
+    <span class="token function">enqueueUpdate</span><span class="token punctuation">(</span>fiber<span class="token punctuation">,</span> update<span class="token punctuation">,</span> lane<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">// 开启状态更新，即React完整的工作流程</span>
+    <span class="token keyword">const</span> root <span class="token operator">=</span> <span class="token function">scheduleUpdateOnFiber</span><span class="token punctuation">(</span>fiber<span class="token punctuation">,</span> lane<span class="token punctuation">,</span> eventTime<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+</code></pre></div><p>从这段代码可以看出，<code>this.setState</code>是一个作为顶层<code>API</code>暴露给开发者使用的，而在源码内部其实使用的是<code>enqueueSetState</code>方法。</p> <p>这个<code>enqueueSetState</code>方法主要做了三件事：</p> <ol><li>创建<code>update</code></li> <li>将<code>update</code>插入到<code>updateQueue</code>中</li> <li>开启一次状态更新流程</li></ol> <p>对于产生的<code>update</code>，<code>react</code>是如何进行计算的？</p> <p>计算<code>update</code>的工作是在<code>beginWork</code>方法中进行的，通过入口函数<code>updateClassComponent</code>间接调用<code>processCommitUpdate</code>完成<code>update</code>的计算工作。</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">function</span> processUpdateQueue<span class="token operator">&lt;</span>State<span class="token operator">&gt;</span><span class="token punctuation">(</span>
+  workInProgress<span class="token operator">:</span> Fiber<span class="token punctuation">,</span>
+  props<span class="token operator">:</span> any<span class="token punctuation">,</span>
+  instance<span class="token operator">:</span> any<span class="token punctuation">,</span>
+  renderLanes<span class="token operator">:</span> Lanes<span class="token punctuation">,</span>
+<span class="token punctuation">)</span><span class="token operator">:</span> <span class="token keyword">void</span> <span class="token punctuation">{</span>
+  <span class="token comment">// 获取当前Fiber节点上的updateQueue</span>
+  <span class="token keyword">const</span> queue<span class="token operator">:</span> UpdateQueue<span class="token operator">&lt;</span>State<span class="token operator">&gt;</span> <span class="token operator">=</span> <span class="token punctuation">(</span>workInProgress<span class="token punctuation">.</span>updateQueue<span class="token operator">:</span> any<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  hasForceUpdate <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+
+  <span class="token comment">// 取到第一个baseUpdate</span>
+  <span class="token keyword">let</span> firstBaseUpdate <span class="token operator">=</span> queue<span class="token punctuation">.</span>firstBaseUpdate<span class="token punctuation">;</span>
+  <span class="token comment">// 取到最后一个baseUpdate</span>
+  <span class="token keyword">let</span> lastBaseUpdate <span class="token operator">=</span> queue<span class="token punctuation">.</span>lastBaseUpdate<span class="token punctuation">;</span>
+
+  <span class="token comment">// 获取shared.pending</span>
+  <span class="token keyword">let</span> pendingQueue <span class="token operator">=</span> queue<span class="token punctuation">.</span>shared<span class="token punctuation">.</span>pending<span class="token punctuation">;</span>
+  <span class="token comment">// 如果存在需要计算的update</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>pendingQueue <span class="token operator">!==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 先重置shared.pending</span>
+    queue<span class="token punctuation">.</span>shared<span class="token punctuation">.</span>pending <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+
+    <span class="token comment">// 准备剪开shared.pending上的环状链表</span>
+    <span class="token comment">// 取到shared.pending上最后一个update</span>
+    <span class="token keyword">const</span> lastPendingUpdate <span class="token operator">=</span> pendingQueue<span class="token punctuation">;</span>
+     <span class="token comment">// 取到shared.pending上第一个update</span>
+    <span class="token keyword">const</span> firstPendingUpdate <span class="token operator">=</span> lastPendingUpdate<span class="token punctuation">.</span>next<span class="token punctuation">;</span>
+    <span class="token comment">// 剪开环，即将lastPendingUpdate.next置null，这样最后一个update就不再指向第一个update了，由此变成了一条单向链表</span>
+    lastPendingUpdate<span class="token punctuation">.</span>next <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+    <span class="token comment">// 将等待计算的update连接到baseQueue上</span>
+    <span class="token comment">// 如果最后一个baseUpdate为null，说明当前还没有baseUpdate</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>lastBaseUpdate <span class="token operator">===</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token comment">// 则将第一个等待计算的update作为第一个baseUpdate</span>
+      firstBaseUpdate <span class="token operator">=</span> firstPendingUpdate<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+      <span class="token comment">// 否则，说明当前存在baseUpdate，需要将等待计算的update链表连接到最后一个baseUpdate后面</span>
+      lastBaseUpdate<span class="token punctuation">.</span>next <span class="token operator">=</span> firstPendingUpdate<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token comment">// 将最后一个等待计算的update作为最后一个baseUpdate</span>
+    lastBaseUpdate <span class="token operator">=</span> lastPendingUpdate<span class="token punctuation">;</span>
+
+    <span class="token comment">// 获取到workInProgress Fiber节点通过alternate连接的current Fiber节点</span>
+    <span class="token keyword">const</span> current <span class="token operator">=</span> workInProgress<span class="token punctuation">.</span>alternate<span class="token punctuation">;</span>
+    <span class="token comment">// current不为null</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>current <span class="token operator">!==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token comment">// /*保证Update不丢失*/</span>
+      <span class="token comment">// 再获取到current上的updateQueue</span>
+      <span class="token keyword">const</span> currentQueue<span class="token operator">:</span> UpdateQueue<span class="token operator">&lt;</span>State<span class="token operator">&gt;</span> <span class="token operator">=</span> <span class="token punctuation">(</span>current<span class="token punctuation">.</span>updateQueue<span class="token operator">:</span> any<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token comment">// 获取到current上的最后一个baseUpdate</span>
+      <span class="token keyword">const</span> currentLastBaseUpdate <span class="token operator">=</span> currentQueue<span class="token punctuation">.</span>lastBaseUpdate<span class="token punctuation">;</span>
+      <span class="token comment">// 当current上最后一个baseUpdate不等于workInProgress上最后一个baseUpdate，说明存在更新</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>currentLastBaseUpdate <span class="token operator">!==</span> lastBaseUpdate<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment">// 将shared.pending这条等待计算的链表同时连接到current fiber的baseUpdate上，目的是保存这条链表</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>currentLastBaseUpdate <span class="token operator">===</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          <span class="token comment">// 如果current fiber上最后一个baseUpdate为null</span>
+          <span class="token comment">// 则说明current fiber上不存在baseUpdate，所以直接赋值current fiber的第一个baseUpdate为第一个等待计算的update</span>
+          currentQueue<span class="token punctuation">.</span>firstBaseUpdate <span class="token operator">=</span> firstPendingUpdate<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+          <span class="token comment">// 否则，说明current fiber上存在baseUpdate，则将等待计算的update链表连接到最后一个baseUpdate后面</span>
+          currentLastBaseUpdate<span class="token punctuation">.</span>next <span class="token operator">=</span> firstPendingUpdate<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        <span class="token comment">// 将最后一个等待计算的update作为最后一个baseUpdate </span>
+        currentQueue<span class="token punctuation">.</span>lastBaseUpdate <span class="token operator">=</span> lastPendingUpdate<span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token comment">// 开始计算update</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>firstBaseUpdate <span class="token operator">!==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 获取当前baseState</span>
+    <span class="token keyword">let</span> newState <span class="token operator">=</span> queue<span class="token punctuation">.</span>baseState<span class="token punctuation">;</span>
+    <span class="token comment">// 优先级相关</span>
+    <span class="token keyword">let</span> newLanes <span class="token operator">=</span> NoLanes<span class="token punctuation">;</span>
+    <span class="token comment">// 即将计算的baseState的值</span>
+    <span class="token keyword">let</span> newBaseState <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+    <span class="token comment">// 被跳过的update会通过newFirstBaseUpdate和newLastBaseUpdate变量保存</span>
+    <span class="token keyword">let</span> newFirstBaseUpdate <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+    <span class="token keyword">let</span> newLastBaseUpdate <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+    <span class="token comment">// 获取第一个baseUpdate</span>
+    <span class="token keyword">let</span> update <span class="token operator">=</span> firstBaseUpdate<span class="token punctuation">;</span>
+    <span class="token keyword">do</span> <span class="token punctuation">{</span>
+      <span class="token keyword">const</span> updateLane <span class="token operator">=</span> update<span class="token punctuation">.</span>lane<span class="token punctuation">;</span>
+      <span class="token keyword">const</span> updateEventTime <span class="token operator">=</span> update<span class="token punctuation">.</span>eventTime<span class="token punctuation">;</span>
+      <span class="token comment">// 如果当前这个update，因为优先级不足，而需要被跳过</span>
+      <span class="token comment">// 则将这个update复制一份，并保存到baseUpdate上，作为下次计算update时的baseUpdate</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">isSubsetOfLanes</span><span class="token punctuation">(</span>renderLanes<span class="token punctuation">,</span> updateLane<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment">// 复制这个update</span>
+        <span class="token keyword">const</span> clone<span class="token operator">:</span> Update<span class="token operator">&lt;</span>State<span class="token operator">&gt;</span> <span class="token operator">=</span> <span class="token punctuation">{</span>
+          eventTime<span class="token operator">:</span> updateEventTime<span class="token punctuation">,</span>
+          lane<span class="token operator">:</span> updateLane<span class="token punctuation">,</span>
+          tag<span class="token operator">:</span> update<span class="token punctuation">.</span>tag<span class="token punctuation">,</span>
+          payload<span class="token operator">:</span> update<span class="token punctuation">.</span>payload<span class="token punctuation">,</span>
+          callback<span class="token operator">:</span> update<span class="token punctuation">.</span>callback<span class="token punctuation">,</span>
+
+          next<span class="token operator">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
+        <span class="token punctuation">}</span><span class="token punctuation">;</span>
+        <span class="token comment">// 将复制的update连接到newBaseUpdate上</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>newLastBaseUpdate <span class="token operator">===</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          <span class="token comment">// 如果不存在newLastBaseUpdate，说明当前这个复制的update是第一个被跳过的update</span>
+          <span class="token comment">// 所以赋值newFirstBaseUpdate和newLastBaseUpdate</span>
+          newFirstBaseUpdate <span class="token operator">=</span> newLastBaseUpdate <span class="token operator">=</span> clone<span class="token punctuation">;</span>
+          <span class="token comment">// 当下次计算这个被跳过的update时，它的baseState是基于被跳过的update对应的当前的newState计算的</span>
+          <span class="token comment">// 所以要将newState保存到newBaseState中，作为下次计算的baseState</span>
+          newBaseState <span class="token operator">=</span> newState<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+          <span class="token comment">// 存在newLastBaseUpdate，那就把赋值的update连接到baseUpdate链表，并作为最后一个baseUpdate</span>
+          newLastBaseUpdate <span class="token operator">=</span> newLastBaseUpdate<span class="token punctuation">.</span>next <span class="token operator">=</span> clone<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        <span class="token comment">// 合并优先级</span>
+        newLanes <span class="token operator">=</span> <span class="token function">mergeLanes</span><span class="token punctuation">(</span>newLanes<span class="token punctuation">,</span> updateLane<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+        <span class="token comment">// 当update存在足够的优先级，就需要计算这个update</span>
+
+        <span class="token comment">// **保证状态依赖的连续性**</span>
+        <span class="token comment">// 当newLastBaseUpdate不为空，说明存在被跳过的update，那么当下次计算这个被跳过的update时是需要将这个update之后的所有的update都进行计算（尽管有些update已经被计算过了）</span>
+        <span class="token comment">// 所以此时会收集被跳过update之后连续的所有update</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>newLastBaseUpdate <span class="token operator">!==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          <span class="token keyword">const</span> clone<span class="token operator">:</span> Update<span class="token operator">&lt;</span>State<span class="token operator">&gt;</span> <span class="token operator">=</span> <span class="token punctuation">{</span>
+            eventTime<span class="token operator">:</span> updateEventTime<span class="token punctuation">,</span>
+            lane<span class="token operator">:</span> NoLane<span class="token punctuation">,</span>
+            tag<span class="token operator">:</span> update<span class="token punctuation">.</span>tag<span class="token punctuation">,</span>
+            payload<span class="token operator">:</span> update<span class="token punctuation">.</span>payload<span class="token punctuation">,</span>
+            callback<span class="token operator">:</span> update<span class="token punctuation">.</span>callback<span class="token punctuation">,</span>
+
+            next<span class="token operator">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
+          <span class="token punctuation">}</span><span class="token punctuation">;</span>
+          <span class="token comment">// 将该update的clone项连接到baseUpdate上</span>
+          newLastBaseUpdate <span class="token operator">=</span> newLastBaseUpdate<span class="token punctuation">.</span>next <span class="token operator">=</span> clone<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+
+        <span class="token comment">// 计算这个update</span>
+        <span class="token comment">// 大致的流程：update.payload如果是函数，则执行它，将它的结果作为partialState</span>
+        <span class="token comment">// update.payload不是函数，则它作为partialState</span>
+        <span class="token comment">// 最后this.state和partialState使用Object.assign浅合并的结果作为getStateFromUpdate方法的返回值</span>
+        newState <span class="token operator">=</span> <span class="token function">getStateFromUpdate</span><span class="token punctuation">(</span>
+          workInProgress<span class="token punctuation">,</span>
+          queue<span class="token punctuation">,</span>
+          update<span class="token punctuation">,</span>
+          newState<span class="token punctuation">,</span>
+          props<span class="token punctuation">,</span>
+          instance<span class="token punctuation">,</span>
+        <span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment">// 获取update中callback</span>
+        <span class="token keyword">const</span> callback <span class="token operator">=</span> update<span class="token punctuation">.</span>callback<span class="token punctuation">;</span>
+        <span class="token comment">// 当存在callback属性，说明存在自定义的回调函数</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>
+          callback <span class="token operator">!==</span> <span class="token keyword">null</span> <span class="token operator">&amp;&amp;</span>
+          update<span class="token punctuation">.</span>lane <span class="token operator">!==</span> NoLane
+        <span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          <span class="token comment">// 为fiber赋值Callback flags</span>
+          workInProgress<span class="token punctuation">.</span>flags <span class="token operator">|=</span> Callback<span class="token punctuation">;</span>
+          <span class="token comment">// 取到effects回调函数数组</span>
+          <span class="token keyword">const</span> effects <span class="token operator">=</span> queue<span class="token punctuation">.</span>effects<span class="token punctuation">;</span>
+          <span class="token comment">// 将这个回调函数保存到updateQueue.effects数组中（最终在layout阶段对ClassComponent会调用commitUpdateQueue方法遍历effects数组依次执行这些回调函数）</span>
+          <span class="token keyword">if</span> <span class="token punctuation">(</span>effects <span class="token operator">===</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            queue<span class="token punctuation">.</span>effects <span class="token operator">=</span> <span class="token punctuation">[</span>update<span class="token punctuation">]</span><span class="token punctuation">;</span>
+          <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+            effects<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span>update<span class="token punctuation">)</span><span class="token punctuation">;</span>
+          <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span>
+      <span class="token punctuation">}</span>
+      <span class="token comment">// 移动next指针指向下一个update</span>
+      update <span class="token operator">=</span> update<span class="token punctuation">.</span>next<span class="token punctuation">;</span>
+      <span class="token comment">// 如果update为null，说明shared.pending上保存的update都已经遍历完了</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>update <span class="token operator">===</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment">// 再判断shared.pending是否为null</span>
+        pendingQueue <span class="token operator">=</span> queue<span class="token punctuation">.</span>shared<span class="token punctuation">.</span>pending<span class="token punctuation">;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>pendingQueue <span class="token operator">===</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          <span class="token comment">// 为null，说明不存在需要计算的update，表示update都被计算完了</span>
+          <span class="token comment">// 跳出循环</span>
+          <span class="token keyword">break</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+          <span class="token comment">// pendingQueue不为null，说明在计算update时又触发了新的状态更新</span>
+          <span class="token comment">// 例如: this.setState(() =&gt; {</span>
+          <span class="token comment">//    this.setState({num: 2});</span>
+          <span class="token comment">//    return ({num: 1})</span>
+          <span class="token comment">// })</span>
+          <span class="token comment">// 外层的this.setState触发了一次状态更新，创建了一个update</span>
+          <span class="token comment">// 当在计算这update时，内部又触发一次状态更新，所以又会创建一个update</span>
+          <span class="token comment">// 而这个update也会被插入到pendingQueue中，仍然需要计算</span>
+
+          <span class="token comment">// 执行的操作依然是把pendingQueue上保存的环状链表剪开，并连接到baseUpdate上</span>
+          <span class="token keyword">const</span> lastPendingUpdate <span class="token operator">=</span> pendingQueue<span class="token punctuation">;</span>
+          <span class="token keyword">const</span> firstPendingUpdate <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>lastPendingUpdate<span class="token punctuation">.</span>next<span class="token operator">:</span> any<span class="token punctuation">)</span><span class="token operator">:</span> Update<span class="token operator">&lt;</span>State<span class="token operator">&gt;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+          <span class="token comment">// 剪开环</span>
+          lastPendingUpdate<span class="token punctuation">.</span>next <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+          <span class="token comment">// 从第一个update开始计算</span>
+          update <span class="token operator">=</span> firstPendingUpdate<span class="token punctuation">;</span>
+          queue<span class="token punctuation">.</span>lastBaseUpdate <span class="token operator">=</span> lastPendingUpdate<span class="token punctuation">;</span>
+          queue<span class="token punctuation">.</span>shared<span class="token punctuation">.</span>pending <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span> <span class="token keyword">while</span> <span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">// 如果newLastBaseUpdate为null，说明不存在被跳过的update</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>newLastBaseUpdate <span class="token operator">===</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token comment">// 则新的baseState的值就是最终计算得出的state的值</span>
+      newBaseState <span class="token operator">=</span> newState<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token comment">// 更新baseState</span>
+    queue<span class="token punctuation">.</span>baseState <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>newBaseState<span class="token operator">:</span> any<span class="token punctuation">)</span><span class="token operator">:</span> State<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">// 最终被跳过的update会再次赋值给baseUpdate，等到下次再计算这些update</span>
+    queue<span class="token punctuation">.</span>firstBaseUpdate <span class="token operator">=</span> newFirstBaseUpdate<span class="token punctuation">;</span>
+    queue<span class="token punctuation">.</span>lastBaseUpdate <span class="token operator">=</span> newLastBaseUpdate<span class="token punctuation">;</span>
+
+    workInProgress<span class="token punctuation">.</span>lanes <span class="token operator">=</span> newLanes<span class="token punctuation">;</span>
+    <span class="token comment">// 最后计算出的新的state，会保存在fiber.memoizedState属性上</span>
+    workInProgress<span class="token punctuation">.</span>memoizedState <span class="token operator">=</span> newState<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>从这段代码可以看到，通过<code>baseState</code>和<code>pendingQueue</code>上保存的等待计算的<code>update</code>，最终计算出来的结果<code>newState</code>会被赋值给<code>fiber.memoizedState</code>。</p> <p>那么<code>fiber.memoizedState</code>又会被如何使用呢？<code>processUpdateQueue</code>的上层函数<code>updateClassInstance</code>中：</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">function</span> <span class="token function">updateClassInstance</span><span class="token punctuation">(</span>
+  <span class="token parameter">current<span class="token operator">:</span> Fiber<span class="token punctuation">,</span>
+  workInProgress<span class="token operator">:</span> Fiber<span class="token punctuation">,</span>
+  ctor<span class="token operator">:</span> any<span class="token punctuation">,</span>
+  newProps<span class="token operator">:</span> any<span class="token punctuation">,</span>
+  renderLanes<span class="token operator">:</span> Lanes<span class="token punctuation">,</span></span>
+<span class="token punctuation">)</span><span class="token operator">:</span> boolean <span class="token punctuation">{</span>
+  <span class="token comment">// order code...</span>
+
+  <span class="token keyword">const</span> oldState <span class="token operator">=</span> workInProgress<span class="token punctuation">.</span>memoizedState<span class="token punctuation">;</span>
+  <span class="token keyword">let</span> newState <span class="token operator">=</span> <span class="token punctuation">(</span>instance<span class="token punctuation">.</span>state <span class="token operator">=</span> oldState<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// 计算update</span>
+  <span class="token function">processUpdateQueue</span><span class="token punctuation">(</span>workInProgress<span class="token punctuation">,</span> newProps<span class="token punctuation">,</span> instance<span class="token punctuation">,</span> renderLanes<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// fiber.memoizedState是计算出的最终的state</span>
+  newState <span class="token operator">=</span> workInProgress<span class="token punctuation">.</span>memoizedState<span class="token punctuation">;</span>
+
+  <span class="token comment">// order code...</span>
+  
+  <span class="token comment">// 将newProps赋值给实例的props</span>
+  instance<span class="token punctuation">.</span>props <span class="token operator">=</span> newProps<span class="token punctuation">;</span>
+  <span class="token comment">// 将newState赋值给实例的state</span>
+  instance<span class="token punctuation">.</span>state <span class="token operator">=</span> newState<span class="token punctuation">;</span>
+  
+  <span class="token keyword">return</span> <span class="token operator">...</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>从这段代码可以看到，通过计算<code>update</code>得出的<code>newState</code>最终会被赋值给实例的<code>state</code>，这样当我们在<code>ClassComponent</code>当中使用<code>this.state</code>是可以得到最新的<code>state</code>。</p> <h2 id="保证update不丢失"><a href="#保证update不丢失" class="header-anchor">#</a> 保证Update不丢失</h2> <p>从<code>updateQueue</code>的工作流程中可以看到，<code>render</code>阶段可能被中断，这样的话该如何保证<code>updateQueue</code>中保存的<code>update</code>不丢失的呢？</p> <p>在<code>render</code>阶段，<code>shared.pending</code>的环会被剪开并连接在<code>updateQueue.lastBaseUpdate</code>后面。同时，也会通过<code>workInProgress.alternate</code>取到<code>current</code>，再连接到<code>current updateQueue.lastBaseUpdate</code>后面。<br>
+当<code>render</code>阶段被中断后重新开始时，会基于<code>current updateQueue</code>克隆出<code>workInProgress updateQueue</code>。由于<code>current updateQueue.lastBaseUpdate</code>已经保存了上一次的<code>update</code>，所以<code>update</code>是不会丢失的。</p> <p>当<code>commit</code>阶段完成渲染，由于<code>workInProgress updateQueue.lastBaseUpdate</code>中保存了上一次的<code>update</code>，所以<code>workInProgress Fiber</code>树变成<code>current Fiber</code>树后也不会造成<code>Update</code>的丢失。</p> <p>对应的的代码部分可以查看上面代码中<em>保证Update不丢失</em>的部分。</p> <h2 id="保证状态依赖的连续性"><a href="#保证状态依赖的连续性" class="header-anchor">#</a> 保证状态依赖的连续性</h2> <p>当某个<code>update</code>由于优先级较低而被跳过时，保存在<code>baseUpdate</code>中的不仅是该<code>update</code>，还包括链表中该<code>update</code>之后所有的<code>update</code>。</p> <p>所谓<strong>状态依赖</strong>是指当前触发的状态更新需要依靠前一个触发的状态更新的结果。比如：</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token comment">// 先触发了优先级较低的u1</span>
+<span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">setState</span><span class="token punctuation">(</span><span class="token punctuation">{</span>num<span class="token operator">:</span> <span class="token number">10</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+<span class="token comment">// 后触发了优先级较高的u2</span>
+<span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">setState</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">prevState</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">(</span><span class="token punctuation">{</span>
+    <span class="token operator">...</span>prevState<span class="token punctuation">,</span>
+    double<span class="token operator">:</span> prevState<span class="token punctuation">.</span>num <span class="token operator">*</span> <span class="token number">2</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+</code></pre></div><p>在这个例子中，存在两次状态更新，<em>u2</em>需要获取<em>u1</em>的<code>state.num</code>值来计算此次修改的<code>double</code>的值。每当通过<code>this.setState</code>第一个参数使用函数的形式并传递<code>state</code>参数，这通常就属于<code>状态依赖</code>。这种情况中前一个状态更新结果的正确与否就决定下一个状态更新的结果是否是正确的。</p> <p>当第一次计算<code>update</code>时，<em>u1</em>由于优先级不足被跳过了，而计算了第二个优先级较高的<em>u2</em>。虽然直接计算<em>u2</em>得出的结果一定不是正确的，但是这种情况也只会作为中间状态短暂的存在。</p> <p>等到第二次计算<code>update</code>时，就会计算被跳过的<em>u1</em>和它之后的<strong>所有</strong><code>update</code>（也就是<code>u1 -- u2</code>的顺序），而得出具有正确状态依赖关系的的<code>state</code>值作为最终的计算结果。</p> <p>对应的的代码部分可以查看上面代码中<em>保证状态依赖的连续性</em>的部分。</p> <h2 id="总结"><a href="#总结" class="header-anchor">#</a> 总结</h2> <p>状态更新的整个工作流程主要分为两部分：</p> <ol><li>通过<code>this.setState</code>触发<strong>状态更新</strong>（包括创建<code>Update</code>，插入<code>Update</code>和开启调度更新）</li> <li>在<code>beginWork</code>方法中间接调用<code>processCommitUpdate</code>计算产生的<code>update</code></li></ol> <p>虽然看起来可能状态更新的工作流程比较简短，但是涉及到的内容非常多，而且计算的过程也比较复杂（包括链表的操作和优先级相关），所以如果想要彻底弄懂这部分内容还是需要重复学习和理解的。</p></div> <footer class="page-edit"><!----> <!----></footer> <div class="page-nav"><p class="inner"><span class="prev">
+      ←
+      <a href="/react-blog/docs/principle/diff.html" class="prev">
+        diff算法
+      </a></span> <span class="next"><a href="/react-blog/docs/concept/lifeCycle.html">
+        生命周期
+      </a>
+      →
+    </span></p></div> </main></div><div class="global-ui"><!----></div></div>
+    <script src="/react-blog/assets/js/app.1296abc1.js" defer></script><script src="/react-blog/assets/js/2.2aa2ea89.js" defer></script><script src="/react-blog/assets/js/40.13eceae9.js" defer></script>
+  </body>
+</html>
