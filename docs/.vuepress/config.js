@@ -13,12 +13,12 @@ module.exports = {
     base: '/react-blog/',
     themeConfig: {
         nav: [
-            {
-                text: '博客园',
-                link: 'https://www.cnblogs.com/rocenjs',
-                icon: 'reco-bokeyuan',
-                target: '_blank'
-            },
+            // {
+            //     text: '博客园',
+            //     link: 'https://www.cnblogs.com/rocenjs',
+            //     icon: 'reco-bokeyuan',
+            //     target: '_blank'
+            // },
             {
                 text: 'nextjs笔记',
                 link: 'https://next-blog.irocen.top',
